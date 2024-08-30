@@ -1,4 +1,4 @@
-<h1>Webapp project for a local non-commercial gym</h1>
+<h1>Webapp project for a local gym</h1>
 <p><h2>Tools used:</h2>
 <ul>
   <li>Python 3.11.8</li>
