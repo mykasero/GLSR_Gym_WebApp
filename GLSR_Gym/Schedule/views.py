@@ -23,5 +23,6 @@ def lobby(request):
 
 def booking(request):
     #booking, dropdown list of users(dynamic, when someone registers add user to this list),
-    #text field for hours booked
+    #text field for hours booked, add conversion from text to datetime so cleanup algorythm can
+    #move the records into archive when the day passes 
     pass
