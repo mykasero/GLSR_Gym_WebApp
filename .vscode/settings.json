@@ -2,5 +2,9 @@
     "cSpell.words": [
         "algorythm",
         "GLSR"
+    ],
+    "cSpell.ignoreWords": [
+        "Godziny",
+        "Uzytkownicy"
     ]
 }
