@@ -6,7 +6,7 @@ def home(request):
     #homepage with 2 buttons, one for login, one for guests moving to gallery (2nd TBD)
     
     
-    return render(request, "home.html")
+    return render(request, "Schedule/home.html")
     
 def login(request):
     #login fields, login button, register hyperlink with text
