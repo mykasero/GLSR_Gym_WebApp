@@ -18,26 +18,34 @@ def home(request):
     
     return render(request, "Schedule/home.html")
     
+# def login(request):
+#     #login fields, login button, register hyperlink with text
+#     form = LoginForm()
+
+#     return render(request, "Schedule/login.html", {'form' : form})
+
 def login(request):
-    #login fields, login button, register hyperlink with text
     form = LoginForm()
-
+    if request.method == "POST":
+        print("LOGIN TEST ---- ",request.POST['login'], request.POST['haslo'])
+        username = request.POST['login']
+        password = request.POST['haslo']
+        user = authenticate(request, username = username, password = password)
+        print("user - ", user)
+        if user is not None:
+            login(request,user)
+            print("here")
+            return redirect('login_success.html')
+        else:
+            print("here2")
+            return render(request,"Schedule/login.html", {'form' : form})
     return render(request, "Schedule/login.html", {'form' : form})
-
-# def login(response):
-#     if response.method == "POST":
-#         form = LoginForm(response.POST)
-        
-#         if form.is_valid():
-#             pass
-        
-#     else:  
-#         form = LoginForm()
-#     return render(response, "Schedule/login.html", {'form' : form})
 
 def login_success(request):
     #different background, info that login is a success, buttons to booking/archive
     return HttpResponse("login_success")
+
+# add logout as well
 
 def register(response):
     #register fields + access code known only to the group in order to eliminate not authorized people from 
