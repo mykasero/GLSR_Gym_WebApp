@@ -1,0 +1,19 @@
+{% extends "Schedule/base.html" %}
+{% block title %}<title>Lobby</title>{% endblock %}
+{% if user.is_authenticated %}
+{% block content %}
+    <div class="container">
+        <div class="text-center mt-5">
+            <form method="post" class="LoginForm">
+                {% csrf_token %}
+                <button type="submit" class = "nice_buttons">Rezerwacja</button>
+                <br>
+                <button type="submit" class = "nice_buttons">Archiwum</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% else %}
+    <p>Login<a class="link_indv" href="/login">here</a>
+{% end if %}
