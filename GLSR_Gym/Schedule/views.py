@@ -1,10 +1,17 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+# from Schedule.models import Booking
+# from Schedule.forms import BookingForm
 # Create your views here.
 
 def home(request):
     #homepage with 2 buttons, one for login, one for guests moving to gallery (2nd TBD)
-    
+    # context = {}
+    # form = BookingForm
+    # booking = Booking.objects.all()
+    # context['users'] = booking
+    # context['title'] = 'test1'
+    # context['form'] = form
     
     return render(request, "Schedule/home.html")
     

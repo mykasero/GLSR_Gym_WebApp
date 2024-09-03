@@ -91,6 +91,41 @@
   }
 }
 
+.homepage_buttons{
+    background-color: #222;
+    border-radius: 4px;
+    border-style: none;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Farfetch Basis","Helvetica Neue",Arial,sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin: 0;
+    max-width: none;
+    min-height: 44px;
+    min-width: 10px;
+    outline: none;
+    overflow: hidden;
+    padding: 9px 20px 8px;
+    position: relative;
+    text-align: center;
+    text-transform: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 25%;
+}
+.a, .a:link, a:visited, a:hover, a:active{
+  color: #fff;
+}
+.homepage_buttons:hover,
+.homepage_buttons:focus {
+    opacity: .75;
+}
+
 body {
   margin: 0;
   font-family: var(--bs-body-font-family);
@@ -246,7 +281,7 @@ sup {
 
 a {
   color: var(--bs-link-color);
-  text-decoration: underline;
+  text-decoration: none;
 }
 a:hover {
   color: var(--bs-link-hover-color);
@@ -490,6 +525,8 @@ progress {
   font-size: 1.25rem;
   font-weight: 300;
 }
+
+
 
 .display-1 {
   font-size: calc(1.625rem + 4.5vw);
@@ -3128,7 +3165,7 @@ textarea.form-control-lg {
   --bs-btn-disabled-border-color: transparent;
   --bs-btn-box-shadow: none;
   --bs-btn-focus-shadow-rgb: 49, 132, 253;
-  text-decoration: underline;
+  text-decoration: none;
 }
 .btn-link:focus-visible {
   color: var(--bs-btn-color);
@@ -7998,13 +8035,7 @@ textarea.form-control-lg {
   text-decoration: none !important;
 }
 
-.text-decoration-underline {
-  text-decoration: underline !important;
-}
 
-.text-decoration-line-through {
-  text-decoration: line-through !important;
-}
 
 .text-lowercase {
   text-transform: lowercase !important;
