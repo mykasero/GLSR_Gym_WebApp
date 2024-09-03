@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from Schedule.forms import LoginForm
+from Schedule.forms import LoginForm, RegisterForm
 # Create your views here.
 
 def home(request):
@@ -27,7 +27,8 @@ def login_success(request):
 def register(request):
     #register fields + access code known only to the group in order to eliminate not authorized people from 
     #making an account
-    return render(request, "Schedule/register.html")
+    form = RegisterForm()
+    return render(request, "Schedule/register.html", {'form':form})
 
 def lobby(request):
     #TBD choice to move to schedule to book a hour
