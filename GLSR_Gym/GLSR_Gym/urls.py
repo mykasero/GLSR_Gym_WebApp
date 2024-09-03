@@ -23,4 +23,5 @@ app_name = "Schedule"
 urlpatterns = [
     path('', include('Schedule.urls')),
     path('admin/', admin.site.urls),
+    path('', include("django.contrib.auth.urls")),
 ]

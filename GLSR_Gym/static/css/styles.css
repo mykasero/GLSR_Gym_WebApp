@@ -91,7 +91,7 @@
   }
 }
 
-.homepage_buttons{
+.nice_buttons{
     background-color: #222;
     border-radius: 4px;
     border-style: none;
@@ -121,6 +121,8 @@
 .a, .a:link, a:visited, a:hover, a:active{
   color: #fff;
 }
+
+
 .homepage_buttons:hover,
 .homepage_buttons:focus {
     opacity: .75;
@@ -10854,4 +10856,8 @@ textarea.form-control-lg {
   .d-print-none {
     display: none !important;
   }
+}
+
+.link_indv, .link_indv:link,.link_indv:visited, .link_indv:hover, .link_indv:active {
+  color: #0b37d6;
 }

@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-# from Schedule.models import Booking
-# from Schedule.forms import BookingForm
+from Schedule.forms import LoginForm
 # Create your views here.
 
 def home(request):
@@ -17,7 +16,9 @@ def home(request):
     
 def login(request):
     #login fields, login button, register hyperlink with text
-    return HttpResponse("login")
+    form = LoginForm()
+
+    return render(request, "Schedule/login.html", {'form' : form})
 
 def login_success(request):
     #different background, info that login is a success, buttons to booking/archive
@@ -26,7 +27,7 @@ def login_success(request):
 def register(request):
     #register fields + access code known only to the group in order to eliminate not authorized people from 
     #making an account
-    pass
+    return render(request, "Schedule/register.html")
 
 def lobby(request):
     #TBD choice to move to schedule to book a hour

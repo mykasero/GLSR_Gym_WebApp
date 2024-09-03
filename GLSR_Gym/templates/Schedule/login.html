@@ -1,0 +1,15 @@
+{% extends "Schedule/base.html" %}
+{% block title %}<title>Login</title>{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="text-center mt-5">
+            <form method="post" class="LoginForm">
+                {% csrf_token %}
+                {{form}}
+                <br>
+                <button type="submit" class = "nice_buttons">Login</button>
+                <p>Nie masz konta? Zarejestruj sie <a class="link_indv" href="/register">tutaj</a></p>
+            </form>
+        </div>
+    </div>
+{% endblock %}
