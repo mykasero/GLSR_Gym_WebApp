@@ -47,10 +47,10 @@ def register(response):
         if form.is_valid:
             form.save()
             
-        return redirect("home.html")
+        return redirect("/")
     else:
         form = RegisterForm()
-    return render(response, "Schedule/register.html", {'form':form})
+        return render(response, "Schedule/register.html", {'form':form})
 
 def lobby(request):
     #TBD choice to move to schedule to book a hour or go to archive
