@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from Schedule.forms import LoginForm, RegisterForm
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 
 
@@ -34,7 +34,7 @@ def login(request):
         user = authenticate(request, username = username, password = password)
         print("user - ", user)
         if user is not None:
-            login(request,user)
+            auth_login(request,user)
             print("here")
             return redirect('login_success.html')
         else:
@@ -44,7 +44,7 @@ def login(request):
 
 def login_success(request):
     #different background, info that login is a success, buttons to booking/archive
-    return HttpResponse("login_success")
+    return render(request,"Schedule/login_success.html")
 
 # add logout as well
 
