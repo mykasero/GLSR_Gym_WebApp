@@ -27,6 +27,7 @@ def home(request):
 def login(request):
     form = LoginForm()
     if request.method == "POST":
+        
         print("LOGIN TEST ---- ",request.POST['login'], request.POST['haslo'])
         username = request.POST['login']
         password = request.POST['haslo']
@@ -47,18 +48,30 @@ def login_success(request):
 
 # add logout as well
 
-def register(response):
-    #register fields + access code known only to the group in order to eliminate not authorized people from 
-    #making an account
-    if response.method == "POST":
-        form = RegisterForm(response.POST)
-        if form.is_valid:
-            form.save()
+def register(request):
+    #register fields + access code known only to the group in order to eliminate the possibility
+    # of not authorized people from making an account
+    if request.method == "POST":
+        if request.POST['password1'] == request.POST['password2']:  
+            form = RegisterForm(request.POST)
+            print(request.POST)
             
+            if form.is_valid:
+                if request.POST['access_code'] == "123":
+                    form.save()
+                
+                elif request.POST['access_code'] != "123":
+                    print("WRONG ACCESS CODE")
+                    return render(request, "Schedule/register.html", {'form':form})
+        
+        else:
+            print("PASSWORDS NOT THE SAME")
+            return render(request, "Schedule/register.html", {'form':form})
+        
         return redirect("/")
     else:
         form = RegisterForm()
-        return render(response, "Schedule/register.html", {'form':form})
+        return render(request, "Schedule/register.html", {'form':form})
 
 def lobby(request):
     #TBD choice to move to schedule to book a hour or go to archive
