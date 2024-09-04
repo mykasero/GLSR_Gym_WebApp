@@ -7,7 +7,7 @@
             <form method="post" class="LoginForm">
                 {% csrf_token %}
                 <button type="submit" class = "nice_buttons">Rezerwacja</button>
-                <br>
+                <br><br>
                 <button type="submit" class = "nice_buttons">Archiwum</button>
             </form>
         </div>
@@ -16,4 +16,4 @@
 
 {% else %}
     <p>Login<a class="link_indv" href="/login">here</a>
-{% end if %}
+{% endif %}

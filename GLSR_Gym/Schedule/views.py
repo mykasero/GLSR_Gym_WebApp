@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from Schedule.forms import LoginForm, RegisterForm
-from django.contrib.auth import login as auth_login, authenticate
+from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 from django.contrib.auth.forms import UserCreationForm
 
 
@@ -36,7 +36,7 @@ def login(request):
         if user is not None:
             auth_login(request,user)
             print("here")
-            return redirect('login_success.html')
+            return redirect('login_success/')
         else:
             print("here2")
             return render(request,"Schedule/login.html", {'form' : form})
@@ -45,6 +45,10 @@ def login(request):
 def login_success(request):
     #different background, info that login is a success, buttons to booking/archive
     return render(request,"Schedule/login_success.html")
+
+def logout(request):
+    auth_logout(request)
+    return HttpResponse("logout success")
 
 # add logout as well
 
@@ -75,7 +79,7 @@ def register(request):
 
 def lobby(request):
     #TBD choice to move to schedule to book a hour or go to archive
-    pass
+    return render(request, "Schedule/lobby.html")
 
 def booking(request):
     #booking, dropdown list of users(dynamic, when someone registers add user to this list),
