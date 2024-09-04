@@ -2,7 +2,7 @@ from django import forms
 from Schedule.models import Booking
 
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, SetPasswordMixin
 from django.contrib.auth.models import User
 
 
@@ -12,8 +12,11 @@ class LoginForm(forms.Form):
     
         
 class RegisterForm(UserCreationForm):
-    access_code = forms.CharField()
-    
+    access_code = forms.CharField(
+        label="Kod Dostepu:",
+        help_text=" ",
+    )
+    usable_password = None
     class Meta:
         model = User
         fields = ['username','password1','password2','access_code']
