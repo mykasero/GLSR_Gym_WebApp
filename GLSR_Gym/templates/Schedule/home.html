@@ -11,6 +11,14 @@
                 <button class = "nice_buttons"><a href="/gallery">Galeria</a></button>
 
             </p>
+            <br><br>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
 {% endblock %}

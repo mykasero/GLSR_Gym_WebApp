@@ -52,7 +52,8 @@ def login_success(request):
 
 def logout(request):
     auth_logout(request)
-    return HttpResponse("logout success")
+    messages.info(request, "Wylogowano pomyslnie")
+    return redirect('/')
 
 # add logout as well
 
