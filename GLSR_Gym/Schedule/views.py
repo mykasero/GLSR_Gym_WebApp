@@ -90,8 +90,11 @@ def booking(request):
     #booking, dropdown list of users(dynamic, when someone registers add user to this list),
     #text field for hours booked, add conversion from text to datetime so cleanup algorythm can
     #move the records into archive when the day passes 
-    pass
+    return render(request, "Schedule/booking.html")
 
 def archive_booking(request):
     #maybe separate, idk TBD
-    pass
+    return render(request, "Schedule/archive.html")
+
+def gallery(request):
+    return HttpResponse("this will be a gallery")

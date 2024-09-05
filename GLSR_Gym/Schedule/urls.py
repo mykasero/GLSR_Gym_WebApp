@@ -14,5 +14,6 @@ urlpatterns = [
     path('lobby/', views.lobby, name = "lobby"),
     path('booking/', views.booking, name = "booking"),
     path('archive/', views.archive_booking, name = "archive"),
+    path('gallery/', views.gallery, name = "gallery"),
     path('admin/', admin.site.urls),
 ]
