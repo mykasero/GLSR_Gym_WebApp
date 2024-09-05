@@ -1,9 +1,13 @@
+import environ
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from Schedule.forms import LoginForm, RegisterForm
+from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 from django.contrib.auth.forms import UserCreationForm
 
+env = environ.Env()
+environ.Env.read_env()
 
 # Create your views here.
 
@@ -61,11 +65,12 @@ def register(request):
             print(request.POST)
             
             if form.is_valid:
-                if request.POST['access_code'] == "123":
+                if request.POST['access_code'] == env("REGISTER_CODE"):
                     form.save()
                 
-                elif request.POST['access_code'] != "123":
+                elif request.POST['access_code'] != env("REGISTER_CODE"):
                     print("WRONG ACCESS CODE")
+                    messages.error(request, "Podano zly kod dostepu.")
                     return render(request, "Schedule/register.html", {'form':form})
         
         else:
