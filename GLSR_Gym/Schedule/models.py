@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 
 class Booking(models.Model):
+    id = models.AutoField(primary_key=True)
     users = models.CharField(db_column="Uzytkownicy",max_length=100)
     hours = models.DateTimeField(db_column="Godziny")
     #Hours + d/m/y auto added

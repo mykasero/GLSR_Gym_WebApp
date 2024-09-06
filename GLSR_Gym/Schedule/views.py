@@ -84,7 +84,7 @@ def booking(request):
     #move the records into archive when the day passes 
     
     context = Booking.objects.all()
-    
+    print("CONTEXT = \n",context)
     if context:
         print("context works")
         return render(request, "Schedule/booking.html", {'context' : context})

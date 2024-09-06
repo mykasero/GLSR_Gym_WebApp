@@ -4,12 +4,13 @@
 <div class="container">
     <div class="text-center mt-5">
         <p class="lead">Rezerwacja godzin</p>
-        {% for item in context %}
-            <table class="table">
-                <thead class="thead">
+        
+            <table class="table table-bordered table-dark">
+                <thead>
                     <th>Imie</th>
                     <th>Godziny</th>
                 </thead>
+                {% for item in context %}
                 <tr>
                     <td>{{item.users}}</td>
                     <td>{{item.hours}}</td>
