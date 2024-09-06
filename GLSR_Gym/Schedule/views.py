@@ -77,8 +77,12 @@ def lobby(request):
     #Buttons move to schedule to book a hour or go to archive
     
     return render(request, "Schedule/lobby.html")
-
 def booking(request):
+    
+    
+    return render(request,'Schedule/booking.html')
+
+def current_bookings(request):
     #booking, dropdown list of users(dynamic, when someone registers add user to this list),
     #text field for hours booked, add conversion from text to datetime so cleanup algorythm can
     #move the records into archive when the day passes 
@@ -87,9 +91,9 @@ def booking(request):
     print("CONTEXT = \n",context)
     if context:
         print("context works")
-        return render(request, "Schedule/booking.html", {'context' : context})
+        return render(request, "Schedule/current_bookings.html", {'context' : context})
     else:
-        return render(request, "Schedule/booking.html")
+        return render(request, "Schedule/current_bookings.html")
 
 def archive_booking(request):
     #booking archive TBD - filtering specific periods maybe
