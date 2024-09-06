@@ -12,6 +12,7 @@ class Booking(models.Model):
 class Archive(models.Model):
     #Usernames
     #Hours + d/m/y auto added
+    id = models.AutoField(primary_key=True)
     users = models.CharField(db_column="Uzytkownicy",max_length=100)
     hours = models.DateTimeField(db_column="Godziny")
     
