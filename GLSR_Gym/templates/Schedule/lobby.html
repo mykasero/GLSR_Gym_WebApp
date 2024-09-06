@@ -4,12 +4,9 @@
 {% block content %}
     <div class="container">
         <div class="text-center mt-5">
-            <form method="post" class="LoginForm">
-                {% csrf_token %}
-                <button type="submit" class = "nice_buttons">Rezerwacja</button>
-                <br><br>
-                <button type="submit" class = "nice_buttons">Archiwum</button>
-            </form>
+                <a class = "nice_buttons" href = "/booking">Rezerwacja</a>
+                <br>
+                <a class = "nice_buttons" href = "/archive">Archiwum</a>
         </div>
     </div>
 {% endblock %}

@@ -5,6 +5,7 @@ from Schedule.forms import LoginForm, RegisterForm
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 
+from .models import Booking
 
 env = environ.Env()
 environ.Env.read_env()
@@ -82,7 +83,13 @@ def booking(request):
     #text field for hours booked, add conversion from text to datetime so cleanup algorythm can
     #move the records into archive when the day passes 
     
-    return render(request, "Schedule/booking.html")
+    context = Booking.objects.all()
+    
+    if context:
+        print("context works")
+        return render(request, "Schedule/booking.html", {'context' : context})
+    else:
+        return render(request, "Schedule/booking.html")
 
 def archive_booking(request):
     #booking archive TBD - filtering specific periods maybe
