@@ -1,6 +1,5 @@
 from django import forms
 from Schedule.models import Booking
-
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, SetPasswordMixin
 from django.contrib.auth.models import User
@@ -20,3 +19,8 @@ class RegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username','password1','password2','access_code']
+        
+class BookingForm(forms.ModelForm):
+    class Meta:
+        model = Booking
+        fields = ["users","users_amount","start_hour","end_hour","current_day"]

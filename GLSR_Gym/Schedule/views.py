@@ -1,7 +1,7 @@
 import environ
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from Schedule.forms import LoginForm, RegisterForm
+from Schedule.forms import LoginForm, RegisterForm, BookingForm
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 
@@ -78,9 +78,15 @@ def lobby(request):
     
     return render(request, "Schedule/lobby.html")
 def booking(request):
-    
-    
-    return render(request,'Schedule/booking.html')
+    if request.method == "POST":
+        form = BookingForm(request.POST)
+        
+        if form.is_valid():
+            form.save()    
+            redirect("/currentbookings")
+    else:
+        form = BookingForm(request.POST)        
+        return render(request,'Schedule/booking.html', {'form':form})
 
 def current_bookings(request):
     #booking, dropdown list of users(dynamic, when someone registers add user to this list),

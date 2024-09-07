@@ -8,7 +8,12 @@
                 Rezerwacja godzin
             </div>
             <div class = "card-body">
-                forms tbd
+                <form method="post" class="BookingForm">
+                    {% csrf_token %}
+                    {{form}}
+                    <br>
+                    <button type = "submit" class = "nice_buttons">Zarezerwuj</button>
+                </form>
             </div>
         </div>
     </div>
