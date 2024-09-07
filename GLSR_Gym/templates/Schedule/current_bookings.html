@@ -12,11 +12,20 @@
                     <thead>
                         <th>Id</th>
                         <th>Imie</th>
+                        <th>Ile osob</th>
+                        <th>Godzina start</th>
+                        <th>Godzina koniec</th>
+                        <th>Dzien</th>
                     </thead>
                     {% for item in context %}
                     <tr>
                         <td>{{item.id}}</td>
                         <td>{{item.users}}</td>
+                        <td>{{item.users_amount}}</td>
+                        <td>{{item.start_hour}}</td>
+                        <td>{{item.end_hour}}</td>
+                        <td>{{item.current_day}}</td>
+
                     </tr>
 
                 {% endfor %}

@@ -77,15 +77,18 @@ def lobby(request):
     #Buttons move to schedule to book a hour or go to archive
     
     return render(request, "Schedule/lobby.html")
+
 def booking(request):
     if request.method == "POST":
         form = BookingForm(request.POST)
-        
+        print("tu1")
         if form.is_valid():
+            print("tu3")
             form.save()    
-            redirect("/currentbookings")
+            return redirect("/current_bookings")
     else:
-        form = BookingForm(request.POST)        
+        form = BookingForm(request.POST)     
+        print("tu2")   
         return render(request,'Schedule/booking.html', {'form':form})
 
 def current_bookings(request):
