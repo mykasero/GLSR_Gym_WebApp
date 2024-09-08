@@ -9,7 +9,7 @@ class Booking(models.Model):
     # start_hour + end_hour vs just start_hour TBD
     start_hour = models.TimeField(db_column= "Start")
     end_hour = models.TimeField(db_column = "Koniec")
-    current_day = models.DateTimeField(db_column = "Data", help_text = "Format miesiac-dzien (np. 09-01)")
+    current_day = models.DateTimeField(db_column = "Data", help_text = "Wpisz w formacie rok-miesiac-dzien (np. 2024-09-01)")
 #     # pass
     
 class Archive(models.Model):
