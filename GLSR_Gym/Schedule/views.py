@@ -96,8 +96,9 @@ def current_bookings(request):
     #text field for hours booked, add conversion from text to datetime so cleanup algorythm can
     #move the records into archive when the day passes 
     
-    context = Booking.objects.all()
+    context = Booking.objects.all().order_by('current_day')
     print("CONTEXT = \n",context)
+    
     if context:
         print("context works")
         return render(request, "Schedule/current_bookings.html", {'context' : context})
