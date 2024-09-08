@@ -6,6 +6,8 @@ from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 
 from .models import Booking
+import datetime
+
 
 env = environ.Env()
 environ.Env.read_env()
@@ -98,9 +100,18 @@ def current_bookings(request):
     
     context = Booking.objects.all().order_by('current_day')
     print("CONTEXT = \n",context)
+    print("TEST - ", Booking.objects.all().values())
+    #logic works, now need to add moving to archive
+    for row in Booking.objects.all().values():
+        if row['current_day'] < datetime.datetime.now():
+            print("YES, booking - ",row['current_day'], " now - ", datetime.datetime.now(), " -------- ")
+    # for booking_date in context.filter("current_day"):
+    #     print("BOOKING DATE - ", booking_date, "\n TODAY DATE - ",date.today() )
+    #     if booking_date < date.today():
+    #         print("OLD DATE")
     
     if context:
-        print("context works")
+        #print("context works")
         return render(request, "Schedule/current_bookings.html", {'context' : context})
     else:
         return render(request, "Schedule/current_bookings.html")
