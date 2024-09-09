@@ -1,6 +1,11 @@
 from django.contrib import admin
-from models import Booking, Archive
+from .models import Booking, Archive
 import logging
+# from django.utils.html import format_html
+admin.site.index_template = 'admin/admin_panel.html'
+from django.urls import path
+from django.shortcuts import render
+
 # Register your models here.
 logger = logging.getLogger(__name__)
 
@@ -26,14 +31,31 @@ def archive_bookings(modeladmin, request, queryset):
     else:
         logger.info("No rows to archive")
 
+from django.contrib import messages
+class MyModelAdmin(admin.ModelAdmin):
+    
+    def button_archive(self, request, obj):
+        if request.method == "POST":
+            archive_bookings(request)
+            messages.info(request, "Wylogowano pomyslnie")
+            return render(request,'admin/admin_panel.html')
+        else:
+            messages.info(request, "Request method not post")
+
+
+
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
+    ordering = ['current_day']
     list_display=('id','users','users_amount','start_hour','end_hour','current_day')
     search_fields=('users','current_day')
-    list_filter=('users','start_hour','current_day')
+    list_filter=('current_day','users')
+    actions=[archive_bookings]
+
 
 @admin.register(Archive)
 class ArchiveAdmin(admin.ModelAdmin):
+    ordering = ['current_day']
     list_display=('id','users','users_amount','start_hour','end_hour','current_day')
     search_fields=('users','current_day')
     list_filter=('users','start_hour','current_day')     
