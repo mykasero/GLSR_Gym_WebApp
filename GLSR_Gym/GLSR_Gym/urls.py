@@ -17,11 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+#test 
+# from Schedule.admin import admin_site
 
 app_name = "Schedule"
 
 urlpatterns = [
     path('', include('Schedule.urls')),
     path('admin/', admin.site.urls),
+    # path('admin/', admin_site.urls),
     path('', include("django.contrib.auth.urls")),
 ]
