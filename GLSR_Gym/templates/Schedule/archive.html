@@ -5,17 +5,20 @@
 {% endblock %}
 
 {% block stylings %}
-    <link href="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/datatables.min.css" rel="stylesheet">
+    <link href=href="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/r-3.0.3/sp-2.3.2/datatables.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-
 <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-<script src="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/datatables.min.js"></script>
+<script src="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/r-3.0.3/sp-2.3.2/datatables.min.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/2.1.5/pagination/simple_incremental_bootstrap.js"></script>
 <script>
     $(document).ready( function () {
-    $('#Archiwum').DataTable();
+        $('#Archiwum').DataTable( {
+        } );
+        
     } );
+
 </script>
 
 
