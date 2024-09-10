@@ -53,14 +53,15 @@ def register(request):
     # of not authorized people from making an account
     
     if request.method == "POST":
+        form = RegisterForm(request.POST)
         if request.POST['password1'] == request.POST['password2']:  
-            form = RegisterForm(request.POST)
+            
             print(request.POST)
             
             if form.is_valid:
                 if request.POST['access_code'] == env("REGISTER_CODE"):
                     form.save()
-                    
+                    messages.info(request, "Zarejestrowano pomyslnie")
                 # make another if for creating an admin account with a different register code
                 
                 elif request.POST['access_code'] != env("REGISTER_CODE"):
@@ -68,6 +69,7 @@ def register(request):
                     return render(request, "Schedule/register.html", {'form':form})
         
         else:
+            messages.error(request, "Hasla nie sa identyczne")
             return render(request, "Schedule/register.html", {'form':form})
         
         return redirect("/")
