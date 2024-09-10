@@ -5,7 +5,7 @@ from Schedule.forms import LoginForm, RegisterForm, BookingForm
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 
-from .models import Booking
+from .models import Booking, Archive
 import datetime
 
 
@@ -99,20 +99,22 @@ def current_bookings(request):
     #move the records into archive when the day passes 
     
     context = Booking.objects.all().order_by('current_day')
-    print("CONTEXT = \n",context)
-    print("TEST - ", Booking.objects.all().values())
-
     
     if context:
-        #print("context works")
         return render(request, "Schedule/current_bookings.html", {'context' : context})
     else:
         return render(request, "Schedule/current_bookings.html")
 
 def archive_booking(request):
     #booking archive TBD - filtering specific periods maybe
+    context = Archive.objects.all().order_by('current_day')
     
-    return render(request, "Schedule/archive.html")
+    if context:
+        return render(request, "Schedule/archive.html", {'context':context})
+    else:
+        messages.info("No data available")
+        return render(request, "Schedule/archive.html")
+
 
 def gallery(request):
     return render(request, "Schedule/gallery.html")
