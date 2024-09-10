@@ -3,7 +3,35 @@
 {% block content %}
 <div class="container">
     <div class="text-center mt-5">
-        <p class="lead">Tu bedzie Archiwum</p>
+        <div class = "card">
+            <div class = "card-header">
+                Archiwum rezerwacji
+            </div>
+            <div class = "card-body">
+                <table class="table table-bordered table-dark">
+                    <thead>
+                        <th>Id</th>
+                        <th>Imie</th>
+                        <th>Ile osob</th>
+                        <th>Godzina start</th>
+                        <th>Godzina koniec</th>
+                        <th>Dzien</th>
+                    </thead>
+                    {% for item in context %}
+                    <tr>
+                        <td>{{item.id}}</td>
+                        <td>{{item.users}}</td>
+                        <td>{{item.users_amount}}</td>
+                        <td>{{item.start_hour}}</td>
+                        <td>{{item.end_hour}}</td>
+                        <td>{{item.current_day|date:'d.m.y'}}</td>
+
+                    </tr>
+
+                {% endfor %}
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
