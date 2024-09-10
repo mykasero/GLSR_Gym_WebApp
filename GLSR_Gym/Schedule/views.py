@@ -114,7 +114,14 @@ def archive_booking(request):
     else:
         messages.info("No data available")
         return render(request, "Schedule/archive.html")
-
+def test_dtables(request):
+    context = Archive.objects.all().order_by('current_day')
+    
+    if context:
+        return render(request, "Schedule/test_dtables.html", {'context':context})
+    else:
+        messages.info("No data available")
+        return render(request, "Schedule/test_dtables.html")
 
 def gallery(request):
     return render(request, "Schedule/gallery.html")

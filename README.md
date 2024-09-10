@@ -6,6 +6,7 @@
   <li>HTML, CSS, JS</li>
   <li>Git</li>
   <li>PostgreSQL 16</li>
+  <li>DataTables</li>
   <li><b>Docker TBD</b></li>
 </ul> 
 </p>

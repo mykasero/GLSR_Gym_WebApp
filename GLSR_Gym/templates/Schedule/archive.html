@@ -1,14 +1,32 @@
 {% extends "Schedule/base.html" %}
-{% block title %}<title>Archiwum</title>{% endblock %}
+{% load static %}
+{% block title %}
+    <title>Archiwum</title>
+{% endblock %}
+
+{% block stylings %}
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/datatables.min.css" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
+
+<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+<script src="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/datatables.min.js"></script>
+<script>
+    $(document).ready( function () {
+    $('#Archiwum').DataTable();
+    } );
+</script>
+
+
 <div class="container">
     <div class="text-center mt-5">
         <div class = "card">
             <div class = "card-header">
-                Archiwum rezerwacji
+                <h5>Archiwum rezerwacji</h5>
             </div>
             <div class = "card-body">
-                <table class="table table-bordered table-dark">
+                <table id="Archiwum" class="table table-bordered table-dark">
                     <thead>
                         <th>Id</th>
                         <th>Imie</th>

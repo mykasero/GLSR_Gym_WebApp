@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+
+    <link type= 'text/css' href="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/datatables.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<table id="Archiwum1" class="table table-bordered table-dark">
+    <thead>
+        <th>Id</th>
+        <th>Imie</th>
+        <th>Ile osob</th>
+        <th>Godzina start</th>
+        <th>Godzina koniec</th>
+        <th>Dzien</th>
+    </thead>
+    {% for item in context %}
+    <tr>
+        <td>{{item.id}}</td>
+        <td>{{item.users}}</td>
+        <td>{{item.users_amount}}</td>
+        <td>{{item.start_hour}}</td>
+        <td>{{item.end_hour}}</td>
+        <td>{{item.current_day|date:'d.m.y'}}</td>
+
+    </tr>
+
+{% endfor %}
+</table>
+<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+<script src="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/datatables.min.js"></script>
+<script>
+    $(document).ready( function () {
+    $('#Archiwum1').DataTable();
+    } );
+</script>
+
+
+</body>
+
+</html>
