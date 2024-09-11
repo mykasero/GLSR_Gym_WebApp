@@ -1,10 +1,10 @@
 import environ
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from Schedule.forms import LoginForm, RegisterForm, BookingForm , RegisterForm_SU
+from Schedule.forms import LoginForm, RegisterForm, BookingForm
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
-
+from django.contrib.auth.models import Group
 from .models import Booking, Archive
 import datetime
 
@@ -29,11 +29,9 @@ def login(request):
         
         if user is not None:
             auth_login(request,user)
-            print("here")
             return redirect('login_success/')
         
         else:
-            print("here2")
             return render(request,"Schedule/login.html", {'form' : form})
     
     return render(request, "Schedule/login.html", {'form' : form})
@@ -58,14 +56,19 @@ def register(request):
         if request.POST['password1'] == request.POST['password2'] and request.POST['password1'] != "":  
             if form.is_valid:
                 if request.POST['access_code'] == env("REGISTER_CODE"):
-                    form.save()
-                    
-                    
+                    user = form.save()
+                    user.save()
+                    group = Group.objects.get(name='base_user')
+                    user.groups.add(group)
                     messages.info(request, "Zarejestrowano pomyslnie")
+                
                 elif request.POST['access_code'] == "54321":
                     user = form.save()
                     user.is_staff = True
                     user.save()
+                    group = Group.objects.get(name='admin_perm')
+                    user.groups.add(group)
+                    messages.info(request, "Zarejestrowano jako admin pomyslnie")
                         
                 # make another if for creating an admin account with a different register code
                 
