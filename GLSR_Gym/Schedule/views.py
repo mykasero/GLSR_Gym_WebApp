@@ -1,7 +1,7 @@
 import environ
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from Schedule.forms import LoginForm, RegisterForm, BookingForm
+from Schedule.forms import LoginForm, RegisterForm, BookingForm , RegisterForm_SU
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 
@@ -54,25 +54,37 @@ def register(request):
     
     if request.method == "POST":
         form = RegisterForm(request.POST)
-        if request.POST['password1'] == request.POST['password2']:  
-            
-            print(request.POST)
-            
+    
+        if request.POST['password1'] == request.POST['password2'] and request.POST['password1'] != "":  
             if form.is_valid:
                 if request.POST['access_code'] == env("REGISTER_CODE"):
                     form.save()
+                    
+                    
                     messages.info(request, "Zarejestrowano pomyslnie")
+                elif request.POST['access_code'] == "54321":
+                    user = form.save()
+                    user.is_staff = True
+                    user.save()
+                        
                 # make another if for creating an admin account with a different register code
                 
                 elif request.POST['access_code'] != env("REGISTER_CODE"):
                     messages.error(request, "Podano zly kod dostepu.")
                     return render(request, "Schedule/register.html", {'form':form})
         
+        elif request.POST['password1'] == "" or request.POST['password2'] == "" or \
+            (request.POST['password1'] == "" and request.POST['password2'] == ""):
+            
+            if form.is_valid:
+                messages.error(request, "Wypelnij pola od hasla")
+                return render(request, "Schedule/register.html", {'form':form})
         else:
             messages.error(request, "Hasla nie sa identyczne")
             return render(request, "Schedule/register.html", {'form':form})
         
         return redirect("/")
+    
     else:
         form = RegisterForm()
         return render(request, "Schedule/register.html", {'form':form})
