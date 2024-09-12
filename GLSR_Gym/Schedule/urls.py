@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.contrib.admin.sites import AdminSite
+from Schedule.admin import admin_site
 from django.urls import path
 from . import views
 
