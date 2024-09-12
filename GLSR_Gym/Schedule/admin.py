@@ -40,7 +40,7 @@ from django.http import HttpResponseRedirect
 
 class MyAdminSite(admin.AdminSite):
     site_header = "Panel Admina"
-
+    index_template = "admin/admin_panel.html"
     # def get_app_list(self, request, **kwargs):
     #     """Show some links in the admin UI.
 
@@ -68,14 +68,15 @@ class MyAdminSite(admin.AdminSite):
         print(request)
         if request.method == "POST":
             print("button works")
-        return redirect('/admin')
+        
+        return redirect('/admin/archive_action')
     
     def get_urls(self):
-        self.app_index_template = 'admin/admin_panel.html'
+        # self.app_index_template = 'admin/admin_panel.html'
         urls = super().get_urls()
         # print("URLS - HERE")
         custom_urls = [
-            path('archive_action/', self.admin_view(self.archive_action), name='archive_action')
+            path('archive_action/', self.admin_view(self.archive_action), name='archive_action'),
         ]
         # print("URLS2 - HERE", custom_urls+urls)
 

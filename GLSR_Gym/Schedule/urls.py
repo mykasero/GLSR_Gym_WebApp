@@ -8,6 +8,7 @@ app_name = "Schedule"
 
 urlpatterns = [
     path("", views.home, name = "home"),
+    
     path("home/", views.home, name = "home"),
     path('login/', views.login, name = "login"),
     path('login/login_success/', views.login_success, name = "login_success"),
@@ -19,6 +20,7 @@ urlpatterns = [
     path('archive/', views.archive_booking, name = "archive"),
     path('test_dtables/', views.test_dtables, name = "testdtables"),
     path('gallery/', views.gallery, name = "gallery"),
+    # path('admin/', admin_site.urls),
     # path('admin/', admin.site.urls),
-    path('admin/', admin_site.urls),
+    
 ]
