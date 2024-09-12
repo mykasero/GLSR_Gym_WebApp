@@ -3,11 +3,7 @@
 {% block content %}
     <div class="container">
         <div class="text-center mt-5">
-            <form method="post">
-            {% csrf_token %}
-                <button type="submit" class = "nice_buttons">Test1</button>  
-            </form>
-            <a href="{% url 'admin_panel:archive_action' %}" class="nice_buttons">Archiwizuj dane</a>
+            <a href="{% url 'admin_panel:archive_action' %}" class="button">Archiwizuj dane</a>
         </div>
     </div>
     <br>{{block.super}}

@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import Booking, Archive
 import logging
 from django.http import HttpResponse
-admin.site.index_template = 'admin/admin_panel.html'
+from django.contrib import messages
 
 
 from django.urls import path
@@ -32,59 +32,26 @@ def archive_bookings(modeladmin, request, queryset):
         logger.info("Success")
     else:
         logger.info("No rows to archive")
-#### working on the button stuff
-# in admin_panel.html <a href="{% url 'Schedule:archive_action' %}" class="nice_buttons">Archiwizuj dane</a>
-from django.utils.html import format_html
-from django.contrib import messages
-from django.http import HttpResponseRedirect
 
 class MyAdminSite(admin.AdminSite):
     site_header = "Panel Admina"
     index_template = "admin/admin_panel.html"
-    # def get_app_list(self, request, **kwargs):
-    #     """Show some links in the admin UI.
-
-    #     See also https://stackoverflow.com/a/56476261"""
-    #     app_list = super().get_app_list(request, kwargs)
-    #     app_list += [
-    #         {
-    #             "name": "Other actions",
-    #             "app_label": "other_actions_app",
-    #             "models": [
-    #                 {
-    #                     "name": "my name",
-    #                     "object_name": "my object name'custom_admin:archive_function'",
-    #                     "view_only": True,
-    #                 }
-    #             ],
-    #         },
-    #     ]
-    #     return app_list
-
+    
     def archive_action(self, request):
-        print("HERE #@!#!@#!@#!@")
-        # self.archive_function()
-        print(request.method)
-        print(request)
-        if request.method == "POST":
-            print("button works")
+        if request.method == "GET":
+            self.archive_function(request)
         
-        return redirect('/admin/archive_action')
+        return redirect('/admin')
     
     def get_urls(self):
-        # self.app_index_template = 'admin/admin_panel.html'
         urls = super().get_urls()
-        # print("URLS - HERE")
         custom_urls = [
             path('archive_action/', self.admin_view(self.archive_action), name='archive_action'),
         ]
-        # print("URLS2 - HERE", custom_urls+urls)
 
         return custom_urls + urls
      
-    
-
-    def archive_function(self):
+    def archive_function(self, request):
         print("TEST")
         from django.utils import timezone
         from django.db import transaction
@@ -102,12 +69,10 @@ class MyAdminSite(admin.AdminSite):
                         current_day = booking.current_day,
                     )
                     booking.delete()
-            logger.info("Success")
+            messages.info(request, "Zarchiwizowano dane pomyslnie")
         else:
-            logger.info("No rows to archive")
+            messages.warning(request, "Nie ma danych do archiwizacji")
             
-    
-
 admin_site = MyAdminSite(name='admin_panel')
 
 
