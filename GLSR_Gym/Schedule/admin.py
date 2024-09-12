@@ -4,6 +4,7 @@ import logging
 from django.http import HttpResponse
 admin.site.index_template = 'admin/admin_panel.html'
 
+
 from django.urls import path
 from django.shortcuts import render, redirect
 
@@ -38,7 +39,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 
 class MyAdminSite(admin.AdminSite):
-    site_header = "custom_admin"
+    site_header = "Panel Admina"
 
     # def get_app_list(self, request, **kwargs):
     #     """Show some links in the admin UI.
@@ -62,16 +63,19 @@ class MyAdminSite(admin.AdminSite):
 
     def archive_action(self, request):
         print("HERE #@!#!@#!@#!@")
-        self.archive_function()
-        
-        return HttpResponse(request, "Schedule/admin")
+        # self.archive_function()
+        print(request.method)
+        print(request)
+        if request.method == "POST":
+            print("button works")
+        return redirect('/admin')
     
     def get_urls(self):
-        
+        self.app_index_template = 'admin/admin_panel.html'
         urls = super().get_urls()
         # print("URLS - HERE")
         custom_urls = [
-            path('', self.admin_view(self.archive_action), name='archive_action')
+            path('archive_action/', self.admin_view(self.archive_action), name='archive_action')
         ]
         # print("URLS2 - HERE", custom_urls+urls)
 
@@ -103,7 +107,7 @@ class MyAdminSite(admin.AdminSite):
             
     
 
-admin_site = MyAdminSite(name='custom_admin')
+admin_site = MyAdminSite(name='admin_panel')
 
 
 @admin.register(Booking)

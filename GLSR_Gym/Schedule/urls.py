@@ -3,7 +3,7 @@ from django.contrib.admin.sites import AdminSite
 from Schedule.admin import admin_site
 from django.urls import path
 from . import views
-
+from Schedule.admin import admin_site
 app_name = "Schedule"
 
 urlpatterns = [
@@ -19,5 +19,6 @@ urlpatterns = [
     path('archive/', views.archive_booking, name = "archive"),
     path('test_dtables/', views.test_dtables, name = "testdtables"),
     path('gallery/', views.gallery, name = "gallery"),
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
+    path('admin/', admin_site.urls),
 ]
