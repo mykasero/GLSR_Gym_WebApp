@@ -4,6 +4,12 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, SetPasswordMixin
 from django.contrib.auth.models import User
 
+import datetime
+DATES_SELECT = [datetime.date.today() + datetime.timedelta(days=i) for i in range(0,3)]
+DAYS = ["Dzisiaj", "Jutro", "Pojutrze"]
+
+DATES_SELECT1 = [(date, day) for date, day in zip(DATES_SELECT, DAYS)]
+print(DATES_SELECT)
 
 class LoginForm(forms.Form):
     login = forms.CharField(label = '', max_length=40, widget=forms.TextInput(attrs={'placeholder': 'Login'}))
@@ -24,3 +30,6 @@ class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
         fields = ["users","users_amount","start_hour","end_hour","current_day"]
+        widgets = {
+            'current_day' : forms.Select(choices=DATES_SELECT1)
+        }
