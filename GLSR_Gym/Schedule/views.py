@@ -15,11 +15,12 @@ environ.Env.read_env()
 # Create your views here.
 
 def home(request):
-    #homepage with 2 buttons, one for login, one for guests moving to gallery
+    #Homepage with 2 buttons, one for login page, one gallery
     
     return render(request, "Schedule/home.html")
     
 def login(request):
+    #Login page
     form = LoginForm()
     if request.method == "POST":
         username = request.POST['login']
@@ -36,9 +37,7 @@ def login(request):
     
     return render(request, "Schedule/login.html", {'form' : form})
 
-def login_success(request):
-    #different background, info that login is a success, buttons to booking/archive
-    
+def login_success(request):    
     return render(request,"Schedule/login_success.html")
 
 def logout(request):
@@ -47,7 +46,7 @@ def logout(request):
     return redirect('/')
 
 def register(request):
-    #register fields + access code known only to the group in order to eliminate the possibility
+    #Registration page, access code known only to the group in order to eliminate the possibility
     # of not authorized people from making an account
     
     if request.method == "POST":
@@ -69,8 +68,6 @@ def register(request):
                     group = Group.objects.get(name='admin_perm')
                     user.groups.add(group)
                     messages.info(request, "Zarejestrowano jako admin pomyslnie")
-                        
-                # make another if for creating an admin account with a different register code
                 
                 elif request.POST['access_code'] != env("REGISTER_CODE"):
                     messages.error(request, "Podano zly kod dostepu.")
@@ -98,22 +95,18 @@ def lobby(request):
     return render(request, "Schedule/lobby.html")
 
 def booking(request):
+    #Page for creating a booking
     if request.method == "POST":
         form = BookingForm(request.POST)
-        print("tu1")
         if form.is_valid():
-            print("tu3")
             form.save()    
             return redirect("/current_bookings")
     else:
         form = BookingForm(request.POST)     
-        print("tu2")   
         return render(request,'Schedule/booking.html', {'form':form})
 
 def current_bookings(request):
-    #booking, dropdown list of users(dynamic, when someone registers add user to this list),
-    #text field for hours booked, add conversion from text to datetime so cleanup algorythm can
-    #move the records into archive when the day passes 
+    #Table with current bookings (today's date and up to 2 days after)
     
     context = Booking.objects.all().order_by('current_day')
     
@@ -123,7 +116,7 @@ def current_bookings(request):
         return render(request, "Schedule/current_bookings.html")
 
 def archive_booking(request):
-    #booking archive TBD - filtering specific periods maybe
+    #Table with archived bookings, basic dataTables used for pagination and filtering
     context = Archive.objects.all().order_by('current_day')
     
     if context:
@@ -131,6 +124,7 @@ def archive_booking(request):
     else:
         messages.info("No data available")
         return render(request, "Schedule/archive.html")
+
 def test_dtables(request):
     context = Archive.objects.all().order_by('current_day')
     

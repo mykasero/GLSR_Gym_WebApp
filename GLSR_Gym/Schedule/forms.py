@@ -33,3 +33,10 @@ class BookingForm(forms.ModelForm):
         widgets = {
             'current_day' : forms.Select(choices=DATES_SELECT1)
         }
+        labels = {
+            'users' : 'Imie:',
+            'users_amount' : 'Ile osob:',
+            'start_hour' : 'Godzina startu:',
+            'end_hour' : 'Godzina konca:',
+            'current_day' : 'Dzien',
+        }
