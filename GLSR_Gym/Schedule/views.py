@@ -98,9 +98,14 @@ def booking(request):
     #Page for creating a booking
     if request.method == "POST":
         form = BookingForm(request.POST)
+        form2 = BookingForm(request.POST)
         if form.is_valid():
-            form.save()    
-            return redirect("/current_bookings")
+            if form.cleaned_data['users'] in [value['users'] for value in list(Booking.objects.values('users'))]:
+                form.save()
+                return redirect("/current_bookings")
+            else:
+                messages.error(request, "Uzytkownik o takiej nazwie nie istnieje")
+                return redirect('/booking')
     else:
         form = BookingForm(request.POST)     
         return render(request,'Schedule/booking.html', {'form':form})
@@ -122,7 +127,7 @@ def archive_booking(request):
     if context:
         return render(request, "Schedule/archive.html", {'context':context})
     else:
-        messages.info("No data available")
+        messages.info(request, "No data available")
         return render(request, "Schedule/archive.html")
 
 def test_dtables(request):
