@@ -37,7 +37,10 @@ def login(request):
     
     return render(request, "Schedule/login.html", {'form' : form})
 
-def login_success(request):    
+def login_success(request):
+    # needs more research
+    # from Schedule.apps import Keybox_code
+    # messages.success(request, f"Kod do skrzynki z kluczem w tym miesiacu : {Keybox_code()}.") 
     return render(request,"Schedule/login_success.html")
 
 def logout(request):
