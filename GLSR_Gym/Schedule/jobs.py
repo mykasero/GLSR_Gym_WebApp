@@ -1,14 +1,15 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
-
+import apscheduler as aps
 from django.conf import settings
 from Schedule.models import Booking, Archive
 import logging
 
 logger = logging.getLogger(__name__)
-scheduler = BackgroundScheduler(timezone=settings.TIME_ZONE)
+scheduler = BackgroundScheduler(timezone=settings.TIME_ZONE)   
 
 def archive_bookings():
+    print("Archiving started")
     from django.utils import timezone
     from django.db import transaction
         
@@ -26,23 +27,36 @@ def archive_bookings():
                 )
                 booking.delete()
         logger.info("Success")
+        
+        print("scheduler shutdown - ")
+        scheduler.remove_all_jobs()
+        scheduler.shutdown()
+        
     else:
         logger.info("No rows to archive")
-    scheduler.shutdown(wait=False)
+        print("nothing to archive")
+        scheduler.remove_all_jobs()
+        scheduler.shutdown()
     
 def schedule():
+    
     trigger = CronTrigger(
         year = "*",
         month = "*",
         day = "*",
-        hour = "21",
-        minute = "18",
+        hour = "0",
+        minute = "1",
         second = "0",
     )
     scheduler.add_job(
         archive_bookings,
         trigger = trigger,
+        id = "1",
         name = "archiver",
+        replace_existing=True,
+        max_instances=1,
         )
     
+        
+    # scheduler.start()
     scheduler.start()

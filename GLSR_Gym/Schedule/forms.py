@@ -9,7 +9,11 @@ DATES_SELECT = [datetime.date.today() + datetime.timedelta(days=i) for i in rang
 DAYS = ["Wczoraj","Dzisiaj", "Jutro", "Pojutrze"]
 
 DATES_SELECT1 = [(date, day) for date, day in zip(DATES_SELECT, DAYS)]
-print(DATES_SELECT)
+
+
+class KeycodeForm(forms.Form):
+    code = forms.CharField(label = 'Nowy kod do skrytki', max_length=4)
+
 
 class LoginForm(forms.Form):
     login = forms.CharField(label = '', max_length=40, widget=forms.TextInput(attrs={'placeholder': 'Login'}))

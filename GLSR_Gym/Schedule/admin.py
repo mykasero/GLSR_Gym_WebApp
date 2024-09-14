@@ -3,9 +3,10 @@ from .models import Booking, Archive
 import logging
 from django.http import HttpResponse
 from django.contrib import messages
-
+from Schedule.forms import KeycodeForm
 
 from django.urls import path
+from django.template.response import TemplateResponse
 from django.shortcuts import render, redirect
 
 # Register your models here.
@@ -33,37 +34,45 @@ def archive_bookings(modeladmin, request, queryset):
     else:
         logger.info("No rows to archive")
 
+
 class MyAdminSite(admin.AdminSite):
     site_header = "Panel Admina"
     index_template = "admin/admin_panel.html"
     
+    
     def archive_action(self, request):
-        if request.method == "GET":
+        if request.method == "POST":
             self.archive_function(request)
+            return redirect('/admin')
+        return TemplateResponse(request, 'admin/archive_action.html', self.each_context(request))
+    
+    def new_keycode(self, request):
         
-        return redirect('/admin')
-    
-    
+        form = KeycodeForm(request.POST)
+        print(request)
+        context = self.each_context(request)
+        if request.method == "POST":
+            print("here")
+            if form.is_valid():
+                form.save() 
+                print(form)
+                messages.info(request,f"Pomyslnie dodano nowy kod: {form.cleaned_data['code']}")
+            return render(request, 'admin/new_keycode.html', context)
+            # return redirect('/admin')
+        else:
+            return render(request, 'admin/new_keycode.html', context)
+                
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
             path('archive_action/', self.admin_view(self.archive_action), name='archive_action'),
+            path('new_keycode/', self.admin_view(self.new_keycode), name='new_keycode'),
         ]
 
         return custom_urls + urls
      
-    def keycode_function(self, request):
-        import random
-        NEW_CODE = [random.randint(0,9) for i in range(4)]
-        THIS_MONTH_CODE = ""
-        for item in NEW_CODE:
-            THIS_MONTH_CODE += str(item)
-            
-        THIS_MONTH_CODE = int(THIS_MONTH_CODE) 
-        return THIS_MONTH_CODE
         
     def archive_function(self, request):
-        print("TEST")
         from django.utils import timezone
         from django.db import transaction
             
