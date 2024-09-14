@@ -43,6 +43,7 @@ class MyAdminSite(admin.AdminSite):
         
         return redirect('/admin')
     
+    
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
@@ -51,6 +52,16 @@ class MyAdminSite(admin.AdminSite):
 
         return custom_urls + urls
      
+    def keycode_function(self, request):
+        import random
+        NEW_CODE = [random.randint(0,9) for i in range(4)]
+        THIS_MONTH_CODE = ""
+        for item in NEW_CODE:
+            THIS_MONTH_CODE += str(item)
+            
+        THIS_MONTH_CODE = int(THIS_MONTH_CODE) 
+        return THIS_MONTH_CODE
+        
     def archive_function(self, request):
         print("TEST")
         from django.utils import timezone

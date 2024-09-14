@@ -5,8 +5,8 @@ from django.contrib.auth.forms import UserCreationForm, SetPasswordMixin
 from django.contrib.auth.models import User
 
 import datetime
-DATES_SELECT = [datetime.date.today() + datetime.timedelta(days=i) for i in range(0,3)]
-DAYS = ["Dzisiaj", "Jutro", "Pojutrze"]
+DATES_SELECT = [datetime.date.today() + datetime.timedelta(days=i) for i in range(-1,3)]
+DAYS = ["Wczoraj","Dzisiaj", "Jutro", "Pojutrze"]
 
 DATES_SELECT1 = [(date, day) for date, day in zip(DATES_SELECT, DAYS)]
 print(DATES_SELECT)
