@@ -52,7 +52,6 @@ class MyAdminSite(admin.AdminSite):
     def new_keycode(self, request):
         
         form = KeycodeForm(request.POST)
-        print(request)
         context = self.each_context(request)
         context.update({
             'form' : form,
@@ -60,10 +59,14 @@ class MyAdminSite(admin.AdminSite):
         if request.method == "POST":
             print("here")
             if form.is_valid():
-                form.save() 
-                print(form)
-                messages.info(request,f"Pomyslnie dodano nowy kod: {form.cleaned_data['code']}")
-            return redirect('/admin')
+                if self.not_last_ten(form.cleaned_data['code']) == True:
+                    form.save() 
+                    print(form)
+                    messages.info(request,f"Pomyslnie dodano nowy kod: {form.cleaned_data['code']}")
+                    return redirect('/admin')
+                else:
+                    messages.error(request,"Kod ostatnio uzywany, podaj inny kod")  
+                    return render(request, 'admin/new_keycode.html', context)
         else:
             return render(request, 'admin/new_keycode.html', context)
                 
@@ -97,6 +100,25 @@ class MyAdminSite(admin.AdminSite):
             messages.info(request, "Zarchiwizowano dane pomyslnie")
         else:
             messages.warning(request, "Nie ma danych do archiwizacji")
+            
+    def not_last_ten(self, code):
+        code = code
+        code_list = list(Keycodes.objects.all().order_by('-id').values_list('code'))
+        
+        if len(code_list) > 10:
+            #take ten last used codes to avoid posting the same one
+            LAST_CODES = [code_list[i][0] for i in range(10)]
+        else:
+            LAST_CODES = [code_list[i][0] for i in range(len(code_list))]
+        
+        print(f"TEST KOD {code}  ----- {LAST_CODES}")
+        
+        if code not in LAST_CODES:
+            return True
+        else:
+            return False
+        
+        
             
 admin_site = MyAdminSite(name='admin_panel')
 

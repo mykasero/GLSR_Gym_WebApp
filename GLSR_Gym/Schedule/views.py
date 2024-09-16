@@ -38,8 +38,8 @@ def login(request):
     return render(request, "Schedule/login.html", {'form' : form})
 
 def login_success(request):
-    keycode = list(Keycodes.objects.all().order_by('-code_date').values_list('code'))[0][0]
-    messages.success(request, f"Kod do skrzynki z kluczem w tym miesiacu : {keycode}.") 
+    keycode = list(Keycodes.objects.all().order_by('-id').values_list('code'))[0][0]
+    messages.success(request, f"Kod do skrzynki z kluczem: {keycode}.") 
     return render(request,"Schedule/login_success.html")
 
 def logout(request):
