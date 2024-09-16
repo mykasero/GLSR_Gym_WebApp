@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Booking, Archive
+from .models import Booking, Archive, Keycodes
 import logging
 from django.http import HttpResponse
 from django.contrib import messages
@@ -38,12 +38,15 @@ def archive_bookings(modeladmin, request, queryset):
 class MyAdminSite(admin.AdminSite):
     site_header = "Panel Admina"
     index_template = "admin/admin_panel.html"
-    
+    def has_permission(self,request):
+        user = request.user
+        return user.is_staff and user.is_active
     
     def archive_action(self, request):
         if request.method == "POST":
             self.archive_function(request)
             return redirect('/admin')
+        
         return TemplateResponse(request, 'admin/archive_action.html', self.each_context(request))
     
     def new_keycode(self, request):
@@ -51,14 +54,16 @@ class MyAdminSite(admin.AdminSite):
         form = KeycodeForm(request.POST)
         print(request)
         context = self.each_context(request)
+        context.update({
+            'form' : form,
+        })
         if request.method == "POST":
             print("here")
             if form.is_valid():
                 form.save() 
                 print(form)
                 messages.info(request,f"Pomyslnie dodano nowy kod: {form.cleaned_data['code']}")
-            return render(request, 'admin/new_keycode.html', context)
-            # return redirect('/admin')
+            return redirect('/admin')
         else:
             return render(request, 'admin/new_keycode.html', context)
                 

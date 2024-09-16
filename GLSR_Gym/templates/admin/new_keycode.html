@@ -13,7 +13,7 @@
             {% endif %}
             <form method="post" class="KeycodeForm">
                 {% csrf_token %}
-                {{form.as_p}}
+                {{form}}
                 <br>
                 <button type="submit" class = "nice_buttons">Ustaw nowy kod</button>
             </form>

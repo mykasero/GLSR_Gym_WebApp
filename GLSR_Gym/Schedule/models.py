@@ -26,5 +26,5 @@ class Archive(models.Model):
 #     # pass
 class Keycodes(models.Model):
     id = models.AutoField(primary_key=True)
-    code = models.CharField(db_column="Kod_Skrytki", max_length=4)
+    code = models.CharField(db_column="Kod_Skrytki", max_length=4, help_text="Cztery cyfry 0-9")
     code_date = models.DateField(db_column="Data dodania")

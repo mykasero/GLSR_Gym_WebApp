@@ -9,13 +9,16 @@ DATES_SELECT = [datetime.date.today() + datetime.timedelta(days=i) for i in rang
 DAYS = ["Wczoraj","Dzisiaj", "Jutro", "Pojutrze"]
 
 DATES_SELECT1 = [(date, day) for date, day in zip(DATES_SELECT, DAYS)]
-
+TODAY = [(datetime.date.today(),"Dzisiaj")]
 
 class KeycodeForm(forms.ModelForm):
     code_date = datetime.date.today()
     class Meta:
         model = Keycodes
         fields = ["code","code_date"]
+        widgets = {
+            'code_date' : forms.Select(choices=TODAY)
+        }
         labels = {
             "code" : "Kod do skrytki",
             "code_date" : "Data dodania kodu",
