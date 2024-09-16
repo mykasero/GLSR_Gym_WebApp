@@ -24,3 +24,7 @@ class Archive(models.Model):
     current_day = models.DateField(db_column = "Data")
     
 #     # pass
+class Keycodes(models.Model):
+    id = models.AutoField(primary_key=True)
+    code = models.CharField(db_column="Kod_Skrytki", max_length=4)
+    code_date = models.DateField(db_column="Data dodania")
