@@ -11,9 +11,15 @@ DAYS = ["Wczoraj","Dzisiaj", "Jutro", "Pojutrze"]
 DATES_SELECT1 = [(date, day) for date, day in zip(DATES_SELECT, DAYS)]
 
 
-class KeycodeForm(forms.Form):
-    code = forms.CharField(label = 'Nowy kod do skrytki', max_length=4)
-
+class KeycodeForm(forms.ModelForm):
+    code_date = datetime.date.today()
+    class Meta:
+        model = Keycodes
+        fields = ["code","code_date"]
+        labels = {
+            "code" : "Kod do skrytki",
+            "code_date" : "Data dodania kodu",
+        }
 
 class LoginForm(forms.Form):
     login = forms.CharField(label = '', max_length=40, widget=forms.TextInput(attrs={'placeholder': 'Login'}))
