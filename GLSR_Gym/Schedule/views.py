@@ -5,7 +5,7 @@ from Schedule.forms import LoginForm, RegisterForm, BookingForm
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 from django.contrib.auth.models import Group
-from .models import Booking, Archive
+from .models import Booking, Archive, Keycodes
 import datetime
 
 
@@ -38,10 +38,8 @@ def login(request):
     return render(request, "Schedule/login.html", {'form' : form})
 
 def login_success(request):
-   
-    # needs more research
-    # from Schedule.apps import Keybox_code
-    # messages.success(request, f"Kod do skrzynki z kluczem w tym miesiacu : {Keybox_code()}.") 
+    keycode = list(Keycodes.objects.all().order_by('-code_date').values_list('code'))[0][0]
+    messages.success(request, f"Kod do skrzynki z kluczem w tym miesiacu : {keycode}.") 
     return render(request,"Schedule/login_success.html")
 
 def logout(request):
@@ -102,7 +100,6 @@ def booking(request):
     #Page for creating a booking
     if request.method == "POST":
         form = BookingForm(request.POST)
-        form2 = BookingForm(request.POST)
         if form.is_valid():
             if form.cleaned_data['users'] in [value['users'] for value in list(Booking.objects.values('users'))]:
                 form.save()
