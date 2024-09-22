@@ -5,7 +5,7 @@
 __pycache__
 PostgresDB
 media
-settings.py
+
 
 # Backup files # 
 *.bak 
