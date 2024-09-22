@@ -23,7 +23,7 @@ from GLSR_Gym_Proj.Schedule.admin import admin_site
 # app_name = "Schedule" Pre render
 admin_site._registry.update(admin.site._registry)
 urlpatterns = [
-    path('Schedule/', include('Schedule.urls')),
+    path('', include('GLSR_Gym_Proj.Schedule.urls')),
     path('admin/', admin_site.urls),
     # path('admin/', admin.site.urls),
     
