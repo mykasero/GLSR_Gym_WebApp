@@ -6,7 +6,11 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'GLSR_Gym.settings')
+    #render
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'GLSR_Gym.GLSR_Gym.settings')
+    
+    #pre render
+    # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'GLSR_Gym.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

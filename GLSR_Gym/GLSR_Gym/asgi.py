@@ -11,6 +11,10 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'GLSR_Gym.settings')
+#render
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'GLSR_Gym.GLSR_Gym.settings')
+
+#pre render
+# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'GLSR_Gym.settings')
 
 application = get_asgi_application()
