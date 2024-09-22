@@ -23,7 +23,7 @@ from Schedule.admin import admin_site
 app_name = "Schedule"
 admin_site._registry.update(admin.site._registry)
 urlpatterns = [
-    path('', include('Schedule.urls')),
+    path('Schedule/', include('Schedule.urls')),
     path('admin/', admin_site.urls),
     # path('admin/', admin.site.urls),
     
