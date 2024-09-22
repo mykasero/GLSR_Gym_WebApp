@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'GLSR_Gym_Proj.Schedule',
+    'Schedule',
     'django_apscheduler'
 ]
 
