@@ -48,8 +48,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Schedule',
-    'django_apscheduler'
+    # 'Schedule',# prerender
+    'GLSR_Gym_Proj.Schedule',
+    'django_apscheduler',
 ]
 
 MIDDLEWARE = [

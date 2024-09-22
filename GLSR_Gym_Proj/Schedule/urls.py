@@ -4,7 +4,9 @@ from Schedule.admin import admin_site
 from django.urls import path
 from . import views
 from Schedule.admin import admin_site
-app_name = "Schedule"
+
+
+app_name = "Schedule" #pre render
 
 urlpatterns = [
     path("", views.home, name = "home"),

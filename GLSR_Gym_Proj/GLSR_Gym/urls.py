@@ -20,7 +20,7 @@ from django.urls import path, include
 #test 
 from Schedule.admin import admin_site
 
-app_name = "Schedule"
+# app_name = "Schedule" Pre render
 admin_site._registry.update(admin.site._registry)
 urlpatterns = [
     path('Schedule/', include('Schedule.urls')),
