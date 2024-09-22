@@ -3,7 +3,7 @@ from .models import Booking, Archive, Keycodes
 import logging
 from django.http import HttpResponse
 from django.contrib import messages
-from Schedule.forms import KeycodeForm
+from .forms import KeycodeForm
 
 from django.urls import path
 from django.template.response import TemplateResponse

@@ -1,7 +1,7 @@
 import environ
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from Schedule.forms import LoginForm, RegisterForm, BookingForm
+from .forms import LoginForm, RegisterForm, BookingForm
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 from django.contrib.auth.models import Group

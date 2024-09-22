@@ -1,5 +1,5 @@
 from django import forms
-from Schedule.models import Booking, Keycodes
+from .models import Booking, Keycodes
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, SetPasswordMixin
 from django.contrib.auth.models import User
