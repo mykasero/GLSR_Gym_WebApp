@@ -29,15 +29,15 @@ echo "Apply db migrations"
 python manage.py migrate
 
 #Create sample superuser
-if [ "#DJANGO_SUPERUSER_USERNAME " ]
-then
-    echo "Creating Superuser"
-    python manage.py createsuperuser \
-    --no-input \
-    --username $DJANGO_SUPERUSER_USERNAME \
-    --email $DJANGO_SUPERUSER_EMAIL 
+# if [ "#DJANGO_SUPERUSER_USERNAME " ]
+# then
+#     echo "Creating Superuser"
+#     python manage.py createsuperuser \
+#     --no-input \
+#     --username $DJANGO_SUPERUSER_USERNAME \
+#     --email $DJANGO_SUPERUSER_EMAIL 
 
-fi
+# fi
 
 
 exec "$@"
