@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
-
+#!/bin/bash
+chmod +x build.sh
 #Req install
 
 pip install -r requirements.txt
