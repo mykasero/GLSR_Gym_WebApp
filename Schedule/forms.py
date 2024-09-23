@@ -39,6 +39,12 @@ class RegisterForm(UserCreationForm):
         model = User
         fields = ['username','password1','password2','access_code']
         
+        labels={
+            'username' : 'Nazwa użytkownika',
+            'password1' : 'Hasło',
+            'password2' : 'Potwierdź hasło',
+        }
+        
 class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking

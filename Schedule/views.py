@@ -81,6 +81,11 @@ def register(request):
             if form.is_valid:
                 messages.error(request, "Wypelnij pola od hasla")
                 return render(request, "Schedule/register.html", {'form':form})
+        
+        elif len(request.POST['password1']) < 8:
+            messages.error(request, "Podane haslo jest za krotkie")
+            return render(request, "Schedule/register.html", {'form':form})
+        
         else:
             messages.error(request, "Hasla nie sa identyczne")
             return render(request, "Schedule/register.html", {'form':form})
