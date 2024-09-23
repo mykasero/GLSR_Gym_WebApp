@@ -108,6 +108,8 @@ env.bak/
 venv.bak/ 
 /env
 *.env
+.env.prod
+.env.prod.db
 # mkdocs documentation 
 /site 
 
