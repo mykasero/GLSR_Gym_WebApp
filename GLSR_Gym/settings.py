@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'Schedule',# prerender
     'Schedule',
     'django_apscheduler',
 ]
@@ -87,18 +86,17 @@ WSGI_APPLICATION = 'GLSR_Gym.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-#render db
+#heroku
 import dj_database_url
 import psycopg2
 
 DATABASE_URL = env('DATABASE_URL')
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+
 DATABASES = {
     'default' : dj_database_url.config(conn_max_age=600, ssl_require=True)
 }
-# DATABASES = {
-    # 'default' : dj_database_url.parse(env('DATABASE_URL'))
-# }
+
 
 # pre render
 # DATABASES = {
@@ -155,7 +153,7 @@ STATICFILES_DIRS = [BASE_DIR/'static']
 # test for docker
 # STATIC_ROOT = "/home/app/web/staticfiles"
 
-#test for render
+#heroku
 # STATIC_ROOT = "staticfiles/"
 if not DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')

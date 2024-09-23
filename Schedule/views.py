@@ -64,7 +64,7 @@ def register(request):
                     user.groups.add(group)
                     messages.info(request, "Zarejestrowano pomyslnie")
                 
-                elif request.POST['access_code'] == "54321":
+                elif request.POST['access_code'] == env("ADMIN_REGISTER_CODE"):
                     user = form.save()
                     user.is_staff = True
                     user.save()
@@ -72,7 +72,7 @@ def register(request):
                     user.groups.add(group)
                     messages.info(request, "Zarejestrowano jako admin pomyslnie")
                 
-                elif request.POST['access_code'] != env("REGISTER_CODE"):
+                elif request.POST['access_code'] not in  [env("REGISTER_CODE"),env("ADMIN_REGISTER_CODE")]:
                     messages.error(request, "Podano zly kod dostepu.")
                     return render(request, "Schedule/register.html", {'form':form})
         
