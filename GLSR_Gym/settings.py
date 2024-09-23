@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(env("DEBUG"))
+DEBUG = bool(int(env("DEBUG")))
 
 
 ALLOWED_HOSTS = env("DJANGO_ALLOWED_HOSTS").split(" ")
@@ -55,6 +55,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -63,7 +64,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 ROOT_URLCONF = 'GLSR_Gym.urls'
-# ROOT_URLCONF = 'GLSR_Gym.urls' pre-render
 
 TEMPLATES = [
     {
@@ -146,7 +146,13 @@ STATICFILES_DIRS = [BASE_DIR/'static']
 # STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
 # test for docker
-STATIC_ROOT = "/home/app/web/staticfiles"
+# STATIC_ROOT = "/home/app/web/staticfiles"
+
+#test for render
+# STATIC_ROOT = "staticfiles/"
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Default primary key field type
