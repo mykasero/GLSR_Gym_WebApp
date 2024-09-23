@@ -7,7 +7,7 @@ import sys
 def main():
     """Run administrative tasks."""
     #render
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'GLSR_Gym_Proj.GLSR_Gym.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'GLSR_Gym.settings')
     
     #pre render
     # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'GLSR_Gym.settings')

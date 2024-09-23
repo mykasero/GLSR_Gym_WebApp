@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 'Schedule',# prerender
-    'GLSR_Gym_Proj.Schedule',
+    'Schedule',
     'django_apscheduler',
 ]
 
@@ -62,7 +62,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-ROOT_URLCONF = 'GLSR_Gym_Proj.GLSR_Gym.urls'
+ROOT_URLCONF = 'GLSR_Gym.urls'
 # ROOT_URLCONF = 'GLSR_Gym.urls' pre-render
 
 TEMPLATES = [
