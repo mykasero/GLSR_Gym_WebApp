@@ -13,5 +13,8 @@ python manage.py migrate
 #loaddata
 python manage.py loaddata template_data.json
 
+#make migrations
+python manage.py makemigrations
+
 #migrate
 python manage.py migrate
