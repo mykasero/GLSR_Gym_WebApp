@@ -6,7 +6,9 @@ from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 from django.contrib.auth.models import Group
 from .models import Booking, Archive, Keycodes
-import datetime
+from django.contrib.auth import get_user_model
+
+
 
 
 env = environ.Env()
@@ -33,7 +35,7 @@ def login(request):
             return redirect('login_success/')
         
         else:
-            messages.warning(request, "Podano niewłasciwe dane")
+            messages.warning(request, "Podano niewłasciwe dane")#shows after succesful login, check it later
             return render(request,"Schedule/login.html", {'form' : form})
     
     return render(request, "Schedule/login.html", {'form' : form})
@@ -107,7 +109,9 @@ def booking(request):
     if request.method == "POST":
         form = BookingForm(request.POST)
         if form.is_valid():
-            if form.cleaned_data['users'] in [value['users'] for value in list(Booking.objects.values('users'))]:
+            User = get_user_model()
+            users_list = User.objects.values('username')
+            if form.cleaned_data['users'] in [value['username'] for value in list(users_list)]:
                 form.save()
                 return redirect("/current_bookings")
             else:
