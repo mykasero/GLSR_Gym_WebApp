@@ -94,21 +94,17 @@ DATABASE_URL = env('DATABASE_URL')
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 DATABASES = {
-    'default' : dj_database_url.config(conn_max_age=600, ssl_require=True)
+    'default' : dj_database_url.config(conn_max_age=600, ssl_require=True),
+    'dockerdb' : {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env("DB_NAME"), 
+        'USER': env("DB_USER"),
+        'PASSWORD': env("DB_PASSWORD"),
+        'HOST': env("DB_HOST"), 
+        'PORT': env("DB_PORT"),
+    },
 }
 
-
-# pre render
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': env("DB_NAME"), 
-#         'USER': env("DB_USER"),
-#         'PASSWORD': env("DB_PASSWORD"),
-#         'HOST': env("DB_HOST"), 
-#         'PORT': env("DB_PORT"),
-#     }
-# }
 
 
 # Password validation

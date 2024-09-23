@@ -23,8 +23,9 @@ def home(request):
     
 def login(request):
     #Login page
-    form = LoginForm()
+    
     if request.method == "POST":
+        form = LoginForm()
         username = request.POST['login']
         password = request.POST['haslo']
         
@@ -35,10 +36,11 @@ def login(request):
             return redirect('login_success/')
         
         else:
-            messages.warning(request, "Podano niewłasciwe dane")#shows after succesful login, check it later
+            messages.error(request, "Podano niewłasciwe dane")
             return render(request,"Schedule/login.html", {'form' : form})
-    
-    return render(request, "Schedule/login.html", {'form' : form})
+    else:
+        form = LoginForm()
+        return render(request, "Schedule/login.html", {'form' : form})
 
 def login_success(request):
     keycode = list(Keycodes.objects.all().order_by('-id').values_list('code'))[0][0]
