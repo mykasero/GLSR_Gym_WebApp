@@ -1,5 +1,4 @@
-chmod +x build.sh
-#!/bin/bash
+#!/usr/bin/env bash
 
 #Req install
 
