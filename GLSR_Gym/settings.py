@@ -89,9 +89,16 @@ WSGI_APPLICATION = 'GLSR_Gym.wsgi.application'
 
 #render db
 import dj_database_url
+import psycopg2
+
+DATABASE_URL = env('DATABASE_URL')
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 DATABASES = {
-    'default' : dj_database_url.parse(env('DATABASE_URL'))
+    'default' : dj_database_url.config(conn_max_age=600, ssl_require=True)
 }
+# DATABASES = {
+    # 'default' : dj_database_url.parse(env('DATABASE_URL'))
+# }
 
 # pre render
 # DATABASES = {

@@ -33,6 +33,7 @@ def login(request):
             return redirect('login_success/')
         
         else:
+            messages.warning(request, "Podano niewłasciwe dane")
             return render(request,"Schedule/login.html", {'form' : form})
     
     return render(request, "Schedule/login.html", {'form' : form})
