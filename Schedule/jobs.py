@@ -46,20 +46,10 @@ def schedule():
         month = "*",
         day = "*",
         hour = "14",
-        minute = "03",
+        minute = "05",
         second = "0",
     )
-    # scheduler.add_job(
-    #     archive_bookings,
-    #     trigger = trigger,
-    #     id = "1",
-    #     name = "archiver",
-    #     replace_existing=True,
-    #     max_instances=1,
-    #     )
-    
-    #testing blocking scheduler
-    scheduler2.add_job(
+    scheduler.add_job(
         archive_bookings,
         trigger = trigger,
         id = "1",
@@ -67,6 +57,7 @@ def schedule():
         replace_existing=True,
         max_instances=1,
         )
+
     
         
     # scheduler.start()
