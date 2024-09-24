@@ -46,7 +46,7 @@ def schedule():
         month = "*",
         day = "*",
         hour = "14",
-        minute = "05",
+        minute = "6",
         second = "0",
     )
     scheduler.add_job(
