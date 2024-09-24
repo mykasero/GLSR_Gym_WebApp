@@ -110,6 +110,8 @@ venv.bak/
 *.env
 .env.prod
 .env.prod.db
+.env.staging
+.env.*
 # mkdocs documentation 
 /site 
 

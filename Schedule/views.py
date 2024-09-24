@@ -1,7 +1,7 @@
 import environ
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .forms import LoginForm, RegisterForm, BookingForm
+from .forms import LoginForm, RegisterForm, BookingForm, BugReportForm
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 from django.contrib.auth.models import Group
@@ -156,6 +156,19 @@ def test_dtables(request):
     else:
         messages.info("No data available")
         return render(request, "Schedule/test_dtables.html")
+
+def bug_report(request):
+    form = BugReportForm()
+    
+    if request.method == "POST":
+        form = BugReportForm(request.POST)
+        if form.is_valid():
+            messages.info(request, "Dziekujemy za złożenie zgłoszenia :)")
+            form.save()
+            return redirect('/')
+    else:
+        form = BugReportForm()
+        return render(request, "Schedule/bug_report.html", {'form' : form})
 
 def gallery(request):
     return render(request, "Schedule/gallery.html")

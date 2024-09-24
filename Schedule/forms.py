@@ -1,14 +1,14 @@
 from django import forms
-from .models import Booking, Keycodes
+from .models import Booking, Keycodes, BugReports
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, SetPasswordMixin
 from django.contrib.auth.models import User
 
 import datetime
-DATES_SELECT = [datetime.date.today() + datetime.timedelta(days=i) for i in range(-1,3)]
-DAYS = ["Wczoraj","Dzisiaj", "Jutro", "Pojutrze"]
+DATES1 = [datetime.date.today() + datetime.timedelta(days=i) for i in range(-1,3)]
+DAYS1 = ["Wczoraj","Dzisiaj", "Jutro", "Pojutrze"]
 
-DATES_SELECT1 = [(date, day) for date, day in zip(DATES_SELECT, DAYS)]
+DATES_SELECT1 = [(date, day) for date, day in zip(DATES1, DAYS1)]
 TODAY = [(datetime.date.today(),"Dzisiaj")]
 
 class KeycodeForm(forms.ModelForm):
@@ -58,4 +58,18 @@ class BookingForm(forms.ModelForm):
             'start_hour' : 'Godzina startu:',
             'end_hour' : 'Godzina konca:',
             'current_day' : 'Dzien',
+        }
+    
+    
+DATES_BUGREPORT = [datetime.date.today() + datetime.timedelta(days=i) for i in range(-3,1)]
+DAYS_BUGREPORT = ["3 dni temu","2 dni temu", "Wczoraj", "Dzisiaj"]
+DATES_SELECT_BUGREPORT = [(date, day) for date, day in zip(DATES_BUGREPORT, DAYS_BUGREPORT)]
+
+class BugReportForm(forms.ModelForm):
+    class Meta:
+        model = BugReports
+        fields = ["report_date","report_text"]
+        widgets = {
+            'report_date' : forms.Select(choices=DATES_SELECT_BUGREPORT),
+            'report_text' : forms.Textarea(attrs={'class' : 'form-group form-control','rows':'3','style':'height: 200px'}) 
         }

@@ -18,7 +18,7 @@ RUN pip install certbot
 RUN ln -s /opt/certbot/bin/certbot /usr/bin/certbot
 
 #entrypoint
-COPY ./entrypoint.sh .
+COPY ./GLSR_Gym/entrypoint.sh .
 RUN sed -i 's/\r$//g' /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 

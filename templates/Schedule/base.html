@@ -24,6 +24,13 @@
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <!--<li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Strona Glowna</a></li>-->
                         {% if user.is_superuser or user.is_staff %}<li class="nav-item"><a class="nav-link" href="/admin">Panel Admina</a></li>{% endif %}
+                        {% if user.is_superuser or user.is_staff%}<li class="nav-item">
+                            <a class="nav-link" href="/admin">Zgłoszenia błędów</a></li>
+
+                        {% elif user.is_authenticated %}
+                            <a class="nav-link" href="/bug_report">Zgłoś błąd</a></li>
+                        {% endif%}
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Zakladki</a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">

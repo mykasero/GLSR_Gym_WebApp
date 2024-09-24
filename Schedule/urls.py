@@ -20,6 +20,7 @@ urlpatterns = [
     path('booking/', views.booking, name = "booking"),
     path('current_bookings/' , views.current_bookings, name="current_bookings"),
     path('archive/', views.archive_booking, name = "archive"),
+    path('bug_report/', views.bug_report, name="bug_report"),
     path('test_dtables/', views.test_dtables, name = "testdtables"),
     path('gallery/', views.gallery, name = "gallery"),
     # path('admin/', admin_site.urls),

@@ -1,0 +1,33 @@
+{% extends "Schedule/base.html" %}
+{% block title %}<title>Zgłoszenie błędu</title>{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="text-center mt-5">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <div class = "card">
+            <div class = "card-header">
+                Zgłoś błąd
+            </div>
+            
+            <div class = "card-body">
+                <b>
+                <form method="post" class="BugReportForm">
+                    {% csrf_token %}
+                    {{form}}
+                    <br>   
+                    <button type = "submit" class = "nice_buttons">Wyślij zgłoszenie</button>
+                    
+                </form>
+            </div>
+        
+        </div>
+    </div>
+</div>
+{% endblock %}

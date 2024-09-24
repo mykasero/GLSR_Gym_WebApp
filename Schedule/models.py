@@ -28,3 +28,8 @@ class Keycodes(models.Model):
     id = models.AutoField(primary_key=True)
     code = models.CharField(db_column="Kod_Skrytki", max_length=4, help_text="Cztery cyfry 0-9")
     code_date = models.DateField(db_column="Data dodania")
+    
+class BugReports(models.Model):
+    id = models.AutoField(primary_key=True)
+    report_text = models.CharField(db_column="Opis bledu", max_length=400, help_text="Opisz problem, jakie kroki zrobiles zanim sie pojawil")
+    report_date = models.DateField(db_column="Data zgloszenia", help_text="Data dnia wystapienia problemu")
