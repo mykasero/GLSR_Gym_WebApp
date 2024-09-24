@@ -21,26 +21,30 @@ def home(request):
     
     return render(request, "Schedule/home.html")
     
-def login(request):
+def login(request, redirect_authenticated_user=True):
     #Login page
-    
-    if request.method == "POST":
-        form = LoginForm()
-        username = request.POST['login']
-        password = request.POST['haslo']
-        
-        user = authenticate(request, username = username, password = password)
-        
-        if user is not None:
-            auth_login(request,user)
-            return redirect('login_success/')
-        
-        else:
-            messages.error(request, "Podano niewłasciwe dane")
-            return render(request,"Schedule/login.html", {'form' : form})
+    if request.user.is_authenticated:
+        return redirect('login_success/')
     else:
-        form = LoginForm()
-        return render(request, "Schedule/login.html", {'form' : form})
+        
+        if request.method == "POST":
+            
+            form = LoginForm()
+            username = request.POST['login']
+            password = request.POST['haslo']
+            
+            
+            user = authenticate(request, username = username, password = password)
+            if user is not None:
+                auth_login(request,user)
+                return redirect('login_success/')
+            
+            else:
+                messages.error(request, "Podano niewłasciwe dane")
+                return render(request,"Schedule/login.html", {'form' : form})
+        else:
+            form = LoginForm()
+            return render(request, "Schedule/login.html", {'form' : form})
 
 def login_success(request):
     keycode = list(Keycodes.objects.all().order_by('-id').values_list('code'))[0][0]
@@ -108,6 +112,7 @@ def lobby(request):
 
 def booking(request):
     #Page for creating a booking
+    form = BookingForm() 
     if request.method == "POST":
         form = BookingForm(request.POST)
         if form.is_valid():
@@ -120,7 +125,7 @@ def booking(request):
                 messages.error(request, "Uzytkownik o takiej nazwie nie istnieje")
                 return redirect('/booking')
     else:
-        form = BookingForm(request.POST)     
+        form = BookingForm()     
         return render(request,'Schedule/booking.html', {'form':form})
 
 def current_bookings(request):
