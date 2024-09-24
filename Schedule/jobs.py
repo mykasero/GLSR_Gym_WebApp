@@ -39,13 +39,13 @@ def archive_bookings():
         scheduler.shutdown()
     
 def schedule():
-    
+    #test to work
     trigger = CronTrigger(
         year = "*",
         month = "*",
         day = "*",
-        hour = "0",
-        minute = "1",
+        hour = "13",
+        minute = "41",
         second = "0",
     )
     scheduler.add_job(
