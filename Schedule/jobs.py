@@ -1,4 +1,5 @@
 from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.background import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 import apscheduler as aps
 from django.conf import settings
@@ -7,7 +8,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 scheduler = BackgroundScheduler(timezone=settings.TIME_ZONE)   
-
+scheduler2 = BlockingScheduler(timezone=settings.TIME_ZONE)
 def archive_bookings():
     print("Archiving started")
     from django.utils import timezone
@@ -44,11 +45,21 @@ def schedule():
         year = "*",
         month = "*",
         day = "*",
-        hour = "13",
-        minute = "50",
+        hour = "14",
+        minute = "00",
         second = "0",
     )
-    scheduler.add_job(
+    # scheduler.add_job(
+    #     archive_bookings,
+    #     trigger = trigger,
+    #     id = "1",
+    #     name = "archiver",
+    #     replace_existing=True,
+    #     max_instances=1,
+    #     )
+    
+    #testing blocking scheduler
+    scheduler2.add_job(
         archive_bookings,
         trigger = trigger,
         id = "1",
