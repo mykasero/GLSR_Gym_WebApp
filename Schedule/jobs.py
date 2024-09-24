@@ -2,7 +2,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 import apscheduler as aps
 from django.conf import settings
-from .models import Booking, Archive
+from Schedule.models import Booking, Archive
 import logging
 
 logger = logging.getLogger(__name__)
