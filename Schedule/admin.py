@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Booking, Archive, Keycodes
+from .models import Booking, Archive, Keycodes, BugReports
 import logging
 from django.http import HttpResponse
 from django.contrib import messages
@@ -138,3 +138,13 @@ class ArchiveAdmin(admin.ModelAdmin):
     list_display=('id','users','users_amount','start_hour','end_hour','current_day')
     search_fields=('users','current_day')
     list_filter=('users','start_hour','current_day')     
+    
+@admin.register(Keycodes)
+class KeycodeAdmin(admin.ModelAdmin):
+    ordering = ['-code_date']
+    list_display=('id','code','code_date')
+    
+@admin.register(BugReports)
+class BugReportAdmin(admin.ModelAdmin):
+    ordering = ['-report_date']
+    list_display=('id','report_text','report_date')
