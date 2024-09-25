@@ -1,0 +1,47 @@
+{% extends "Schedule/base.html" %}
+{% load static %}
+{% block title %}<title>Zgłoszenia błędów</title>{% endblock %}
+
+{% block stylings %}
+    <link href=href="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/r-3.0.3/sp-2.3.2/datatables.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+<script src="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/r-3.0.3/sp-2.3.2/datatables.min.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/2.1.5/pagination/simple_incremental_bootstrap.js"></script>
+<script>
+    $(document).ready( function () {
+        $('#Reports').DataTable( {
+        } );
+        
+    } );
+
+</script>
+
+<div class="container">
+    <div class="text-center mt-5">
+        <div class = "card">
+            <div class = "card-header">
+                <h5>Lista zgłoszeń</h5>
+            </div>
+            <div class = "card-body">
+                <table id="Reports" class="table table-bordered table-dark">
+                    <thead>
+                        <th>Opis zgłoszenia</th>
+                        <th>Data wystąpienia błędu</th>
+                    </thead>
+                    {% for item in context %}
+                    <tr>
+                        <td>{{item.report_text}}</td>
+                        <td>{{item.report_date|date:'d.m.y'}}</td>
+                    </tr>
+
+                {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

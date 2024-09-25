@@ -5,7 +5,7 @@ from .forms import LoginForm, RegisterForm, BookingForm, BugReportForm
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 from django.contrib.auth.models import Group
-from .models import Booking, Archive, Keycodes
+from .models import Booking, Archive, Keycodes, BugReports
 from django.contrib.auth import get_user_model
 
 
@@ -148,14 +148,14 @@ def archive_booking(request):
         messages.info(request, "No data available")
         return render(request, "Schedule/archive.html")
 
-def test_dtables(request):
-    context = Archive.objects.all().order_by('current_day')
+# def test_dtables(request):
+#     context = Archive.objects.all().order_by('current_day')
     
-    if context:
-        return render(request, "Schedule/test_dtables.html", {'context':context})
-    else:
-        messages.info("No data available")
-        return render(request, "Schedule/test_dtables.html")
+#     if context:
+#         return render(request, "Schedule/test_dtables.html", {'context':context})
+#     else:
+#         messages.info("No data available")
+#         return render(request, "Schedule/test_dtables.html")
 
 def bug_report(request):
     form = BugReportForm()
@@ -163,12 +163,21 @@ def bug_report(request):
     if request.method == "POST":
         form = BugReportForm(request.POST)
         if form.is_valid():
-            messages.info(request, "Dziekujemy za złożenie zgłoszenia :)")
             form.save()
+            messages.info(request, "Dziekujemy za złożenie zgłoszenia :)")
             return redirect('/')
     else:
         form = BugReportForm()
         return render(request, "Schedule/bug_report.html", {'form' : form})
+
+def reports(request):
+    context = BugReports.objects.all().order_by('-report_date')
+    
+    if context:
+        return render(request, "Schedule/reports.html", {'context' : context})
+    else:
+        messages.info(request, "No reports exist :)")
+        return render(request,"Schedule/reports.html")
 
 def gallery(request):
     return render(request, "Schedule/gallery.html")

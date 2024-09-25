@@ -25,7 +25,7 @@
                         <!--<li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Strona Glowna</a></li>-->
                         {% if user.is_superuser or user.is_staff %}<li class="nav-item"><a class="nav-link" href="/admin">Panel Admina</a></li>{% endif %}
                         {% if user.is_superuser or user.is_staff%}<li class="nav-item">
-                            <a class="nav-link" href="/admin">Zgłoszenia błędów</a></li>
+                            <a class="nav-link" href="/reports">Zgłoszenia błędów</a></li>
 
                         {% elif user.is_authenticated %}
                             <a class="nav-link" href="/bug_report">Zgłoś błąd</a></li>

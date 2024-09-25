@@ -31,5 +31,5 @@ class Keycodes(models.Model):
     
 class BugReports(models.Model):
     id = models.AutoField(primary_key=True)
-    report_text = models.CharField(db_column="Opis bledu", max_length=400, help_text="Opisz problem, jakie kroki zrobiles zanim sie pojawil")
+    report_text = models.CharField(db_column="Opis bledu", max_length=1000, help_text="Opisz problem, jakie kroki zrobiles zanim sie pojawil")
     report_date = models.DateField(db_column="Data zgloszenia", help_text="Data dnia wystapienia problemu")
