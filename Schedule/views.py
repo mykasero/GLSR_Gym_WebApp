@@ -59,7 +59,7 @@ def logout(request):
 def register(request):
     #Registration page, access code known only to the group in order to eliminate the possibility
     # of not authorized people from making an account
-    
+    form = RegisterForm()
     if request.method == "POST":
         form = RegisterForm(request.POST)
     
