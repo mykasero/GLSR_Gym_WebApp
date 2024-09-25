@@ -110,7 +110,8 @@ def register(request):
         else:
             messages.error(request, "Hasla nie sa identyczne")
             return render(request, "Schedule/register.html", {'form':form})
-        
+    
+     
         return redirect("/")
     
     else:
