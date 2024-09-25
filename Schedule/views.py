@@ -118,8 +118,7 @@ def register(request):
         return render(request, "Schedule/register.html", {'form':form})
 
 def lobby(request):
-    #Buttons move to schedule to book a hour or go to archive
-    
+    #Buttons move to schedule to book a hour or go to archive 
     return render(request, "Schedule/lobby.html")
 
 def booking(request):
