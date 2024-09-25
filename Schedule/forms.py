@@ -3,7 +3,7 @@ from .models import Booking, Keycodes, BugReports
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, SetPasswordMixin
 from django.contrib.auth.models import User
-
+from django.utils.safestring import mark_safe
 import datetime
 DATES1 = [datetime.date.today() + datetime.timedelta(days=i) for i in range(0,3)]
 DAYS1 = ["Dzisiaj", "Jutro", "Pojutrze"]
@@ -25,25 +25,35 @@ class KeycodeForm(forms.ModelForm):
         }
 
 class LoginForm(forms.Form):
-    login = forms.CharField(label = '', max_length=40, widget=forms.TextInput(attrs={'placeholder': 'Login'}))
+    login = forms.CharField(label = '', max_length=50, widget=forms.TextInput(attrs={'placeholder': 'Login'}))
     haslo = forms.CharField(label = '', widget=forms.PasswordInput(attrs={'placeholder': 'Haslo'}), max_length=40)
     
         
 class RegisterForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args,**kwargs)
+        self.fields['password1'].label = mark_safe('<strong>Hasło</strong>')
+        self.fields['password2'].label = mark_safe('<strong>Potwierdź hasło</strong>')
+        
+        self.fields['password1'].help_text = '<ul><li>Nie podawaj swojego prawdziwego hasła.</li><li>Minimum 8 znaków.</li><li>Nie może być podobne do loginu.</li><li>Nie może być całkowicie złożone z cyfr.</li></ul>'
+        self.fields['password2'].help_text = ' '
+    
     access_code = forms.CharField(
-        label="Kod Dostepu:",
+        label=mark_safe("<strong>Kod Dostepu</strong>"),
         help_text=" ",
     )
     usable_password = None
     class Meta:
         model = User
         fields = ['username','password1','password2','access_code']
-        
+
         labels={
-            'username' : 'Nazwa użytkownika',
-            'password1' : 'Hasło',
-            'password2' : 'Potwierdź hasło',
+            'username' : mark_safe('<strong>Nazwa użytkownika</strong>'),
         }
+        help_texts= {
+            'username' : 'Max długość 50 znaków. Dozwolone litery, cyfry i symbole @/./+/-/_',
+        }
+        
         
 class BookingForm(forms.ModelForm):
     class Meta:
@@ -53,11 +63,11 @@ class BookingForm(forms.ModelForm):
             'current_day' : forms.Select(choices=DATES_SELECT1)
         }
         labels = {
-            'users' : 'Imie:',
-            'users_amount' : 'Ile osob:',
-            'start_hour' : 'Godzina startu:',
-            'end_hour' : 'Godzina konca:',
-            'current_day' : 'Dzien',
+            'users' : mark_safe('<strong>Imie</strong>'),
+            'users_amount' : mark_safe('<strong>Ile osób</strong>'),
+            'start_hour' : mark_safe('<strong>Godzina startu</strong>'),
+            'end_hour' : mark_safe('<strong>Godzina końca</strong>'),
+            'current_day' : mark_safe('<strong>Dzień</strong>'),
         }
     
     

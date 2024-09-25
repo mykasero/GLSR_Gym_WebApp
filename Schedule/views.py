@@ -62,8 +62,28 @@ def register(request):
     form = RegisterForm()
     if request.method == "POST":
         form = RegisterForm(request.POST)
-    
-        if request.POST['password1'] == request.POST['password2'] and request.POST['password1'] != "":  
+        
+        if request.POST['password1'] == "" or request.POST['password2'] == "" or \
+            (request.POST['password1'] == "" and request.POST['password2'] == ""):
+            
+            if form.is_valid:
+                messages.error(request, "Wypelnij pola od hasla")
+                return render(request, "Schedule/register.html", {'form':form})
+
+            else:
+                form = RegisterForm()
+                return render(request, "Schedule/register.html", {'form' : form})
+            
+        elif len(request.POST['password1']) < 8:
+            messages.error(request, "Podane haslo jest za krotkie")
+            return render(request, "Schedule/register.html", {'form':form})
+        
+        elif len(request.POST['username']) >= 50:
+            messages.error(request, "Podano za długą nazwe użytkownika")
+            return render(request, "Schedule/register.html", {'form' : form})
+        
+        
+        elif request.POST['password1'] == request.POST['password2'] and request.POST['password1'] != "":  
             if form.is_valid:
                 if request.POST['access_code'] == env("REGISTER_CODE"):
                     user = form.save()
@@ -83,17 +103,9 @@ def register(request):
                 elif request.POST['access_code'] not in  [env("REGISTER_CODE"),env("ADMIN_REGISTER_CODE")]:
                     messages.error(request, "Podano zly kod dostepu.")
                     return render(request, "Schedule/register.html", {'form':form})
-        
-        elif request.POST['password1'] == "" or request.POST['password2'] == "" or \
-            (request.POST['password1'] == "" and request.POST['password2'] == ""):
-            
-            if form.is_valid:
-                messages.error(request, "Wypelnij pola od hasla")
-                return render(request, "Schedule/register.html", {'form':form})
-        
-        elif len(request.POST['password1']) < 8:
-            messages.error(request, "Podane haslo jest za krotkie")
-            return render(request, "Schedule/register.html", {'form':form})
+            else:
+                form = RegisterForm()
+                return render(request, "Schedule/register.html", {'form' : form})
         
         else:
             messages.error(request, "Hasla nie sa identyczne")

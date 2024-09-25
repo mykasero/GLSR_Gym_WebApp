@@ -12,10 +12,3 @@ python manage.py makemigrations
 
 #migrate
 python manage.py migrate
-
-#loaddata
-# python manage.py loaddata template_data.json
-
-
-#migrate
-# python manage.py migrate
