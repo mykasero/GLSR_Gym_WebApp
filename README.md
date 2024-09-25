@@ -19,3 +19,5 @@
   
   <li><b>More functionalities TBD</b></li>
 </ul></p>
+
+<h4><b><ins>This is version 1.0, released to public</ins></b></h4>
