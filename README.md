@@ -8,6 +8,8 @@
   <li>PostgreSQL 16</li>
   <li>DataTables</li>
   <li>Docker</li>
+  <li>APScheduler (local) / Heroku Scheduler (prod)</li>
+  
 </ul> 
 </p>
 <p><h2>Functionalities:</h2>
