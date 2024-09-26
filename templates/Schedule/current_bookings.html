@@ -22,8 +22,8 @@
                         <td>{{item.id}}</td>
                         <td>{{item.users}}</td>
                         <td>{{item.users_amount}}</td>
-                        <td>{{item.start_hour}}</td>
-                        <td>{{item.end_hour}}</td>
+                        <td>{{item.start_hour|time:'H:i'}}</td>
+                        <td>{{item.end_hour|time:'H:i'}}</td>
                         <td>{{item.current_day|date:'d.m.y'}}</td>
 
                     </tr>

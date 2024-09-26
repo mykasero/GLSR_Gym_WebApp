@@ -188,7 +188,7 @@ def reports(request):
     if context:
         return render(request, "Schedule/reports.html", {'context' : context})
     else:
-        messages.info(request, "No reports exist :)")
+        messages.info(request, "Nie ma żadnych zgłoszeń :)")
         return render(request,"Schedule/reports.html")
 
 def gallery(request):
