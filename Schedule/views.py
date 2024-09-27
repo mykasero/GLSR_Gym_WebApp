@@ -9,6 +9,17 @@ from .models import Booking, Archive, Keycodes, BugReports
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
 
+SITE_NAMES = {
+    'booking' : 'rezerwacji',
+    'current_booking' : 'dzisiejszych rezerwacji',
+    'archive' : 'archiwum',
+    'reports' : 'zgłoszeń',
+    'bug_report' : 'zgłoszenia problemu',
+    'lobby' : 'poczekalni',
+    'login_success' : 'ekranu powitalnego',
+    
+}
+
 #decorator for checking if logged user has staff permissions
 def staff_required(login_url=None):
     return user_passes_test(lambda u: u.is_staff, login_url = login_url)
@@ -46,7 +57,7 @@ def login(request, redirect_authenticated_user=True):
                 return render(request,"Schedule/login.html", {'form' : form})
         else:
             if 'next' in request.GET:
-                messages.warning(request, "Aby wyświetlić tą strone musisz być zalogowany")
+                messages.warning(request, f"Aby wyświetlić strone {SITE_NAMES[dict(request.GET)['next'][0][1:-1]]} musisz być zalogowany")
             form = LoginForm()
             return render(request, "Schedule/login.html", {'form' : form})
 
