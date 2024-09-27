@@ -7,9 +7,11 @@ from django.contrib.auth import login as auth_login, authenticate, logout as aut
 from django.contrib.auth.models import Group
 from .models import Booking, Archive, Keycodes, BugReports
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required, user_passes_test
 
-
-
+#decorator for checking if logged user has staff permissions
+def staff_required(login_url=None):
+    return user_passes_test(lambda u: u.is_staff, login_url = login_url)
 
 env = environ.Env()
 environ.Env.read_env()
@@ -43,13 +45,18 @@ def login(request, redirect_authenticated_user=True):
                 messages.error(request, "Podano niewłasciwe dane")
                 return render(request,"Schedule/login.html", {'form' : form})
         else:
+            if 'next' in request.GET:
+                messages.warning(request, "Aby wyświetlić tą strone musisz być zalogowany")
             form = LoginForm()
             return render(request, "Schedule/login.html", {'form' : form})
 
+@login_required(login_url="/login/")
 def login_success(request):
+    #View with current key stash code displaying upon login
     keycode = list(Keycodes.objects.all().order_by('-id').values_list('code'))[0][0]
     messages.success(request, f"Kod do skrzynki z kluczem: {keycode}.") 
     return render(request,"Schedule/login_success.html")
+
 
 def logout(request):
     auth_logout(request)
@@ -118,12 +125,14 @@ def register(request):
         form = RegisterForm()
         return render(request, "Schedule/register.html", {'form':form})
 
+@login_required(login_url="/login/")
 def lobby(request):
     #Buttons move to schedule to book a hour or go to archive 
     return render(request, "Schedule/lobby.html")
 
+@login_required(login_url="/login/")
 def booking(request):
-    #Page for creating a booking
+    #Creating a booking
     form = BookingForm() 
     if request.method == "POST":
         form = BookingForm(request.POST)
@@ -137,9 +146,11 @@ def booking(request):
                 messages.error(request, "Uzytkownik o takiej nazwie nie istnieje")
                 return redirect('/booking')
     else:
+        
         form = BookingForm()     
         return render(request,'Schedule/booking.html', {'form':form})
 
+@login_required(login_url="/login/")
 def current_bookings(request):
     #Table with current bookings (today's date and up to 2 days after)
     
@@ -150,6 +161,7 @@ def current_bookings(request):
     else:
         return render(request, "Schedule/current_bookings.html")
 
+@login_required(login_url="/login/")
 def archive_booking(request):
     #Table with archived bookings, basic dataTables used for pagination and filtering
     context = Archive.objects.all().order_by('current_day')
@@ -160,16 +172,9 @@ def archive_booking(request):
         messages.info(request, "No data available")
         return render(request, "Schedule/archive.html")
 
-# def test_dtables(request):
-#     context = Archive.objects.all().order_by('current_day')
-    
-#     if context:
-#         return render(request, "Schedule/test_dtables.html", {'context':context})
-#     else:
-#         messages.info("No data available")
-#         return render(request, "Schedule/test_dtables.html")
-
+@login_required(login_url="/login/")
 def bug_report(request):
+    #View for making reports when a bug pops up
     form = BugReportForm()
     
     if request.method == "POST":
@@ -182,7 +187,9 @@ def bug_report(request):
         form = BugReportForm()
         return render(request, "Schedule/bug_report.html", {'form' : form})
 
+@staff_required(login_url="/admin/")
 def reports(request):
+    #Datatables with user bug reports
     context = BugReports.objects.all().order_by('-report_date')
     
     if context:
@@ -192,4 +199,5 @@ def reports(request):
         return render(request,"Schedule/reports.html")
 
 def gallery(request):
+    #View with a photo gallery of the gym
     return render(request, "Schedule/gallery.html")

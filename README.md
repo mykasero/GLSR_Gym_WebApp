@@ -16,7 +16,7 @@
 <ul>
   <li>Authentication + Authorization</li>
   <li>Schedule table for users to book a session</li>
-  <li>Automated movement of records every day</li>
+  <li>Automated movement of records every day (APScheduler + custom job/ Heroku Scheduler + custom management command + custom job)</li>
   <li>Security</li>
   
   <li><b>More functionalities TBD</b></li>
