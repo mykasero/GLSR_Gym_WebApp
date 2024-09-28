@@ -1,5 +1,17 @@
 {% extends "Schedule/base.html" %}
+{% load static %}
 {% block title %}<title>Login</title>{% endblock %}
+{% block background_img %}
+<style type="text/css">
+    body {
+    background-image:url('{% static 'images/home.jpg' %}');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: #212429;
+    }
+</style>
+{% endblock %}
 {% block content %}
     <div class="container">
         <div class="text-center mt-5">
@@ -11,13 +23,16 @@
                     </div>
                 {% endfor %}
             {% endif %}
-            <form method="post" class="LoginForm">
-                {% csrf_token %}
-                {{form.as_p}}
-                <br>
-                <button type="submit" class = "nice_buttons">Login</button>
-                <p>Nie masz konta? Zarejestruj sie <a class="link_indv" href="/register">tutaj</a></p>
-            </form>
+            <p>
+                <br><br><br><br>
+                <form method="post" class="LoginForm">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <br>
+                    <button type="submit" class = "nice_buttons">Login</button>
+                    <p>Nie masz konta? Zarejestruj sie <a class="link_indv" href="/register">tutaj</a></p>
+                </form>
+            </p>
         </div>
     </div>
 {% endblock %}

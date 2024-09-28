@@ -63,10 +63,10 @@ class BookingForm(forms.ModelForm):
             'current_day' : forms.Select(choices=DATES_SELECT1)
         }
         labels = {
-            'users' : mark_safe('<strong>Imie</strong>'),
+            'users' : mark_safe('<strong>Nazwa</strong>'),
             'users_amount' : mark_safe('<strong>Ile osób</strong>'),
-            'start_hour' : mark_safe('<strong>Godzina startu</strong>'),
-            'end_hour' : mark_safe('<strong>Godzina końca</strong>'),
+            'start_hour' : mark_safe('<strong>Godzina Start</strong>'),
+            'end_hour' : mark_safe('<strong>Godzina Koniec</strong>'),
             'current_day' : mark_safe('<strong>Dzień</strong>'),
         }
     

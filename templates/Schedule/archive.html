@@ -3,9 +3,22 @@
 {% block title %}
     <title>Archiwum</title>
 {% endblock %}
-
+{% block background_img %}
+    <style type="text/css">
+        body {
+        background-image:url('{% static 'images/tables.jpg' %}');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-color: #212429;
+        }
+        .card {
+            background-color: rgba(200, 200, 200, 0.5);
+        }
+    </style>
+{% endblock %}
 {% block stylings %}
-    <link href=href="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/r-3.0.3/sp-2.3.2/datatables.min.css" rel="stylesheet">
+    <link href=href="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/r-3.0.3/sp-2.3.2/datatables.min.css" rel="stylesheet" style="width: auto;">
 {% endblock %}
 
 {% block content %}
@@ -26,21 +39,19 @@
     <div class="text-center mt-5">
         <div class = "card">
             <div class = "card-header">
-                <h5>Archiwum rezerwacji</h5>
+                <b>Archiwum rezerwacji</b>
             </div>
             <div class = "card-body">
                 <table id="Archiwum" class="table table-bordered table-dark">
                     <thead>
-                        <th>Id</th>
-                        <th>Imie</th>
-                        <th>Ile osob</th>
-                        <th>Godzina start</th>
-                        <th>Godzina koniec</th>
+                        <th>Nazwa</th>
+                        <th>Ile osób</th>
+                        <th>Start</th>
+                        <th>Koniec</th>
                         <th>Dzien</th>
                     </thead>
                     {% for item in context %}
                     <tr>
-                        <td>{{item.id}}</td>
                         <td>{{item.users}}</td>
                         <td>{{item.users_amount}}</td>
                         <td>{{item.start_hour|time:'H:i'}}</td>

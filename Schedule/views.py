@@ -16,7 +16,7 @@ SITE_NAMES = {
     'reports' : 'zgłoszeń',
     'bug_report' : 'zgłoszenia problemu',
     'lobby' : 'poczekalni',
-    'login_success' : 'ekranu powitalnego',
+    'login/login_success' : 'ekranu powitalnego',
     
 }
 
@@ -57,7 +57,8 @@ def login(request, redirect_authenticated_user=True):
                 return render(request,"Schedule/login.html", {'form' : form})
         else:
             if 'next' in request.GET:
-                messages.warning(request, f"Aby wyświetlić strone {SITE_NAMES[dict(request.GET)['next'][0][1:-1]]} musisz być zalogowany")
+                if dict(request.GET)['next'][0][1:-1] in list(SITE_NAMES.keys()):  
+                    messages.warning(request, f"Aby wyświetlić strone {SITE_NAMES[dict(request.GET)['next'][0][1:-1]]} musisz być zalogowany")
             form = LoginForm()
             return render(request, "Schedule/login.html", {'form' : form})
 

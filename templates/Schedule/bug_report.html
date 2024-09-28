@@ -1,5 +1,20 @@
 {% extends "Schedule/base.html" %}
+{% load static %}
 {% block title %}<title>Zgłoszenie błędu</title>{% endblock %}
+{% block background_img %}
+    <style type="text/css">
+        body {
+        background-image:url('{% static 'images/tables.jpg' %}');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-color: #212429;
+        }
+        .card {
+            background-color: rgba(200, 200, 200, 0.5);
+        }
+    </style>
+{% endblock %}
 {% block content %}
 <div class="container">
     <div class="text-center mt-5">

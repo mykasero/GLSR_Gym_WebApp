@@ -1,7 +1,20 @@
 {% extends "Schedule/base.html" %}
 {% load static %}
 {% block title %}<title>Zgłoszenia błędów</title>{% endblock %}
-
+{% block background_img %}
+    <style type="text/css">
+        body {
+        background-image:url('{% static 'images/tables.jpg' %}');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-color: #212429;
+        }
+        .card {
+            background-color: rgba(200, 200, 200, 0.5);
+        }
+    </style>
+{% endblock %}
 {% block stylings %}
     <link href=href="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/r-3.0.3/sp-2.3.2/datatables.min.css" rel="stylesheet">
 {% endblock %}
@@ -32,7 +45,7 @@
         </b>
         <div class = "card">
             <div class = "card-header">
-                <h5>Lista zgłoszeń</h5>
+                <b>Lista zgłoszeń</b>
             </div>
             <div class = "card-body">
                 <table id="Reports" class="table table-bordered table-dark">

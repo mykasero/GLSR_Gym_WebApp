@@ -10,10 +10,14 @@
 
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{% static 'css/styles.css'%}" rel="stylesheet" />
-
+        {% block background_img %}
+        
+        {% endblock %}
         {% block stylings %}
         {% endblock %}
+
     </head>
+    
     <body>
         <!-- Responsive navbar-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
