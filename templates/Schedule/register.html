@@ -1,5 +1,20 @@
 {% extends 'Schedule/base.html' %}
+{% load static %}
 {% block title %}<title>Rejestracja</title>{% endblock %}
+{% block background_img %}
+<style type="text/css">
+    body {
+    background-image:url('{% static 'images/home.jpg' %}');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: #212429;
+    }
+    .card {
+        background-color: rgba(200, 200, 200, 0.5);
+    }
+</style>
+{% endblock %}
 {% block content %}
     <div class="container">
         <div class="text-center mt-5">
@@ -11,28 +26,32 @@
                     </div>
                 {% endfor %}
             {% endif %}
-            <form method="post" class="RegisterForm">
-                {% csrf_token %}
-                
-                {% if form.non_field_errors %}
-                    {% for error in form.non_field_errors %}
-                        <div class="alert alert-error">{{ error }}</div>
-                    {% endfor %}
+            <div class = "card">
+                <div class = "card-body">
+                    <form method="post" class="RegisterForm">
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                            {% for error in form.non_field_errors %}
+                                <div class="alert alert-error">{{ error }}</div>
+                            {% endfor %}
 
-                    {% for form_item in form %}
-                        {% if form_item != form.non_field_errors %}
-                            {{ form_item.label }}<br>
-                            {{ form_item.help_text }}<br>
-                            {{ form_item }}<br>
+                            {% for form_item in form %}
+                                {% if form_item != form.non_field_errors %}
+                                    {{ form_item.label }}<br>
+                                    {{ form_item.help_text }}<br>
+                                    {{ form_item }}<br>
+                                {% endif %}
+                            {% endfor %}
+
+                        {% else %}
+                            {{form}}
                         {% endif %}
-                    {% endfor %}
-
-                {% else %}
-                    {{form}}
-                {% endif %}
-                <br>
-                <button type="submit" class = "nice_buttons">Zarejestruj</button>
-            </form>
+                        <br>
+                        <button type="submit" class = "nice_buttons">Zarejestruj</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
