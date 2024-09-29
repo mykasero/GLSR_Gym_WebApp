@@ -148,17 +148,14 @@ def booking(request):
     form = BookingForm() 
     if request.method == "POST":
         form = BookingForm(request.POST)
-        if form.is_valid():
-            User = get_user_model()
-            users_list = User.objects.values('username')
-            if form.cleaned_data['users'] in [value['username'] for value in list(users_list)]:
-                form.save()
-                return redirect("/current_bookings")
-            else:
-                messages.error(request, "Uzytkownik o takiej nazwie nie istnieje")
-                return redirect('/booking')
-    else:
         
+        if form.is_valid():
+            form.save()
+            return redirect("/current_bookings")
+        
+        else:
+            return render(request,'Schedule/booking.html', {'form':form})
+    else:
         form = BookingForm()     
         return render(request,'Schedule/booking.html', {'form':form})
 
@@ -177,7 +174,7 @@ def current_bookings(request):
 def archive_booking(request):
     #Table with archived bookings, basic dataTables used for pagination and filtering
     context = Archive.objects.all().order_by('current_day')
-    
+    #--------------------data is not ordered by currentday, look into this
     if context:
         return render(request, "Schedule/archive.html", {'context':context})
     else:

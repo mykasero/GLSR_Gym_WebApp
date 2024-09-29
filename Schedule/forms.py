@@ -1,10 +1,13 @@
 from django import forms
 from .models import Booking, Keycodes, BugReports
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, get_user_model
 from django.contrib.auth.forms import UserCreationForm, SetPasswordMixin
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
 import datetime
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext as _
+
 DATES1 = [datetime.date.today() + datetime.timedelta(days=i) for i in range(0,3)]
 DAYS1 = ["Dzisiaj", "Jutro", "Pojutrze"]
 
@@ -69,6 +72,39 @@ class BookingForm(forms.ModelForm):
             'end_hour' : mark_safe('<strong>Godzina Koniec</strong>'),
             'current_day' : mark_safe('<strong>Dzień</strong>'),
         }
+    
+    def clean(self):
+        cleaned_data = super().clean()
+
+        username = cleaned_data.get('users')
+        start = cleaned_data.get('start_hour')
+        end = cleaned_data.get('end_hour')
+        amount = cleaned_data.get('users_amount')
+        
+        # Booking Validations
+        
+        # If username is not registered throw error
+        User = get_user_model()
+        users_list = User.objects.values('username')
+        if username not in [value['username'] for value in list(users_list)]:
+             self.add_error(None,forms.ValidationError(_("Podana nazwa (%(username)s) nie jest na liście zarejestrowanych użytkowników"),
+                                  code="invalid",
+                                  params = {'username' : username}))
+        
+        # If end hour is earlier than start hour throw error    
+        if end < start:
+            self.add_error(None,forms.ValidationError(_("Godzina końca %(end)s nie może być mniejsza niż godzina startu %(start)s"),
+                                  code="invalid",
+                                  params = {'end' : end, 'start' : start}))
+        
+        # If amount of user in booking are more than 5 throw error    
+        if amount > 5:
+            self.add_error(None,forms.ValidationError(_("Przekroczono maksymalna ilosc osob (%(amount)s) w rezerwacji"),
+                                  code="invalid",
+                                  params = {'amount' : amount}))   
+        
+        
+        return cleaned_data
     
     
 DATES_BUGREPORT = [datetime.date.today() + datetime.timedelta(days=i) for i in range(-3,1)]
