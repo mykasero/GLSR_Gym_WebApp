@@ -1,12 +1,16 @@
 from django import forms
 from .models import Booking, Keycodes, BugReports
-from django.contrib.auth import login, authenticate, get_user_model
+from django.contrib.auth import login, authenticate, get_user_model, password_validation
 from django.contrib.auth.forms import UserCreationForm, SetPasswordMixin
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
 import datetime
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 DATES1 = [datetime.date.today() + datetime.timedelta(days=i) for i in range(0,3)]
 DAYS1 = ["Dzisiaj", "Jutro", "Pojutrze"]
@@ -38,7 +42,7 @@ class RegisterForm(UserCreationForm):
         self.fields['password1'].label = mark_safe('<strong>Hasło</strong>')
         self.fields['password2'].label = mark_safe('<strong>Potwierdź hasło</strong>')
         
-        self.fields['password1'].help_text = '<ul><li>Nie podawaj swojego prawdziwego hasła.</li><li>Minimum 8 znaków.</li><li>Nie może być podobne do loginu.</li><li>Nie może być całkowicie złożone z cyfr.</li></ul>'
+        self.fields['password1'].help_text = mark_safe('<ul><li>Nie podawaj swojego prawdziwego hasła.</li><li>Minimum 8 znaków.</li><li>Nie może być podobne do loginu.</li><li>Nie może być całkowicie złożone z cyfr.</li></ul>')
         self.fields['password2'].help_text = ' '
     
     access_code = forms.CharField(
@@ -56,8 +60,60 @@ class RegisterForm(UserCreationForm):
         help_texts= {
             'username' : 'Max długość 50 znaków. Dozwolone litery, cyfry i symbole @/./+/-/_',
         }
+    
+    def clean(self):
+        cleaned_data = super().clean()
         
+        username = cleaned_data.get('username')
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
+        access_code = cleaned_data.get('access_code')
         
+        if password1 != password2:
+            self.add_error(None,forms.ValidationError(_("Hasła nie są takie same"),
+                                  code="invalid",
+                                  ))
+        
+        if password1 == "" or password2 == "" or (password1 == "" and password2 == ""):
+            self.add_error(None,forms.ValidationError(_("Pola haseł nie mogą być puste"),
+                                  code="invalid",
+                                  ))
+        if len(password1) < 8:
+            self.add_error(None,forms.ValidationError(_("Hasło za krótkie, minimalna długość 8 znaków"),
+                                  code="invalid",
+                                  ))
+        
+        if username is None:
+            self.add_error(None,   
+                           forms.ValidationError(
+                               _("Użytkownik o takiej nazwie już istnieje"),
+                                code="invalid",
+                                )
+                           )
+
+        elif len(username) > 50:
+            self.add_error(None,forms.ValidationError(_("Nazwa za długa, maksymalna długość - 50 znaków"),
+                                  code="invalid",
+                                  ))
+        
+        if access_code not in [env("REGISTER_CODE"),env("ADMIN_REGISTER_CODE")]:
+            self.add_error(None,   
+                           forms.ValidationError(
+                               _("Podano zły kod dostępu"),
+                                code="invalid",
+                                )
+                           )
+        
+        if password1.isdigit():
+            self.add_error(None,   
+                           forms.ValidationError(
+                               _("Hasło nie może być złożone z samych cyfr"),
+                                code="invalid",
+                                )
+                           )
+        
+        return cleaned_data
+    
 class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
