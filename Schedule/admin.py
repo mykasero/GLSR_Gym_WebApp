@@ -4,6 +4,8 @@ import logging
 from django.http import HttpResponse
 from django.contrib import messages
 from .forms import KeycodeForm
+from django.utils import timezone
+from datetime import timedelta
 
 from django.urls import path
 from django.template.response import TemplateResponse
@@ -69,12 +71,24 @@ class MyAdminSite(admin.AdminSite):
                     return render(request, 'admin/new_keycode.html', context)
         else:
             return render(request, 'admin/new_keycode.html', context)
+    
+    def clean_archive(self, request):      
+        context = self.each_context(request)
+        
+        if request.method == "POST":
+            self.remove_archives(request)
+            
+            return redirect('/admin')
+        else:
+            
+            return render(request, 'admin/clean_archive.html', context)
                 
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
             path('archive_action/', self.admin_view(self.archive_action), name='archive_action'),
             path('new_keycode/', self.admin_view(self.new_keycode), name='new_keycode'),
+            path('clean_archive/', self.admin_view(self.clean_archive), name='clean_archive'),
         ]
 
         return custom_urls + urls
@@ -117,7 +131,26 @@ class MyAdminSite(admin.AdminSite):
             return True
         else:
             return False
+    
+    def remove_archives(self, request):
+        # from sys import stdout
+        # stdout.write("Looking for old archives that can be removed")
+        self.rows_deleted = 0
+        removable_archives = Archive.objects.filter(current_day__lt=(timezone.now()-timedelta(days=30)))
         
+        if removable_archives.exists():
+            # stdout.write("Found some old archives ready for removal")
+            for record in removable_archives:
+                record.delete()
+                self.rows_deleted += 1
+            messages.info(request, f"Usunięto pomyślnie {self.rows_deleted} starych wpisów")
+            # messages(request, "Old archives removed successfully")
+            # stdout.write(f"Old archives ({self.rows_deleted}) removed successfully")            
+            
+        else:
+            messages.warning(request, "Nie ma żadnych wystarczająco starych wpisów do usunięcia")
+            # stdout.write("No data found ready for removal")
+
         
             
 admin_site = MyAdminSite(name='admin_panel')

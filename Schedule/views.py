@@ -143,7 +143,7 @@ def current_bookings(request):
 @login_required(login_url="/login/")
 def archive_booking(request):
     #Table with archived bookings, basic dataTables used for pagination and filtering
-    context = Archive.objects.all().order_by('current_day')
+    context = Archive.objects.all().order_by('-current_day').values()
     #--------------------data is not ordered by currentday, look into this
     if context:
         return render(request, "Schedule/archive.html", {'context':context})

@@ -14,7 +14,7 @@ class Booking(models.Model):
 class Archive(models.Model):
     id = models.AutoField(primary_key=True)
     users = models.CharField(db_column="Uzytkownicy",max_length=100)
-    users_amount = models.IntegerField(db_column = "Ilosc osob")
+    users_amount = models.IntegerField(db_column = "Ilosc_osob")
     start_hour = models.TimeField(db_column= "Start")
     end_hour = models.TimeField(db_column = "Koniec")
     current_day = models.DateField(db_column = "Data")
