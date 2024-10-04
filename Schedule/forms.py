@@ -18,6 +18,30 @@ DAYS1 = ["Dzisiaj", "Jutro", "Pojutrze"]
 DATES_SELECT1 = [(date, day) for date, day in zip(DATES1, DAYS1)]
 TODAY = [(datetime.date.today(),"Dzisiaj")]
 
+HOUR_LIST = []
+
+for hour in range(0,24):
+     for minute in range(0,60,15):
+            if hour == 0:
+                if minute == 0:
+                    HOUR_LIST.append("00:00")
+                else:
+                    HOUR_LIST.append("00:"+str(minute))
+            
+            elif hour < 10:
+                if minute==0:
+                    HOUR_LIST.append("0"+str(hour)+":00") 
+                else:
+                    HOUR_LIST.append("0"+str(hour)+":"+str(minute))
+            else:
+                if minute==0:    
+                    HOUR_LIST.append(str(hour)+":00")
+                else:                     
+                    HOUR_LIST.append(str(hour)+":"+str(minute))
+
+for i in range(len(HOUR_LIST)):
+    HOUR_LIST[i] = (HOUR_LIST[i],HOUR_LIST[i])
+
 class KeycodeForm(forms.ModelForm):
     code_date = datetime.date.today()
     class Meta:
@@ -115,10 +139,16 @@ class RegisterForm(UserCreationForm):
         return cleaned_data
     
 class BookingForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(BookingForm, self).__init__(*args,**kwargs)
+        self.fields['start_hour'].widget = forms.Select(choices=HOUR_LIST)
+        self.fields['end_hour'].widget = forms.Select(choices=HOUR_LIST)
     class Meta:
         model = Booking
         fields = ["users","users_amount","start_hour","end_hour","current_day"]
         widgets = {
+            # 'start_hour' : forms.Select(choices=HOUR_LIST),
+            # 'end_hour' : forms.Select(choices=HOUR_LIST),
             'current_day' : forms.Select(choices=DATES_SELECT1)
         }
         labels = {
@@ -147,6 +177,14 @@ class BookingForm(forms.ModelForm):
                                   code="invalid",
                                   params = {'username' : username}))
         
+        #Look into form taking only hour as well with hour:minute
+        
+        # ONLY_HOUR = [f"0{i}" for i in range(10)] + [f"1{i}" for i in range(10)] + [f"2{i}" for i in range(5)]
+        
+        # print(f"TEST 1 start - {start}, start type - {type(start)}")
+        # if start in ONLY_HOUR:
+        #     print(f"TEST 2start - {start}, start type - {type(start)}")
+        
         # If end hour is earlier than start hour throw error    
         if end < start:
             self.add_error(None,forms.ValidationError(_("Godzina końca %(end)s nie może być mniejsza niż godzina startu %(start)s"),
@@ -158,6 +196,7 @@ class BookingForm(forms.ModelForm):
             self.add_error(None,forms.ValidationError(_("Przekroczono maksymalna ilosc osob (%(amount)s) w rezerwacji"),
                                   code="invalid",
                                   params = {'amount' : amount}))   
+        
         
         
         return cleaned_data

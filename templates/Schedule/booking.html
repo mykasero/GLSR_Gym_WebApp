@@ -16,9 +16,14 @@
         .nice_buttons {
             width: auto;
         }
+
     </style>
+    <script src="{% static 'scripts.js' %}"></script>
 {% endblock %}
 {% block content %}
+
+
+
 <div class="container">
     <div class="text-center mt-5">
         {% if messages %}
@@ -34,27 +39,78 @@
                 <b>Rezerwacja godzin</b>
             </div>
             <div class = "card-body">
-                    <form method="post" class="BookingForm">
-                    {% csrf_token %}
-                    {% if form.non_field_errors %}
-                        {% for error in form.non_field_errors %}
-                            <div class="alert alert-error">{{ error }}</div>
-                        {% endfor %}
-                        {% for form_item in form %}
-                            {% if form_item != form.non_field_errors %}
+                <form method="post" class="BookingForm">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                        <div class="alert alert-error">{{ error }}</div>
+                    {% endfor %}
+                    {% for form_item in form %}
+                        {% if form_item != form.non_field_errors %}
+                            {% if form_item == form.start_hour%}
+                                {{ form_item.label }}<br>
+                                {{ form_item.help_text}}<br>
+                                <input class="form-select" placeholder="Wybierz godzine" name="start_hour" type="text" list="hour_list">
+                                <datalist id="hour_list">
+                                    {% for i in form_item %}
+                                    <option>{{ i }}</option>
+                                    {% endfor %}
+                                </datalist><br>
+                            {% elif form_item == form.end_hour%}
+                                {{ form_item.label }}<br>
+                                {{ form_item.help_text}}<br>
+                                <input class="form-select" placeholder="Wybierz godzine" name="end_hour" type="text" list="hour_list">
+                                <datalist id="hour_list">
+                                    {% for i in form_item %}
+                                    <option>{{ i }}</option>
+                                    {% endfor %}
+                                </datalist><br>
+                            {% else %}
+                                <b> Test3</b>
                                 {{ form_item.label }}<br>
                                 {{ form_item.help_text}}<br>
                                 {{ form_item }}<br>
                             {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        {{form}}
-                    {% endif %}
-                    <br>
-                    <button type = "submit" class = "nice_buttons">Zarezerwuj</button>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    {% for form_item in form %}
+                        {% if form_item != form.non_field_errors %}
+                            {% if form_item == form.start_hour%}
+                                {{ form_item.label }}<br>
+                                {{ form_item.help_text}}<br>
+                                <input class="form-select" placeholder="Wybierz godzine" name="start_hour" type="text" list="hour_list">
+                                <datalist id="hour_list">
+                                    {% for i in form_item %}
+                                    <option>{{ i }}</option>
+                                    {% endfor %}
+                                </datalist><br>
+                            {% elif form_item == form.end_hour%}
+                                {{ form_item.label }}<br>
+                                {{ form_item.help_text}}<br>
+                                <input class="form-select" placeholder="Wybierz godzine" name="end_hour" type="text" list="hour_list">
+                                <datalist id="hour_list">
+                                    {% for i in form_item %}
+                                    <option>{{ i }}</option>
+                                    {% endfor %}
+                                </datalist><br>
+                            {% else %}
+                                {{ form_item.label }}<br>
+                                {{ form_item.help_text}}<br>
+                                {{ form_item }}<br>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                <br>
+                <button type = "submit" class = "nice_buttons">Zarezerwuj</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+
+
+
 {% endblock %}
