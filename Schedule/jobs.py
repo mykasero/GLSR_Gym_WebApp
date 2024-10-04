@@ -45,9 +45,9 @@ def schedule():
         year = "*",
         month = "*",
         day = "*",
-        hour = "14",
-        minute = "10",
-        second = "0",
+        hour = "01",
+        minute = "00",
+        second = "00",
     )
     scheduler.add_job(
         archive_bookings,
@@ -61,4 +61,4 @@ def schedule():
     
         
     # scheduler.start()
-    scheduler.start()
+    # scheduler.start()
