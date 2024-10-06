@@ -179,14 +179,14 @@ class BookingForm(forms.ModelForm):
         
         #Look into form taking only hour as well with hour:minute
         
-        # ONLY_HOUR = [f"0{i}" for i in range(10)] + [f"1{i}" for i in range(10)] + [f"2{i}" for i in range(5)]
-        
-        # print(f"TEST 1 start - {start}, start type - {type(start)}")
-        # if start in ONLY_HOUR:
-        #     print(f"TEST 2start - {start}, start type - {type(start)}")
-        
+        # If start or end is in wrong format (only hour for example) throw this error
+        # !!!This is a temporary solution!!!
+        if start is None or end is None:
+            self.add_error(None,forms.ValidationError(_("Podano zły format godziny."),
+                                  code="invalid",
+                                  ))
         # If end hour is earlier than start hour throw error    
-        if end < start:
+        elif end < start:
             self.add_error(None,forms.ValidationError(_("Godzina końca %(end)s nie może być mniejsza niż godzina startu %(start)s"),
                                   code="invalid",
                                   params = {'end' : end, 'start' : start}))

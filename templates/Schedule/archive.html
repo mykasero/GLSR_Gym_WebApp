@@ -15,25 +15,37 @@
         .card {
             background-color: rgba(200, 200, 200, 0.5);
         }
+        
     </style>
 {% endblock %}
 {% block stylings %}
-    <link href=href="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/r-3.0.3/sp-2.3.2/datatables.min.css" rel="stylesheet" style="width: auto;">
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/r-3.0.3/sp-2.3.2/datatables.min.css" type="text/css" rel="stylesheet" style="width: auto;">
+
+    <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/r-3.0.3/sp-2.3.2/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/2.1.5/pagination/simple_incremental_bootstrap.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/2.1.7/sorting/datetime-moment.js"></script>
+
+    <script>
+        $(document).ready( function () {
+                $.fn.dataTable.moment('DD.MM.YY');
+        $('#Archiwum').DataTable({
+            columnDefs: [
+                {
+                    target: 4,
+                    type: 'datetime-moment'
+                }
+            ],
+            order: []
+        });
+        });
+
+    </script>
+
 {% endblock %}
 
 {% block content %}
-<script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
-<script src="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/r-3.0.3/sp-2.3.2/datatables.min.js"></script>
-<script src="https://cdn.datatables.net/plug-ins/2.1.5/pagination/simple_incremental_bootstrap.js"></script>
-<script>
-    $(document).ready( function () {
-        $('#Archiwum').DataTable( {
-        } );
-        
-    } );
-
-</script>
-
 
 <div class="container">
     <div class="text-center mt-5">
