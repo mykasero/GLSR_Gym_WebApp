@@ -11,6 +11,8 @@ from django.urls import path
 from django.template.response import TemplateResponse
 from django.shortcuts import render, redirect
 
+from sys import stdout
+
 # Register your models here.
 logger = logging.getLogger(__name__)
 
@@ -40,17 +42,29 @@ def archive_bookings(modeladmin, request, queryset):
 class MyAdminSite(admin.AdminSite):
     site_header = "Panel Admina"
     index_template = "admin/admin_panel.html"
-    def has_permission(self,request):
-        user = request.user
-        return user.is_staff and user.is_active
     
+    def has_permission(self, request):
+        # user = request.user
+        return request.user.is_active and request.user.is_staff
+    
+
     def archive_action(self, request):
+        if not self.has_permission(request):
+            return self.login(request)
+        
+        context = dict(
+            self.each_context(request),
+        )
+        
         if request.method == "POST":
             self.archive_function(request)
             return redirect('/admin')
-        
-        return TemplateResponse(request, 'admin/archive_action.html', self.each_context(request))
+        else:
+            print(f"context = {context}")
+            return render(request, 'admin/archive_action.html', context)
+            
     
+
     def new_keycode(self, request):
         
         form = KeycodeForm(request.POST)
@@ -72,6 +86,7 @@ class MyAdminSite(admin.AdminSite):
         else:
             return render(request, 'admin/new_keycode.html', context)
     
+
     def clean_archive(self, request):      
         context = self.each_context(request)
         
