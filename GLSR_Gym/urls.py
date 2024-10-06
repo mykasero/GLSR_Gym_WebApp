@@ -18,10 +18,15 @@ from django.contrib import admin
 from django.urls import path, include
 from Schedule.admin import admin_site
 
+from django.templatetags.static import static
+from django.views.generic.base import RedirectView
+
+
 # app_name = "Schedule" Pre render
 admin_site._registry.update(admin.site._registry)
 urlpatterns = [
     path('', include('Schedule.urls')),
     path('admin/', admin_site.urls),
     path('', include("django.contrib.auth.urls")),
+    path('favicon.ico', RedirectView.as_view(url=static('favicon.ico'))),
 ]
