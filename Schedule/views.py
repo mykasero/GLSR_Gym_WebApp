@@ -27,8 +27,6 @@ def staff_required(login_url=None):
 env = environ.Env()
 environ.Env.read_env()
 
-# Create your views here.
-
 def home(request):
     #Homepage with 2 buttons, one for login page, one gallery
     
