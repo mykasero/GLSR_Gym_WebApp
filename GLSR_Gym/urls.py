@@ -22,7 +22,6 @@ from django.templatetags.static import static
 from django.views.generic.base import RedirectView
 
 
-# app_name = "Schedule" Pre render
 admin_site._registry.update(admin.site._registry)
 urlpatterns = [
     path('', include('Schedule.urls')),
