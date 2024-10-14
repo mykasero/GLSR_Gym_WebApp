@@ -11,15 +11,17 @@ import environ
 
 env = environ.Env()
 environ.Env.read_env()
-
+# Get dates for 3 days starting from today
 DATES1 = [datetime.date.today() + datetime.timedelta(days=i) for i in range(0,3)]
+# Names for today, tomorrow, 2 days after 
 DAYS1 = ["Dzisiaj", "Jutro", "Pojutrze"]
 
+# Zip the dates and day names for type friendly to SELECT widget
 DATES_SELECT1 = [(date, day) for date, day in zip(DATES1, DAYS1)]
 TODAY = [(datetime.date.today(),"Dzisiaj")]
 
 HOUR_LIST = []
-
+# Create a list of hours for auto complete in booking
 for hour in range(0,24):
      for minute in range(0,60,15):
             if hour == 0:
@@ -39,10 +41,13 @@ for hour in range(0,24):
                 else:                     
                     HOUR_LIST.append(str(hour)+":"+str(minute))
 
+# Create a list of tuples for SELECT widget
 for i in range(len(HOUR_LIST)):
     HOUR_LIST[i] = (HOUR_LIST[i],HOUR_LIST[i])
 
+# Keycodes model form
 class KeycodeForm(forms.ModelForm):
+    # Get todays datetime
     code_date = datetime.date.today()
     class Meta:
         model = Keycodes
@@ -55,20 +60,23 @@ class KeycodeForm(forms.ModelForm):
             "code_date" : "Data dodania kodu",
         }
 
+# Login Form
 class LoginForm(forms.Form):
     login = forms.CharField(label = '', max_length=50, widget=forms.TextInput(attrs={'placeholder': 'Login'}))
     haslo = forms.CharField(label = '', widget=forms.PasswordInput(attrs={'placeholder': 'Haslo'}), max_length=40)
     
-        
+# Register form
 class RegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args,**kwargs)
+        # override Djangos default label
         self.fields['password1'].label = mark_safe('<strong>Hasło</strong>')
         self.fields['password2'].label = mark_safe('<strong>Potwierdź hasło</strong>')
-        
+        # override Djangos default helptext
         self.fields['password1'].help_text = mark_safe('<ul><li>Nie podawaj swojego prawdziwego hasła.</li><li>Minimum 8 znaków.</li><li>Nie może być podobne do loginu.</li><li>Nie może być całkowicie złożone z cyfr.</li></ul>')
         self.fields['password2'].help_text = ' '
     
+    # Add an access_code field for register form
     access_code = forms.CharField(
         label=mark_safe("<strong>Kod Dostepu</strong>"),
         help_text=" ",
@@ -85,6 +93,7 @@ class RegisterForm(UserCreationForm):
             'username' : 'Max długość 50 znaków. Dozwolone litery, cyfry i symbole @/./+/-/_',
         }
     
+    # Create validation checks
     def clean(self):
         cleaned_data = super().clean()
         
@@ -93,20 +102,23 @@ class RegisterForm(UserCreationForm):
         password2 = cleaned_data.get('password2')
         access_code = cleaned_data.get('access_code')
         
+        # If passwords don't match throw error
         if password1 != password2:
             self.add_error(None,forms.ValidationError(_("Hasła nie są takie same"),
                                   code="invalid",
                                   ))
-        
+        # If any of the passwords ( or both ) are empty, throw error
         if password1 == "" or password2 == "" or (password1 == "" and password2 == ""):
             self.add_error(None,forms.ValidationError(_("Pola haseł nie mogą być puste"),
                                   code="invalid",
                                   ))
+        # If password shorter than 8 chars, throw error
         if len(password1) < 8:
             self.add_error(None,forms.ValidationError(_("Hasło za krótkie, minimalna długość 8 znaków"),
                                   code="invalid",
                                   ))
         
+        # If username is empty, throw error
         if username is None:
             self.add_error(None,   
                            forms.ValidationError(
@@ -114,12 +126,13 @@ class RegisterForm(UserCreationForm):
                                 code="invalid",
                                 )
                            )
-
+        # If username is longer than 50 chars, throw error
         elif len(username) > 50:
             self.add_error(None,forms.ValidationError(_("Nazwa za długa, maksymalna długość - 50 znaków"),
                                   code="invalid",
                                   ))
         
+        # If access_code is wrong, throw error
         if access_code not in [env("REGISTER_CODE"),env("ADMIN_REGISTER_CODE")]:
             self.add_error(None,   
                            forms.ValidationError(
@@ -127,7 +140,7 @@ class RegisterForm(UserCreationForm):
                                 code="invalid",
                                 )
                            )
-        
+        # If password is only numeric, throw error
         if password1.isdigit():
             self.add_error(None,   
                            forms.ValidationError(
@@ -137,7 +150,8 @@ class RegisterForm(UserCreationForm):
                            )
         
         return cleaned_data
-    
+
+# Bookings model form 
 class BookingForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(BookingForm, self).__init__(*args,**kwargs)
@@ -147,8 +161,6 @@ class BookingForm(forms.ModelForm):
         model = Booking
         fields = ["users","users_amount","start_hour","end_hour","current_day"]
         widgets = {
-            # 'start_hour' : forms.Select(choices=HOUR_LIST),
-            # 'end_hour' : forms.Select(choices=HOUR_LIST),
             'current_day' : forms.Select(choices=DATES_SELECT1)
         }
         labels = {
@@ -159,6 +171,7 @@ class BookingForm(forms.ModelForm):
             'current_day' : mark_safe('<strong>Dzień</strong>'),
         }
     
+    # Create validation checks
     def clean(self):
         cleaned_data = super().clean()
 
@@ -167,9 +180,9 @@ class BookingForm(forms.ModelForm):
         end = cleaned_data.get('end_hour')
         amount = cleaned_data.get('users_amount')
         
-        # Booking Validations
+       
         
-        # If username is not registered throw error
+        # If username is not found in registered usernames throw error
         User = get_user_model()
         users_list = User.objects.values('username')
         if username not in [value['username'] for value in list(users_list)]:
@@ -191,7 +204,7 @@ class BookingForm(forms.ModelForm):
                                   code="invalid",
                                   params = {'end' : end, 'start' : start}))
         
-        # If amount of user in booking are more than 5 throw error    
+        # If amount of users in booking are more than 5 throw error    
         if amount > 5:
             self.add_error(None,forms.ValidationError(_("Przekroczono maksymalna ilosc osob (%(amount)s) w rezerwacji"),
                                   code="invalid",
@@ -201,9 +214,11 @@ class BookingForm(forms.ModelForm):
         
         return cleaned_data
     
-    
+# Create a list of dates starting from 3days ago until today included)    
 DATES_BUGREPORT = [datetime.date.today() + datetime.timedelta(days=i) for i in range(-3,1)]
+# List of days names
 DAYS_BUGREPORT = ["3 dni temu","2 dni temu", "Wczoraj", "Dzisiaj"]
+# Creating a list of tuples for SELECT widget
 DATES_SELECT_BUGREPORT = [(date, day) for date, day in zip(DATES_BUGREPORT, DAYS_BUGREPORT)]
 
 class BugReportForm(forms.ModelForm):
