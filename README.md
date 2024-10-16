@@ -3,6 +3,7 @@
 <ul>
   <li>Python 3.11.8</li>
   <li>Django 5.1</li>
+  <li>Django REST framework</li>
   <li>HTML, CSS, JS</li>
   <li>Git</li>
   <li>PostgreSQL 16</li>
@@ -17,7 +18,12 @@
   <li>Authentication + Authorization</li>
   <li>Schedule table for users to book a session</li>
   <li>Automated movement of records every day (APScheduler + custom job/ Heroku Scheduler + custom management command + custom job)</li>
+  <li>Custom admin panel</li>
   <li>Security</li>
-  
-  <li><b>More functionalities TBD</b></li>
+  <li>REST (In works)</li>
+
+  <li>User profiles TODO</li>
+  <li>Chat STODO</li>
+  <li>Cleaner UI TODO</li>
+  <li><b>... And more functionalities TBD</b></li>
 </ul></p>
