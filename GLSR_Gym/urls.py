@@ -21,6 +21,14 @@ from Schedule.admin import admin_site
 from django.templatetags.static import static
 from django.views.generic.base import RedirectView
 
+#rest test
+from rest_framework import routers
+from REST import views as REST_views
+router = routers.DefaultRouter()
+router.register(r'users', REST_views.UserViewSet)
+router.register(r'groups', REST_views.GroupViewSet)
+
+#
 
 admin_site._registry.update(admin.site._registry)
 urlpatterns = [
@@ -28,4 +36,7 @@ urlpatterns = [
     path('admin/', admin_site.urls),
     path('', include("django.contrib.auth.urls")),
     path('favicon.ico', RedirectView.as_view(url=static('favicon.ico'))),
+    path('', include(router.urls)),
+    path('', include('REST.urls')),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

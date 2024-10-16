@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Schedule',
+    'rest_framework',
     'django_apscheduler',
 ]
 
@@ -87,27 +88,27 @@ WSGI_APPLICATION = 'GLSR_Gym.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 #heroku
-import dj_database_url
-import psycopg2
+# import dj_database_url
+# import psycopg2
 
-DATABASE_URL = env('DATABASE_URL')
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+# DATABASE_URL = env('DATABASE_URL')
+# conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
-DATABASES = {
-    'default' : dj_database_url.config(conn_max_age=600, ssl_require=True),
-}
+# DATABASES = {
+#     'default' : dj_database_url.config(conn_max_age=600, ssl_require=True),
+# }
 
 #docker
-# DATABASES = {
-#     'default' : {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': env("DB_NAME"), 
-#         'USER': env("DB_USER"),
-#         'PASSWORD': env("DB_PASSWORD"),
-#         'HOST': env("DB_HOST"), 
-#         'PORT': env("DB_PORT"),
-#     },
-# }
+DATABASES = {
+    'default' : {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env("DB_NAME"), 
+        'USER': env("DB_USER"),
+        'PASSWORD': env("DB_PASSWORD"),
+        'HOST': env("DB_HOST"), 
+        'PORT': env("DB_PORT"),
+    },
+}
 
 
 
@@ -137,7 +138,10 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Europe/Warsaw'
 
-
+TIME_INPUT_FORMATS = [
+    '%H:%M',
+    '%H',
+]
 
 USE_I18N = True
 
@@ -181,16 +185,23 @@ SCHEDULER_DEFAULT = True # new
 #COOKIES
 SESSION_COOKIE_AGE = 3600
 SESSION_SAVE_EVERY_REQUEST = False
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_BROWSER_XSS_FILTER = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# SECURE_BROWSER_XSS_FILTER = True
 
-# #Sec options
+# # #Sec options
 
-SECURE_SSL_REDIRECT = True
-SECURE_HSTS_SECONDS = 31536000 #1year
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+# SECURE_SSL_REDIRECT = True
+# SECURE_HSTS_SECONDS = 31536000 #1year
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
 
 # SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
+
+
+#REST
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS' : 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE' : 10
+}
