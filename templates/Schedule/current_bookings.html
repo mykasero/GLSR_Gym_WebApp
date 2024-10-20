@@ -13,6 +13,9 @@
         .card {
             background-color: rgba(200, 200, 200, 0.5);
         }
+        .nice_buttons {
+            width:auto;
+        }
     </style>
 {% endblock %}
 {% block content %}
@@ -30,6 +33,7 @@
                         <th>Godzina start</th>
                         <th>Godzina koniec</th>
                         <th>Dzien</th>
+                        <th></th>
                     </thead>
                     {% for item in context %}
                     <tr>
@@ -38,10 +42,15 @@
                         <td>{{item.start_hour|time:'H:i'}}</td>
                         <td>{{item.end_hour|time:'H:i'}}</td>
                         <td>{{item.current_day|date:'d.m.y'}}</td>
-
+                        {% if item.created_by_id == current_user %}
+                        <td><a class = "nice_buttons" href = "./list/">Edytuj</a></td>
+                        {% else %}
+                        <td>{{item.created_by_id}} --- {{current_user}}</td>
+                        {% endif %}
                     </tr>
+                    
 
-                {% endfor %}
+                    {% endfor %}
                 </table>
             </div>
         </div>

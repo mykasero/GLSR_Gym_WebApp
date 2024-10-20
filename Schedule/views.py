@@ -118,7 +118,10 @@ def booking(request):
         form = BookingForm(request.POST)
         
         if form.is_valid():
-            form.save()
+            task_list = form.save(commit=False)
+            task_list.created_by = request.user
+            task_list.save()
+            print(Booking.objects.values().last())
             return redirect("/current_bookings")
         
         else:
@@ -134,9 +137,10 @@ def current_bookings(request):
     #Table with current bookings (today's date and up to 2 days after)
     
     context = Booking.objects.all().order_by('current_day')
-    
+    current_user = request.user.id
+    print(current_user)
     if context:
-        return render(request, "Schedule/current_bookings.html", {'context' : context})
+        return render(request, "Schedule/current_bookings.html", {'context' : context, 'current_user' : current_user})
     else:
         return render(request, "Schedule/current_bookings.html")
 

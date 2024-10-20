@@ -1,10 +1,13 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.models import Group, User
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, viewsets, status
 from Schedule.models import Booking, Archive
 from REST.serializers import GroupSerializer, UserSerializer, BookingSerializer
-from rest_framework.parsers import JSONParser
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited
@@ -21,8 +24,8 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
     
-    
-def Bookings_list(request):
+@api_view(['GET','POST'])
+def Bookings_list(request, format= None):
     """
     List all bookings
     """
@@ -30,40 +33,41 @@ def Bookings_list(request):
     if request.method == 'GET':
         bookings = Booking.objects.all()
         serializer = BookingSerializer(bookings,many=True)
-        return JsonResponse(serializer.data, safe = False)
+        return Response(serializer.data)
     
-    else:
-        data = JSONParser().parse(request)
-        serializer = BookingSerializer(data=data)
+    elif request.method == 'POST':
+        serializer = BookingSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data,status=201)
-        return JsonResponse(serializer.errors, status=400)
-    
-def Booking_detail(request, pk):
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET','PUT','DELETE'])    
+def Booking_detail(request, pk, format= None):
     """
     Retrieve, update or delete a booking
     """
     try:
         booking = Booking.objects.get(pk=pk)
     except Booking.DoesNotExist:
-        return HttpResponse(status=404)
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     
     if request.method == "GET":
         serializer = BookingSerializer(booking)
-        return JsonResponse(serializer.data)
+        return Response(serializer.data)
     elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = BookingSerializer(booking, data=data)
+        serializer = BookingSerializer(booking, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=400)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         booking.delete()
-        return HttpResponse(status=204)
-    
-def Archives_list(request):
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET','POST'])    
+def Archives_list(request, format= None):
     """
     List all bookings
     """
@@ -71,35 +75,34 @@ def Archives_list(request):
     if request.method == 'GET':
         archives = Archive.objects.all()
         serializer = BookingSerializer(archives,many=True)
-        return JsonResponse(serializer.data, safe = False)
+        return Response(serializer.data)
     
     else:
-        data = JSONParser().parse(request)
-        serializer = BookingSerializer(data=data)
+        serializer = BookingSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data,status=201)
-        return JsonResponse(serializer.errors, status=400)
-    
-def Archive_detail(request, pk):
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET','PUT','DELETE'])      
+def Archive_detail(request, pk, format= None):
     """
     Retrieve, update or delete a booking
     """
     try:
         archive = Archive.objects.get(pk=pk)
     except Archive.DoesNotExist:
-        return HttpResponse(status=404)
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     
     if request.method == "GET":
         serializer = BookingSerializer(archive)
         return JsonResponse(serializer.data)
     elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = BookingSerializer(archive, data=data)
+        serializer = BookingSerializer(archive, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=400)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         archive.delete()
-        return HttpResponse(status=204)
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)

@@ -14,9 +14,10 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 from Schedule.models import Booking, Archive
 
 class BookingSerializer(serializers.ModelSerializer):
+    created_by = serializers.StringRelatedField(default=serializers.CurrentUserDefault(), read_only = True)
     class Meta:
         model = Booking
-        fields = ['id','users','users_amount','start_hour','end_hour','current_day']    
+        fields = ['id','users','users_amount','start_hour','end_hour','current_day','created_by']    
 
         
                 

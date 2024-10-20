@@ -196,7 +196,7 @@ admin_site = MyAdminSite(name='admin_panel')
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
     ordering = ['current_day']
-    list_display=('id','users','users_amount','start_hour','end_hour','current_day')
+    list_display=('id','users','users_amount','start_hour','end_hour','current_day', 'created_by')
     search_fields=('users','current_day')
     list_filter=('current_day','users')
     actions=[archive_bookings]

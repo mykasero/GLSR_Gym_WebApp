@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.conf import settings
 # Current bookings model
 class Booking(models.Model):
     id = models.AutoField(primary_key=True)
@@ -8,7 +8,8 @@ class Booking(models.Model):
     start_hour = models.TimeField(db_column= "Start", help_text = "Podaj godzine w formacie np.: 12:20, lub zacznij podawać numery i wybierz odpowiadający ci z listy domyślnych wyborów (na tel nad klawiaturą)")
     end_hour = models.TimeField(db_column = "Koniec", help_text = "Ta godzina moze byc 'na oko', format taki sam jak powyżej")
     current_day = models.DateField(db_column = "Data", help_text = "Wybierz dzień" )
-
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='created_by', blank = True, null = True)
+    
 # Bookings archive model
 class Archive(models.Model):
     id = models.AutoField(primary_key=True)
@@ -17,6 +18,7 @@ class Archive(models.Model):
     start_hour = models.TimeField(db_column= "Start")
     end_hour = models.TimeField(db_column = "Koniec")
     current_day = models.DateField(db_column = "Data")
+    
     class Meta:
         ordering = ["-current_day"]
     
