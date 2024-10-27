@@ -1,0 +1,20 @@
+{% for item in context %}
+<tr id="item-{{ item.pk }}" class="booking-row">
+
+    <td>{{item.users}}</td>
+    <td>{{item.users_amount}}</td>
+    <td>{{item.start_hour|time:'H:i'}}</td>
+    <td>{{item.end_hour|time:'H:i'}}</td>
+    <td>{{item.current_day|date:'d.m.y'}}</td>
+    {% if item.created_by_id == current_user %}
+    <td>
+    <button class="btn btn-primary btn-sm" hx-get="{% url 'edit_booking' pk=item.pk %}" hx-target="#edit_dialog"
+    data-toggle="modal" data-target="#edit_modal">Edytuj</button>
+    <button class="btn btn-danger btn-sm" hx-get="{% url 'remove_booking_conf' pk=item.pk %}" hx-target="#remove_dialog"
+    data-toggle="modal" data-target="#remove_modal">Usuń</button>
+    </td>
+    {% else %}
+    <td></td>
+    {% endif %}
+</tr>
+{% endfor %}
