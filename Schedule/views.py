@@ -8,6 +8,8 @@ from django.contrib.auth.models import Group
 from .models import Booking, Archive, Keycodes, BugReports
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import get_object_or_404
+import json
 
 SITE_NAMES = {
     'booking' : 'rezerwacji',
@@ -121,7 +123,6 @@ def booking(request):
             task_list = form.save(commit=False)
             task_list.created_by = request.user
             task_list.save()
-            print(Booking.objects.values().last())
             return redirect("/current_bookings")
         
         else:
@@ -143,6 +144,80 @@ def current_bookings(request):
         return render(request, "Schedule/current_bookings.html", {'context' : context, 'current_user' : current_user})
     else:
         return render(request, "Schedule/current_bookings.html")
+
+@login_required(login_url="/login/")
+def booking_list(request):
+    context = Booking.objects.all()
+    current_user = request.user.id
+    return render(request,'Schedule/booking_list.html', {'context' : context, 'current_user' : current_user})
+
+@login_required(login_url="/login/")
+def edit_booking(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+    if request.method == "POST":
+        form = BookingForm(request.POST, initial={
+            'users' : booking.users,
+            'users_amount' : booking.users_amount,
+            'start_hour' : booking.start_hour,
+            'end_hour' : booking.end_hour,
+            'current_day' : booking.current_day
+        })
+        if form.is_valid():
+            booking.users = form.cleaned_data.get('users')
+            booking.users_amount = form.cleaned_data.get('users_amount')
+            booking.start_hour = form.cleaned_data.get('start_hour')
+            booking.end_hour = form.cleaned_data.get('end_hour')
+            booking.current_day = form.cleaned_data.get('current_day')
+            booking.created_by = request.user
+            booking.save()
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger' : json.dumps({
+                        "bookingListChanged" : None,
+                        "showMessage" : f"Zaktualizowano rezerwacje"
+                    })
+                }
+            )
+        else:
+            return render(request, 'Schedule/booking_form.html', {
+                'form' : form,
+                'booking' : booking,
+            })
+        
+        
+    else:
+        form = BookingForm(initial={
+            'users' : booking.users,
+            'users_amount' : booking.users_amount,
+            'start_hour' : booking.start_hour,
+            'end_hour' : booking.end_hour,
+            'current_day' : booking.current_day
+        })
+    
+    return render(request, 'Schedule/booking_form.html', {
+        'form' : form,
+        'booking' : booking
+        })
+
+@login_required(login_url="/login/")
+def remove_booking_conf(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+    return render(request, 'Schedule/booking_delete_conf.html', {'booking' : booking})
+
+@login_required(login_url="/login/")
+def remove_booking(request, pk):
+    booking = get_object_or_404(Booking,pk=pk)
+    booking.delete()
+    return HttpResponse(
+        status=204,
+        headers={
+            'HX-Trigger' : json.dumps({
+                "bookingListChanged" : None,
+                "showMessage" : f"Rezerwacja usunięta"
+            })
+        }
+        )
 
 @login_required(login_url="/login/")
 def archive_booking(request):
