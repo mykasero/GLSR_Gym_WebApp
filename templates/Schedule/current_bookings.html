@@ -28,12 +28,13 @@
             <div class = "card-body">
                 <table class="table table-bordered table-dark">
                     <thead>
+                        <th></th>  
                         <th>Imie</th>
-                        <th>Ile osob</th>
-                        <th>Godzina start</th>
-                        <th>Godzina koniec</th>
+                        <th>Osoby</th>
+                        <th>Start</th>
+                        <th>Koniec</th>
                         <th>Dzien</th>
-                        <th></th>
+                        
                     </thead>
                     <!-- testing htmx -->
                     <tbody hx-trigger="load, bookingListChanged from:body" hx-get="{% url 'booking_list' %}" hx-target="this">
@@ -62,7 +63,7 @@
       <div class="d-flex">
           <div id="toast-body" class="toast-body"></div>
           <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-          aria-label="Close">test3</button>
+          aria-label="Close"></button>
       </div>
       </div>
     </div>
