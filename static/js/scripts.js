@@ -74,15 +74,15 @@ function setupHourInputs() {
 }
 
 // Call setupHourInputs on page load
-document.addEventListener('DOMContentLoaded', function(){
-    setupHourInputs();
-});
+document.addEventListener('DOMContentLoaded', setupHourInputs);
+
 // Call setupHourInputs on model popup
-document.addEventListener('shown.bs.modal', function(event){
-    const modalElement = event.target;
-    if (modalElement.classList.contains('modal')){
-        setupHourInputs();
-    }
-});
+document.addEventListener('shown.bs.modal', setupHourInputs);
+// document.addEventListener('shown.bs.modal', function(event){
+//     const modalElement = event.target;
+//     if (modalElement.classList.contains('modal')){
+//         setupHourInputs();
+//     }
+// });
 
 

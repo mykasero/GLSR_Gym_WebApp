@@ -11,39 +11,62 @@ import environ
 
 env = environ.Env()
 environ.Env.read_env()
-# Get dates for 3 days starting from today
-DATES1 = [datetime.date.today() + datetime.timedelta(days=i) for i in range(0,3)]
-# Names for today, tomorrow, 2 days after 
-DAYS1 = ["Dzisiaj", "Jutro", "Pojutrze"]
 
+def dates1():
+    DATES1 = [datetime.date.today() + datetime.timedelta(days=i) for i in range(0,3)]
+    DAYS1 = ["Dzisiaj", "Jutro", "Pojutrze"]
+    DATES_SELECT1 = [(date, day) for date, day in zip(DATES1, DAYS1)]
+    
+    return DATES_SELECT1
+
+def dates_bugreport():
+    # Create a list of dates starting from 3days ago until today included)    
+    DATES_BUGREPORT = [datetime.date.today() + datetime.timedelta(days=i) for i in range(-3,1)]
+    # List of days names
+    DAYS_BUGREPORT = ["3 dni temu","2 dni temu", "Wczoraj", "Dzisiaj"]
+    # Creating a list of tuples for SELECT widget
+    DATES_SELECT_BUGREPORT = [(date, day) for date, day in zip(DATES_BUGREPORT, DAYS_BUGREPORT)]
+
+    return DATES_SELECT_BUGREPORT
+
+
+# Get dates for 3 days starting from today
+# DATES1 = [datetime.date.today() + datetime.timedelta(days=i) for i in range(0,3)]
+# Names for today, tomorrow, 2 days after 
+# DAYS1 = ["Dzisiaj", "Jutro", "Pojutrze"]
 # Zip the dates and day names for type friendly to SELECT widget
-DATES_SELECT1 = [(date, day) for date, day in zip(DATES1, DAYS1)]
+# DATES_SELECT1 = [(date, day) for date, day in zip(DATES1, DAYS1)]
+
 TODAY = [(datetime.date.today(),"Dzisiaj")]
 
-HOUR_LIST = []
-# Create a list of hours for auto complete in booking
-for hour in range(0,24):
-     for minute in range(0,60,15):
-            if hour == 0:
-                if minute == 0:
-                    HOUR_LIST.append("00:00")
+def hour_list():
+    HOUR_LIST = []
+    # Create a list of hours for auto complete in booking
+    for hour in range(0,24):
+        for minute in range(0,60,15):
+                if hour == 0:
+                    if minute == 0:
+                        HOUR_LIST.append("00:00")
+                    else:
+                        HOUR_LIST.append("00:"+str(minute))
+                
+                elif hour < 10:
+                    if minute==0:
+                        HOUR_LIST.append("0"+str(hour)+":00") 
+                    else:
+                        HOUR_LIST.append("0"+str(hour)+":"+str(minute))
                 else:
-                    HOUR_LIST.append("00:"+str(minute))
-            
-            elif hour < 10:
-                if minute==0:
-                    HOUR_LIST.append("0"+str(hour)+":00") 
-                else:
-                    HOUR_LIST.append("0"+str(hour)+":"+str(minute))
-            else:
-                if minute==0:    
-                    HOUR_LIST.append(str(hour)+":00")
-                else:                     
-                    HOUR_LIST.append(str(hour)+":"+str(minute))
+                    if minute==0:    
+                        HOUR_LIST.append(str(hour)+":00")
+                    else:                     
+                        HOUR_LIST.append(str(hour)+":"+str(minute))
+    # Create a list of tuples for SELECT widget
+    for i in range(len(HOUR_LIST)):
+        HOUR_LIST[i] = (HOUR_LIST[i],HOUR_LIST[i])
+    
+    return HOUR_LIST
 
-# Create a list of tuples for SELECT widget
-for i in range(len(HOUR_LIST)):
-    HOUR_LIST[i] = (HOUR_LIST[i],HOUR_LIST[i])
+
 
 # Keycodes model form
 class KeycodeForm(forms.ModelForm):
@@ -155,14 +178,15 @@ class RegisterForm(UserCreationForm):
 class BookingForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(BookingForm, self).__init__(*args,**kwargs)
-        self.fields['start_hour'].widget = forms.Select(choices=HOUR_LIST)
-        self.fields['end_hour'].widget = forms.Select(choices=HOUR_LIST)
+        self.fields['start_hour'].widget = forms.Select(choices=hour_list())
+        self.fields['end_hour'].widget = forms.Select(choices=hour_list())
+        self.fields['current_day'].widget = forms.Select(choices=dates1())
     class Meta:
         model = Booking
         fields = ["users","users_amount","start_hour","end_hour","current_day"]
-        widgets = {
-            'current_day' : forms.Select(choices=DATES_SELECT1)
-        }
+        # widgets = {
+        #     'current_day' : forms.Select(choices=dates1())
+        # }
         labels = {
             'users' : mark_safe('<strong>Nazwa</strong>'),
             'users_amount' : mark_safe('<strong>Ile osób</strong>'),
@@ -214,18 +238,12 @@ class BookingForm(forms.ModelForm):
         
         return cleaned_data
     
-# Create a list of dates starting from 3days ago until today included)    
-DATES_BUGREPORT = [datetime.date.today() + datetime.timedelta(days=i) for i in range(-3,1)]
-# List of days names
-DAYS_BUGREPORT = ["3 dni temu","2 dni temu", "Wczoraj", "Dzisiaj"]
-# Creating a list of tuples for SELECT widget
-DATES_SELECT_BUGREPORT = [(date, day) for date, day in zip(DATES_BUGREPORT, DAYS_BUGREPORT)]
 
 class BugReportForm(forms.ModelForm):
     class Meta:
         model = BugReports
         fields = ["report_date","report_text"]
         widgets = {
-            'report_date' : forms.Select(choices=DATES_SELECT_BUGREPORT),
+            'report_date' : forms.Select(choices=dates_bugreport()),
             'report_text' : forms.Textarea(attrs={'class' : 'form-group form-control','rows':'3','style':'height: 200px'}) 
         }

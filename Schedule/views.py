@@ -160,7 +160,7 @@ def edit_booking(request, pk):
             'users_amount' : booking.users_amount,
             'start_hour' : booking.start_hour,
             'end_hour' : booking.end_hour,
-            'current_day' : booking.current_day
+            'current_day' : booking.current_day,
         })
         if form.is_valid():
             booking.users = form.cleaned_data.get('users')
