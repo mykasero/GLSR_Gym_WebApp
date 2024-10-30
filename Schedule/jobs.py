@@ -1,3 +1,31 @@
+from Schedule.models import Booking, Archive
+def archive_bookings():
+    print("Archiving started")
+    from django.utils import timezone
+    from django.db import transaction
+        
+    old_bookings = Booking.objects.filter(current_day__lt=timezone.now())
+    archives_removed = 0
+    
+    if old_bookings.exists():
+        with transaction.atomic():
+            for booking in old_bookings:
+                Archive.objects.create(
+                    users = booking.users,
+                    users_amount = booking.users_amount,
+                    start_hour = booking.start_hour,
+                    end_hour = booking.end_hour,
+                    current_day = booking.current_day,
+                )
+                booking.delete()
+                archives_removed += 1
+        
+        print(f"Archived {archives_removed} bookings.")
+        
+    else:
+        print("Nothing to archive")
+
+
 '''
 Obsolete due to the use of Heroku Scheduler on prod
 '''
