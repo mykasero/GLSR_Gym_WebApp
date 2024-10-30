@@ -12,10 +12,9 @@ COPY requirements.txt /app
 
 #dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends netcat-traditional
+RUN apt-get install net-tools
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-RUN pip install certbot
-RUN ln -s /opt/certbot/bin/certbot /usr/bin/certbot
 
 #entrypoint
 COPY ./GLSR_Gym/entrypoint.sh .
