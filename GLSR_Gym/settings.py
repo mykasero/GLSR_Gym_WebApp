@@ -29,8 +29,10 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(env("DEBUG")))
 
-
-ALLOWED_HOSTS = env("DJANGO_ALLOWED_HOSTS").split(" ")
+if DEBUG:
+    ALLOWED_HOSTS = env("DJANGO_LOCAL_HOSTS").split(" ")
+else:
+    ALLOWED_HOSTS = env("DJANGO_ALLOWED_HOSTS").split(" ")
 
 CSRF_TRUSTED_ORIGINS=["http://localhost:8080", "http://127.0.0.1:8080"]
 CSRF_ALLOWED_ORIGINS=["http://localhost:8080", "http://127.0.0.1:8080"]
@@ -88,6 +90,7 @@ WSGI_APPLICATION = 'GLSR_Gym.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 #heroku
+
 import dj_database_url
 import psycopg2
 

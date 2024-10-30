@@ -16,9 +16,17 @@
         .nice_buttons {
             width:auto;
         }
+        .table-scrollable {
+            overflow-x: auto;
+            max-width: 600px;
+            box-shadow: inset 0 0 5px rgba(150, 150 ,150,0.35);
+            margin: auto;
+        }
+        
     </style>
-{% endblock %}
+{% endblock%}
 {% block content %}
+
 <div class="container">
     <div class="text-center mt-5">
         <div class = "card">
@@ -26,26 +34,28 @@
                 <b>Dzisiejsze rezerwacje</b>
             </div>
             <div class = "card-body">
-                <table class="table table-bordered table-dark">
-                    <thead>
-                        <th></th>  
-                        <th>Imie</th>
-                        <th>Osoby</th>
-                        <th>Start</th>
-                        <th>Koniec</th>
-                        <th>Dzien</th>
-                        
-                    </thead>
-                    <!-- testing htmx -->
-                    <tbody hx-trigger="load, bookingListChanged from:body" hx-get="{% url 'booking_list' %}" hx-target="this">
-                        <tr>
-                          <td class="spinner-border" role="status">
-                            <span class="visually-hidden">Ładowanie...</span>
-                          </td>
-                        </tr>
-                    </tbody>
+                <div class = "table-scrollable">
+                    <table id = "Booking" class="table table-bordered table-dark table-responsive">
+                        <thead>
+                            <th></th>  
+                            <th>Nazwa</th>
+                            <th>Osoby</th>
+                            <th>Start</th>
+                            <th>Koniec</th>
+                            <th>Dzien</th>
+                            
+                        </thead>
+                        <!-- testing htmx -->
+                        <tbody hx-trigger="load, bookingListChanged from:body" hx-get="{% url 'booking_list' %}" hx-target="this">
+                            <tr>
+                            <td class="spinner-border" role="status">
+                                <span class="visually-hidden">Ładowanie...</span>
+                            </td>
+                            </tr>
+                        </tbody>
 
-                </table>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
