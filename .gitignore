@@ -5,7 +5,7 @@
 __pycache__
 PostgresDB
 media
-
+template_data_docker.json
 
 # Backup files # 
 *.bak 

@@ -4,13 +4,15 @@
 {% block background_img %}
     <style type="text/css">
         body {
-        background-image:url('{% static 'images/home_log_success.jpg' %}');
+        background:url('{% static 'images/home_log_success.jpg' %}') no-repeat center fixed;
         background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center center;
+        /* background-repeat: no-repeat;
+        background-position: center center; */
         background-color: #212429;
         }
-        
+        .div_pad {
+            padding-top:150px;
+        }
     </style>
 
 {% endblock %}
@@ -28,12 +30,13 @@
             {% endif %}
             </p>
         </b>
-        <br>
+        <div class="div_pad">
         <p>
             <button class = "nice_buttons"><a href="/home">Strona Glowna</a></button>
             <br><br>
             <button class = "nice_buttons"><a href="/lobby">Lobby</a></button>
         </p>
+        </div>
 
     </div>
 </div>

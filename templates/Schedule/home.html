@@ -4,14 +4,17 @@
 {% block background_img %}
     <style type="text/css">
         body {
-        background-image:url('{% static 'images/home.jpg' %}');
+        background:url('{% static 'images/home.jpg' %}') no-repeat center fixed;
         background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center center;
+        /* background-repeat: no-repeat;
+        background-position: center center; */
         background-color: #212429;
         }
         .nice_buttons {
             width: auto;
+        }
+        .div_pad {
+            padding-top:150px;
         }
     </style>
 
@@ -21,13 +24,14 @@
         <div class="text-center mt-5">
             <h1>GLSN</h1>
             <h2>Strona Główna</h2>
-            <br><br><br>
+            <div class="div_pad">
             <p>
                 <button class = "nice_buttons"><a href="/login">Logowanie</a></button>
                 <br><br>
                 <button class = "nice_buttons"><a href="/gallery">Galeria</a></button>
 
             </p>
+            </div>
             <br><br>
             {% if messages %}
                 {% for message in messages %}
@@ -36,6 +40,7 @@
                     </div>
                 {% endfor %}
             {% endif %}
+            
         </div>
     </div>
 

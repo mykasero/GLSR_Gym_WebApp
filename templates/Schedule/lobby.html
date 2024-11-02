@@ -4,25 +4,28 @@
 {% block background_img %}
     <style type="text/css">
         body {
-        background-image:url('{% static 'images/lobby.jpg' %}');
+        background:url('{% static 'images/lobby.jpg' %}') no-repeat center fixed;
         background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center center;
         background-color: #212429;
         }
         .nice_buttons {
             width: auto;
+        }
+        .div_pad {
+            padding-top:150px;
         }
     </style>
 {% endblock %}
 {% block content %}
     <div class="container">
         <div class="text-center mt-5">
-                <a class = "nice_buttons" href = "/booking">Rezerwacja</a>
-                <br><br>
-                <a class = "nice_buttons" href = "/current_bookings"> Dzisiejsze rezerwacje</a>
-                <br><br>
-                <a class = "nice_buttons" href = "/archive">Archiwum</a>
+                <div class="div_pad">
+                    <a class = "nice_buttons" href = "/booking">Rezerwacja</a>
+                    <br><br>
+                    <a class = "nice_buttons" href = "/current_bookings"> Dzisiejsze rezerwacje</a>
+                    <br><br>
+                    <a class = "nice_buttons" href = "/archive">Archiwum</a>
+                </div>
         </div>
     </div>
 {% endblock %}
