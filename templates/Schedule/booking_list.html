@@ -1,11 +1,12 @@
+{% load static %}
 {% for item in context %}
 <tr id="item-{{ item.pk }}" class="booking-row">
     {% if item.created_by_id == current_user %}
     <td>
-    <button class="btn btn-primary btn-sm" hx-get="{% url 'edit_booking' pk=item.pk %}" hx-target="#edit_dialog"
-    data-toggle="modal" data-target="#edit_modal">Edytuj</button><br>
-    <button class="btn btn-danger btn-sm" hx-get="{% url 'remove_booking_conf' pk=item.pk %}" hx-target="#remove_dialog"
-    data-toggle="modal" data-target="#remove_modal">Usuń</button>
+    <button style="background-color:#212529" hx-get="{% url 'edit_booking' pk=item.pk %}" hx-target="#edit_dialog"
+    data-toggle="modal" data-target="#edit_modal"><img height="16" src="{% static 'images/edit.svg' %}"/></button><br>
+    <button style="background-color:#212529" hx-get="{% url 'remove_booking_conf' pk=item.pk %}" hx-target="#remove_dialog"
+    data-toggle="modal" data-target="#remove_modal"><img height = "16" src="{% static 'images/remove.svg' %}"/></button>
     </td>
     {% else %}
     <td></td>
