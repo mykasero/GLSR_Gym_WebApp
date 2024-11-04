@@ -6,14 +6,13 @@
         body {
         background:url('{% static 'images/home.jpg' %}') no-repeat center fixed;
         background-size: cover;
-        /* background-repeat: no-repeat;
-        background-position: center center; */
         background-color: #212429;
         }
-        .div_pad {
-            padding-top:150px;
-        }
-</style>
+         
+    </style>
+{% endblock %}
+{% block stylings %}
+    <link href="{% static 'css/auth_styles.css'%}" rel="stylesheet" />    
 {% endblock %}
 {% block content %}
     <div class="container">
@@ -26,17 +25,31 @@
                     </div>
                 {% endfor %}
             {% endif %}
-            <p>
-                <div class="div_pad">
-                <form method="post" class="LoginForm">
-                    {% csrf_token %}
-                    {{form.as_p}}
-                    <br>
-                    <button type="submit" class = "nice_buttons">Login</button>
-                    <p>Nie masz konta? Zarejestruj sie <a class="link_indv" href="/register">tutaj</a></p>
-                </form>
+            <div class="div_pad">
+                <div class="wrapper">
+                    <div class = "logo">
+                        <img style="height:80px;" src="{% static 'images/logo1.png' %}" alt=""/>
+                    </div>
+                    GLSN Gym
+                    
+                    <form method="post" class="LoginForm p-3 mt-3">
+                        {% csrf_token %}
+                        <div class="form-field d-flex align-items-center">
+                            {{form.login}}  
+                        </div>
+                        
+                        <div class="form-field d-flex align-items-center"> 
+                            {{form.haslo}}
+                        </div>
+                    
+                        <button type="submit" class = "btn mt-3 text-center fs-6">Login</button>
+                        
+                        <div class="text-center fs-6">
+                            Nie masz konta? Zarejestruj sie <a class="link_indv" href="/register">tutaj</a>
+                        </div>
+                    </form>
                 </div>
-            </p>
+            </div>
         </div>
     </div>
 {% endblock %}
