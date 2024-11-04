@@ -6,33 +6,17 @@
         body {
         background:url('{% static 'images/home.jpg' %}') no-repeat center fixed;
         background-size: cover;
-        /* background-repeat: no-repeat;
-        background-position: center center; */
         background-color: #212429;
-        }
-        .nice_buttons {
-            width: auto;
-        }
-        .div_pad {
-            padding-top:150px;
         }
     </style>
 
 {% endblock %}
+{% block stylings %}
+    <link href="{% static 'css/auth_styles.css'%}" rel="stylesheet" />    
+{% endblock %}
 {% block content %}
     <div class="container">
         <div class="text-center mt-5">
-            <h1>GLSN</h1>
-            <h2>Strona Główna</h2>
-            <div class="div_pad">
-            <p>
-                <button class = "nice_buttons"><a href="/login">Logowanie</a></button>
-                <br><br>
-                <button class = "nice_buttons"><a href="/gallery">Galeria</a></button>
-
-            </p>
-            </div>
-            <br><br>
             {% if messages %}
                 {% for message in messages %}
                     <div class="alert alert-{{ message.tags }}">
@@ -40,7 +24,19 @@
                     </div>
                 {% endfor %}
             {% endif %}
-            
+            <div class="div_pad">
+                <div class="wrapper">
+                    <div class="logo">
+                        <img style="height:80px;" src="{% static 'images/logo1.png' %}" alt=""/>
+                    </div>
+                    GLSN Gym
+                    <div style="padding-top:30px;">
+                        <a class="btn mt-3 text-center fs-6" href="/login">Logowanie</a>
+                        <br><br>
+                        <a class="btn mt-3 text-center fs-6" href="/gallery">Galeria</a>                 
+                    </div>
+                </div> 
+            </div>
         </div>
     </div>
 
