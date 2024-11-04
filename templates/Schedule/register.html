@@ -4,19 +4,15 @@
 {% block background_img %}
 <style type="text/css">
     body {
-    background-image:url('{% static 'images/home.jpg' %}');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-color: #212429;
-    }
-    .card {
-        background-color: rgba(200, 200, 200, 0.5);
-    }
-    .nice_buttons {
-        width: auto;
-    }
+        background:url('{% static 'images/home.jpg' %}') no-repeat center fixed;
+        background-size: cover;
+        background-color: #212429;
+        }
 </style>
+{% block stylings %}
+    <link href="{% static 'css/auth_styles.css'%}" rel="stylesheet" />    
+{% endblock %}
+
 {% endblock %}
 {% block content %}
     <div class="container">
@@ -29,9 +25,13 @@
                     </div>
                 {% endfor %}
             {% endif %}
-            <div class = "card">
-                <div class = "card-body">
-                    <form method="post" class="RegisterForm">
+            <div class = "div_pad">
+                <div class = "wrapper">
+                    <div class = "logo">
+                        <img style="height:80px;" src="{% static 'images/logo1.png' %}" alt=""/>
+                    </div>
+                    GLSN Gym
+                    <form method="post" class="RegisterForm p-3 mt-3">
                         {% csrf_token %}
                         
                         {% if form.non_field_errors %}
@@ -41,17 +41,28 @@
 
                             {% for form_item in form %}
                                 {% if form_item != form.non_field_errors %}
-                                    {{ form_item.label }}<br>
-                                    {{ form_item.help_text }}<br>
-                                    {{ form_item }}<br>
+                                    
+                                        {{ form_item.label }}<br>
+                                        {{ form_item.help_text }}<br>
+                                    <div class="form-field d-flex align-items-center">
+                                        {{ form_item }}<br>
+                                    </div>
                                 {% endif %}
                             {% endfor %}
 
                         {% else %}
-                            {{form}}
+                            {% comment %} {{form}} {% endcomment %}
+                            {% for form_item in form %}
+                                
+                                    {{ form_item.label }}<br>
+                                    {{ form_item.help_text }}
+                                <div class="form-field d-flex align-items-center">
+                                    {{ form_item }}<br>
+                                </div>
+                            {% endfor %}
                         {% endif %}
                         <br>
-                        <button type="submit" class = "nice_buttons">Zarejestruj</button>
+                        <button type="submit" class = "btn mt-3">Zarejestruj</button>
                     </form>
                 </div>
             </div>

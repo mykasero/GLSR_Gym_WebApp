@@ -6,38 +6,39 @@
         body {
         background:url('{% static 'images/home_log_success.jpg' %}') no-repeat center fixed;
         background-size: cover;
-        /* background-repeat: no-repeat;
-        background-position: center center; */
         background-color: #212429;
-        }
-        .div_pad {
-            padding-top:150px;
         }
     </style>
 
 {% endblock %}
+
+{% block stylings %}
+    <link href="{% static 'css/auth_styles.css'%}" rel="stylesheet" />    
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="text-center mt-5">
-        <b>
-            <p>
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-            </p>
-        </b>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
         <div class="div_pad">
-        <p>
-            <button class = "nice_buttons"><a href="/home">Strona Glowna</a></button>
-            <br><br>
-            <button class = "nice_buttons"><a href="/lobby">Lobby</a></button>
-        </p>
+            <div class="wrapper">
+                <div class="logo">
+                    <img style="height:80px;" src="{% static 'images/logo1.png' %}" alt=""/>
+                </div>
+                GLSN Gym
+                <div style="padding-top:30px;">
+                    <a class="btn mt-3 text-center fs-6" href="/home">Strona Glowna</a>
+                    <br><br>
+                    <a class="btn mt-3 text-center fs-6" href="/lobby">Lobby</a>                 
+                </div>
+            </div> 
         </div>
-
     </div>
 </div>
 {% endblock %}
