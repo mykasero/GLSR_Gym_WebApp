@@ -8,16 +8,18 @@
         background-size: cover;
         background-color: #212429;
         }
-        .card {
-            background-color: rgba(200, 200, 200, 0.5);
-        }
-        .nice_buttons {
-            width: auto;
+        .form-select{
+            width:100px;
         }
 
     </style>
     <script src="{% static 'js/scripts.js' %}"></script>
 {% endblock %}
+
+{% block stylings %}
+    <link href="{% static 'css/auth_styles.css'%}" rel="stylesheet" />    
+{% endblock %}
+
 {% block content %}
 
 
@@ -31,77 +33,96 @@
                 </div>
             {% endfor %}
         {% endif %}
-        
-        <div class = "card">
-            <div class = "card-header">
-                <b>Rezerwacja godzin</b>
-            </div>
-            <div class = "card-body">
-                <form method="post" class="BookingForm">
-                {% csrf_token %}
-                {% if form.non_field_errors %}
-                    {% for error in form.non_field_errors %}
-                        <div class="alert alert-error">{{ error }}</div>
-                    {% endfor %}
-                    {% for form_item in form %}
-                        {% if form_item != form.non_field_errors %}
-                            {% if form_item == form.start_hour%}
-                                {{ form_item.label }}<br>
-                                {{ form_item.help_text}}<br>
-                                <input class="form-select" placeholder="Wybierz godzine" name="start_hour" type="text" list="hour_list">
-                                <datalist id="hour_list">
-                                    {% for i in form_item %}
-                                    <option>{{ i }}</option>
-                                    {% endfor %}
-                                </datalist><br>
-                            {% elif form_item == form.end_hour%}
-                                {{ form_item.label }}<br>
-                                {{ form_item.help_text}}<br>
-                                <input class="form-select" placeholder="Wybierz godzine" name="end_hour" type="text" list="hour_list">
-                                <datalist id="hour_list">
-                                    {% for i in form_item %}
-                                    <option>{{ i }}</option>
-                                    {% endfor %}
-                                </datalist><br>
-                            {% else %}
-                                <b> Test3</b>
-                                {{ form_item.label }}<br>
-                                {{ form_item.help_text}}<br>
-                                {{ form_item }}<br>
+        <div class="div_pad">
+            <div class="wrapper">
+                <div class="logo">
+                    <img style="height:80px;" src="{% static 'images/logo1.png' %}" alt=""/>
+                </div>
+                GLSN Gym
+                <form method="post" class="BookingForm p-3 mt-3">
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                            {% for error in form.non_field_errors %}
+                                <div class="alert alert-error">{{ error }}</div>
+                            {% endfor %}
+                        
+                        {% for form_item in form %}
+                            {% if form_item != form.non_field_errors %}
+                                {% if form_item == form.start_hour%}
+                                    {{ form_item.label }}<br>
+                                    {{ form_item.help_text}}<br>
+                                    <div class="form-field d-flex align-items-center">
+                                        <input class="form-select" placeholder="Wybierz godzine" name="start_hour" type="text" list="hour_list">
+                                        <datalist id="hour_list">
+                                            {% for i in form_item %}
+                                            <option>{{ i }}</option>
+                                            {% endfor %}
+                                        </datalist>
+                                    </div>
+                                {% elif form_item == form.end_hour%}
+                                    {{ form_item.label }}<br>
+                                    {{ form_item.help_text}}<br>
+                                    <div class="form-field d-flex align-items-center">
+                                        <input class="form-select" placeholder="Wybierz godzine" name="end_hour" type="text" list="hour_list">
+                                        <datalist id="hour_list">
+                                            {% for i in form_item %}
+                                            <option>{{ i }}</option>
+                                            {% endfor %}
+                                        </datalist>
+                                    </div>
+                                {% elif form_item == form.current_day %}
+                                    {{ form_item.label }}<br>
+                                    {{ form_item.help_text}}<br>
+                                    <div class="form-select">
+                                        {{ form_item }}<br>
+                                    </div>
+                                {% else %}
+                                    {{ form_item.label }}<br>
+                                    {{ form_item.help_text}}<br>
+                                    {{ form_item }}<br>
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    {% for form_item in form %}
-                        {% if form_item != form.non_field_errors %}
-                            {% if form_item == form.start_hour %}
-                                {{ form_item.label }}<br>
-                                {{ form_item.help_text}}<br>
-                                <input class="form-select" placeholder="Wybierz godzine" name="start_hour" type="text" list="hour_list">
-                                <datalist id="hour_list">
-                                    {% for i in form_item %}
-                                    <option>{{ i }}</option>
-                                    {% endfor %}
-                                </datalist><br>
-                            {% elif form_item == form.end_hour%}
-                                {{ form_item.label }}<br>
-                                {{ form_item.help_text}}<br>
-                                <input class="form-select" placeholder="Wybierz godzine" name="end_hour" type="text" list="hour_list">
-                                <datalist id="hour_list">
-                                    {% for i in form_item %}
-                                    <option>{{ i }}</option>
-                                    {% endfor %}
-                                </datalist><br>
-                            {% else %}
-                                {{ form_item.label }}<br>
-                                {{ form_item.help_text}}<br>
-                                {{ form_item }}<br>
+                        {% endfor %}
+                    {% else %}
+                        {% for form_item in form %}
+                            {% if form_item != form.non_field_errors %}
+                                {% if form_item == form.start_hour%}
+                                    {{ form_item.label }}<br>
+                                    {{ form_item.help_text}}<br>
+                                    <div class="form-field d-flex align-items-center">
+                                        <input class="form-select" placeholder="Wybierz godzine" name="start_hour" type="text" list="hour_list">
+                                        <datalist id="hour_list">
+                                            {% for i in form_item %}
+                                            <option>{{ i }}</option>
+                                            {% endfor %}
+                                        </datalist>
+                                    </div>
+                                {% elif form_item == form.end_hour%}
+                                    {{ form_item.label }}<br>
+                                    {{ form_item.help_text}}<br>
+                                    <div class="form-field d-flex align-items-center">
+                                        <input class="form-select" placeholder="Wybierz godzine" name="end_hour" type="text" list="hour_list">
+                                        <datalist id="hour_list">
+                                            {% for i in form_item %}
+                                            <option>{{ i }}</option>
+                                            {% endfor %}
+                                        </datalist>
+                                    </div>
+                                {% elif form_item == form.current_day %}
+                                    {{ form_item.label }}<br>
+                                    {{ form_item.help_text}}<br>
+                                    {{ form_item }}<br>
+                                {% else %}
+                                    {{ form_item.label }}<br>
+                                    {{ form_item.help_text}}<br>
+                                    <div class="form-field d-flex align-items-center">
+                                        {{ form_item }}
+                                    </div>
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-                <br>
-                <button type = "submit" class = "nice_buttons">Zarezerwuj</button>
+                        {% endfor %}
+                        <button type="submit" class = "btn mt-3">Zarezerwuj</button>
+                    {% endif %}                
                 </form>
             </div>
         </div>

@@ -180,7 +180,7 @@ class BookingForm(forms.ModelForm):
         super(BookingForm, self).__init__(*args,**kwargs)
         self.fields['start_hour'].widget = forms.Select(choices=hour_list())
         self.fields['end_hour'].widget = forms.Select(choices=hour_list())
-        self.fields['current_day'].widget = forms.Select(choices=dates1())
+        self.fields['current_day'].widget = forms.Select(choices=dates1(),attrs={'class':"form-select"})
     class Meta:
         model = Booking
         fields = ["users","users_amount","start_hour","end_hour","current_day"]
