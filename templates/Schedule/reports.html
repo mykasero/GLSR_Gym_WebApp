@@ -8,31 +8,142 @@
         background-size: cover;
         background-color: #212429;
         }
-        .card {
-            background-color: rgba(200, 200, 200, 0.5);
-        }
     </style>
 {% endblock %}
+
 {% block stylings %}
-    <link href=href="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/r-3.0.3/sp-2.3.2/datatables.min.css" rel="stylesheet">
+    <link href="{% static 'css/datatables.min.css' %}" type="text/css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/r-3.0.3/sp-2.3.2/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/2.1.5/pagination/simple_incremental_bootstrap.js"></script>
+    <script>
+        $(document).ready( function () {
+            $('#Reports').DataTable( {
+            
+                scrollX: true,
+                "language": {
+                    "info" : "Wyświetlono _START_ - _END_ z _TOTAL_ wpisów",
+                    "lengthMenu" : "Wpisy _MENU_",
+                    "search" : "Szukaj:",            
+                },
+                layout: {
+                    bottom: "info",
+                    bottom2: "paging",
+                    bottomStart: "",
+                    bottomEnd: "",
+                },
+            
+            } );
+            
+        } );
+
+    </script>
+
+    <link href="{% static 'css/auth_styles.css'%}" rel="stylesheet" /> 
+
+    <style type="text/css">
+        div.dt-length{
+            text-align: left;
+        }
+        div.dt-search{
+            text-align: right;
+        }
+
+        @media only screen
+            and (min-width:1081px){
+                .div_pad {
+                    padding-top: 60px;
+                }
+                .wrapper{
+                    max-width: 1150px;
+                }
+                div.dt-length{
+                    text-align: left;
+                }
+                div.dt-search{
+                    text-align: right;
+                }
+            }
+        @media only screen 
+            and (min-width:801px)
+            and (max-width:1080px){
+                .div_pad {
+                    padding-top:30px;
+                }
+                .wrapper{
+                    max-width: 900px;
+                }
+                div.dt-length{
+                    text-align: left;
+                }
+                div.dt-search{
+                    text-align: right;
+                }
+            }
+        @media screen 
+        and (min-width:601px)
+        and (max-width: 800px) {
+            .div_pad{
+                padding-top:30px;
+            }
+            .wrapper{
+                max-width: 700px;
+                min-height: 400px;
+                margin-right: 5px;
+                margin-left: 5px;
+            }
+            div.dt-container .row {
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            div.dt-container .dt-layout-start,
+            div.dt-container .dt-layout-end {
+                flex: 1;
+            }
+            @media screen 
+                and (min-width:768px)
+                and (max-width:800px){
+                div.dt-container .dt-layout-start,
+                div.dt-container .dt-layout-end {
+                 flex: 0;
+                }
+            }      
+        }
+
+        @media screen and (max-width: 600px) {
+            .div_pad{
+                padding-top:30px;
+            }
+            .wrapper{
+                max-width: 500px;
+                min-height: 400px;
+                margin-right: 5px;
+                margin-left: 5px;
+            }
+            div.dt-container .row {
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: center;
+                gap: 0.5rem;
+            }
+        
+            div.dt-container .dt-layout-start,
+            div.dt-container .dt-layout-end {
+                flex: 1;
+            }
+
+        
+        }
+
+    </style>
 {% endblock %}
 
 {% block content %}
-<script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
-<script src="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/r-3.0.3/sp-2.3.2/datatables.min.js"></script>
-<script src="https://cdn.datatables.net/plug-ins/2.1.5/pagination/simple_incremental_bootstrap.js"></script>
-<script>
-    $(document).ready( function () {
-        $('#Reports').DataTable( {
-        } );
-        
-    } );
-
-</script>
-
 <div class="container">
     <div class="text-center mt-5">
-        <b>
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }}">
@@ -40,8 +151,34 @@
                 </div>
             {% endfor %}
         {% endif %}
-        </b>
-        <div class = "card">
+        <div class="wrapper">
+            <div class="logo">
+                <img style="height:80px;" src="{% static 'images/logo1.png' %}" alt=""/>
+            </div>
+            GLSN Gym
+            <div class="div_pad">
+                <div style="text-shadow: 5px 5px 10px #03A9F4; padding-bottom:10px;">
+                    <b>Lista zgłoszeń</b>
+                </div>
+                <table id="Reports" class="table table-sm table-bordered">
+                    <thead class="table-dark table-bordered">
+                        <th>Opis zgłoszenia</th>
+                        <th>Data</th>
+                    </thead>
+                    {% for item in context %}
+                    <tr style="background:rgba(180,180,180,0.5);">
+                        <td>{{item.report_text}}</td>
+                        <td>{{item.report_date|date:'d.m.y'}}</td>
+                    </tr>
+
+                {% endfor %}
+                </table>
+            </div>
+        </div>
+        
+
+
+        {% comment %} <div class = "card">
             <div class = "card-header">
                 <b>Lista zgłoszeń</b>
             </div>
@@ -60,7 +197,7 @@
                 {% endfor %}
                 </table>
             </div>
-        </div>
+        </div> {% endcomment %}
     </div>
 </div>
 

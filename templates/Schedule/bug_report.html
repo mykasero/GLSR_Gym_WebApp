@@ -8,14 +8,62 @@
         background-size: cover;
         background-color: #212429;
         }
-        .card {
-            background-color: rgba(200, 200, 200, 0.5);
-        }
-        .nice_buttons {
-            width: auto;
-        }
     </style>
 {% endblock %}
+
+{% block stylings %}
+<link href="{% static 'css/auth_styles.css'%}" rel="stylesheet" /> 
+
+<style type="text/css">
+    @media only screen
+        and (min-width:1081px){
+            .div_pad {
+                padding-top: 60px;
+            }
+            .wrapper{
+                max-width: 1150px;
+            }
+        }
+    @media only screen 
+        and (min-width:801px)
+        and (max-width:1080px){
+            .div_pad {
+                padding-top:30px;
+            }
+            .wrapper{
+                max-width: 900px;
+            }
+        }
+    @media screen 
+    and (min-width:601px)
+    and (max-width: 800px) {
+        .div_pad{
+            padding-top:30px;
+        }
+        .wrapper{
+            max-width: 700px;
+            min-height: 400px;
+            margin-right: 5px;
+            margin-left: 5px;
+        }
+     
+    }
+
+    @media screen and (max-width: 600px) {
+        .div_pad{
+            padding-top:30px;
+        }
+        .wrapper{
+            max-width: 500px;
+            min-height: 400px;
+            margin-right: 5px;
+            margin-left: 5px;
+        }
+    }
+</style>
+
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="text-center mt-5">
@@ -27,7 +75,29 @@
             {% endfor %}
         {% endif %}
         
-        <div class = "card">
+        <div class="wrapper">
+            <div class="logo">
+                <img style="height:80px;" src="{% static 'images/logo1.png' %}" alt=""/>
+            </div>
+            GLSN Gym
+            <div class="div_pad">
+                <div style="text-shadow: 5px 5px 10px #03A9F4; padding-bottom:10px;">
+                    <b>Zgłoś błąd</b>
+                </div>
+                <form method="post" class="BugReportForm">
+                    {% csrf_token %}
+                    {{form}}
+                    <br>   
+                    <button type="submit" class = "btn mt-3 text-center fs-6">Wyślij zgłoszenie</button>
+                    
+                </form>
+            </div> 
+        </div>
+        
+        
+
+
+        {% comment %} <div class = "card">
             <div class = "card-header">
                 Zgłoś błąd
             </div>
@@ -42,8 +112,8 @@
                     
                 </form>
             </div>
-        
-        </div>
+         
+        </div>{% endcomment %}
     </div>
 </div>
 {% endblock %}
