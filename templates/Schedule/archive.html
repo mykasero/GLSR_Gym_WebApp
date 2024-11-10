@@ -13,7 +13,6 @@
     </style>
 {% endblock %}
 {% block stylings %}
-    {% comment %} <link href="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/r-3.0.3/sp-2.3.2/datatables.min.css" type="text/css" rel="stylesheet" style="width: auto;"> {% endcomment %}
     <link href="{% static 'css/datatables.min.css' %}" type="text/css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
     <script src="https://cdn.datatables.net/v/bs5/dt-2.1.6/b-3.1.2/r-3.0.3/sp-2.3.2/datatables.min.js"></script>
@@ -108,11 +107,18 @@
                 align-items: center;
                 gap: 0.5rem;
             }
-        
             div.dt-container .dt-layout-start,
             div.dt-container .dt-layout-end {
                 flex: 1;
             }
+            @media screen 
+                and (min-width:768px)
+                and (max-width:800px){
+                div.dt-container .dt-layout-start,
+                div.dt-container .dt-layout-end {
+                 flex: 0;
+                }
+            }      
         }
 
         @media screen and (max-width: 600px) {
@@ -140,49 +146,6 @@
         
         }
 
-        /*@media only screen 
-            and (min-width:601px)
-            and (max-width:800px){
-                .div_pad {
-                    padding-top:30px;
-                }
-                .wrapper{
-                    max-width: 700px;
-                    margin-right: 5px;
-                    margin-left: 5px;
-                }
-                div.dt-length{
-                    text-align: left;
-                }
-                div.dt-search{
-                    text-align: right;
-                }
-            }
-        @media only screen 
-            and (min-width:300px)
-            and (max-width:600px){
-                .div_pad{
-                    padding-top:30px;
-                }
-                .wrapper{
-                    max-width: 500px;
-                    min-height: 400px;
-                    margin-right: 5px;
-                    margin-left: 5px;
-                }
-                
-                div.dt-container div.dt-length{
-                    text-align: left;
-                }
-                div.dt-search{
-                    text-align: right;
-                }
-                div.dt-container div.dt-search input{
-                    width: 80px;
-                }
-            }*/
-        
-        
     </style>
 
 {% endblock %}
@@ -197,7 +160,10 @@
             </div>
             GLSN Gym
             <div class="div_pad">
-                <table id="Archiwum" class="table table-sm table-striped table-bordered">
+                <div style="text-shadow: 5px 5px 10px #03A9F4; padding-bottom:10px;">
+                    <b>Archiwum</b>
+                </div>
+                <table id="Archiwum" class="table table-sm table-bordered">
                     <thead class="table-dark table-bordered">
                         <th>Nazwa</th>
                         <th>Osoby</th>
@@ -205,17 +171,16 @@
                         <th>Koniec</th>
                         <th>Dzien</th>
                     </thead>
+                    
                     {% for item in context %}
-                    <tr>
+                    <tr style="background:rgba(180,180,180,0.5);">
                         <td>{{item.users}}</td>
                         <td>{{item.users_amount}}</td>
                         <td>{{item.start_hour|time:'H:i'}}</td>
                         <td>{{item.end_hour|time:'H:i'}}</td>
                         <td>{{item.current_day|date:'d.m.y'}}</td>
-
                     </tr>
-
-                {% endfor %}
+                    {% endfor %}
                 </table>
             </div>
     </div>
