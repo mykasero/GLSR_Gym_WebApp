@@ -10,7 +10,56 @@
         }
 </style>
 {% block stylings %}
-    <link href="{% static 'css/auth_styles.css'%}" rel="stylesheet" />    
+    <link href="{% static 'css/auth_styles.css'%}" rel="stylesheet" /> 
+    <style type="text/css">
+        @media only screen
+            and (min-width:1081px){
+                .div_pad {
+                    padding-top: 60px;
+                }
+                .wrapper{
+                    max-width: 1150px;
+                }
+            }
+        @media only screen 
+            and (min-width:801px)
+            and (max-width:1080px){
+                .div_pad {
+                    padding-top:30px;
+                }
+                .wrapper{
+                    max-width: 900px;
+                }
+            }
+        @media screen 
+        and (min-width:601px)
+        and (max-width: 800px) {
+            .div_pad{
+                padding-top:30px;
+            }
+            .wrapper{
+                max-width: 700px;
+                min-height: 400px;
+                margin-right: 5px;
+                margin-left: 5px;
+            }
+         
+        }
+    
+        @media screen and (max-width: 600px) {
+            .div_pad{
+                padding-top:30px;
+            }
+            .wrapper{
+                max-width: 500px;
+                min-height: 400px;
+                margin-right: 5px;
+                margin-left: 5px;
+            }
+        }
+    
+    </style>
+    
 {% endblock %}
 
 {% endblock %}
