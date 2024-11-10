@@ -27,6 +27,9 @@
                 .wrapper{
                     max-width: 1150px;
                 }
+                .col-4{
+                    width:33.33%;
+                }
             }
         @media only screen 
             and (min-width:801px)
@@ -36,6 +39,9 @@
                 }
                 .wrapper{
                     max-width: 900px;
+                }
+                .col-4{
+                    width:42.5%;
                 }
             }
         @media screen 
@@ -50,7 +56,17 @@
                 margin-right: 5px;
                 margin-left: 5px;
             }
-         
+            .col-4{
+                width:70%;
+            }
+            
+            @media screen 
+            and (min-width:768px)
+            and (max-width: 800px) {
+                .col-4{
+                    width:42.5%;
+                }
+            }    
         }
     
         @media screen and (max-width: 600px) {
@@ -62,6 +78,9 @@
                 min-height: 400px;
                 margin-right: 5px;
                 margin-left: 5px;
+            }
+            .col-4{
+                width:75%;
             }
         }
     
@@ -102,7 +121,7 @@
                                 {% if form_item == form.start_hour%}
                                     {{ form_item.label }}<br>
                                     {{ form_item.help_text}}<br>
-                                    <div class="form-field d-flex align-items-center">
+                                    <div class="form-field col-4 d-flex align-items-center mx-auto">
                                         <input class="form-select" placeholder="Wybierz godzine" name="start_hour" type="text" list="hour_list">
                                         <datalist id="hour_list">
                                             {% for i in form_item %}
@@ -113,7 +132,7 @@
                                 {% elif form_item == form.end_hour%}
                                     {{ form_item.label }}<br>
                                     {{ form_item.help_text}}<br>
-                                    <div class="form-field d-flex align-items-center">
+                                    <div class="form-field col-4 d-flex align-items-center mx-auto">
                                         <input class="form-select" placeholder="Wybierz godzine" name="end_hour" type="text" list="hour_list">
                                         <datalist id="hour_list">
                                             {% for i in form_item %}
@@ -124,8 +143,10 @@
                                 {% elif form_item == form.current_day %}
                                     {{ form_item.label }}<br>
                                     {{ form_item.help_text}}<br>
-                                    <div class="form-select">
-                                        {{ form_item }}<br>
+                                    <div class="form-field col-4 d-flex align-items-center mx-auto">
+                                        <div class="form-select">
+                                            {{ form_item }}<br>
+                                        </div>
                                     </div>
                                 {% else %}
                                     {{ form_item.label }}<br>
@@ -140,7 +161,7 @@
                                 {% if form_item == form.start_hour%}
                                     {{ form_item.label }}<br>
                                     {{ form_item.help_text}}<br>
-                                    <div class="form-field d-flex align-items-center">
+                                    <div class="form-field col-4 d-flex align-items-center mx-auto">
                                         <input class="form-select" placeholder="Wybierz godzine" name="start_hour" type="text" list="hour_list">
                                         <datalist id="hour_list">
                                             {% for i in form_item %}
@@ -151,7 +172,7 @@
                                 {% elif form_item == form.end_hour%}
                                     {{ form_item.label }}<br>
                                     {{ form_item.help_text}}<br>
-                                    <div class="form-field d-flex align-items-center">
+                                    <div class="form-field col-4 d-flex align-items-center mx-auto">
                                         <input class="form-select" placeholder="Wybierz godzine" name="end_hour" type="text" list="hour_list">
                                         <datalist id="hour_list">
                                             {% for i in form_item %}
@@ -166,7 +187,7 @@
                                 {% else %}
                                     {{ form_item.label }}<br>
                                     {{ form_item.help_text}}<br>
-                                    <div class="form-field d-flex align-items-center">
+                                    <div class="form-field col-4 d-flex align-items-center mx-auto">
                                         {{ form_item }}
                                     </div>
                                 {% endif %}
