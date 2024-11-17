@@ -45,7 +45,14 @@
                         <button type="submit" class = "btn mt-3 text-center fs-6">Login</button>
                         
                         <div class="text-center fs-6">
-                            Nie masz konta? Zarejestruj sie <a class="link_indv" href="/register">tutaj</a>
+                            <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:5px;">
+                                <b>Nie masz konta?</b>
+                            </div> Zarejestruj sie <a class="link_indv" href="/register">tutaj</a>
+                        </div>
+                        <div class="text-center fs-6">
+                            <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px;">
+                                <b>Zapomniałeś hasła?</b>
+                            </div> Przejdź <a class="link_indv" href="{% url 'password_reset' %}">tutaj</a>
                         </div>
                     </form>
                 </div>
