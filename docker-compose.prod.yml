@@ -13,6 +13,8 @@ services:
       - ./GLSR_Gym/.env.prod
     depends_on:
       - db-dockerdb
+    environment:
+      - PYTHONUNBUFFERED=1
   db-dockerdb:
     image: postgres:16
     volumes:
@@ -31,13 +33,6 @@ services:
     depends_on:
       - web
 
-  # certbot:
-  #   image: certbot/cerbot:latest
-  #   volumes:
-  #     - /var/certbot/conf:/etc/letsencrypt/:rw
-  #     - /var/certbot/www/:/var/www/certbot/:rw
-  #   depends_on:
-  #     - nginx
   
 
 volumes:
