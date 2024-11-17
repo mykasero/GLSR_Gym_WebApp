@@ -1,7 +1,7 @@
 import environ
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .forms import LoginForm, RegisterForm, BookingForm, BugReportForm
+from .forms import LoginForm, RegisterForm, BookingForm, BugReportForm, UserPasswordResetForm
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 from django.contrib.auth.models import Group
@@ -10,6 +10,9 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404
 import json
+from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
 
 SITE_NAMES = {
     'booking' : 'rezerwacji',
@@ -31,7 +34,6 @@ environ.Env.read_env()
 
 def home(request):
     #Homepage with 2 buttons, one for login page, one gallery
-    
     return render(request, "Schedule/home.html")
     
 def login(request, redirect_authenticated_user=True):
@@ -106,6 +108,58 @@ def register(request):
     else:
         form = RegisterForm()
         return render(request, "Schedule/register.html", {'form':form})
+
+
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.template.loader import render_to_string
+
+class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    template_name = "pass_reset/password_reset.html"
+    email_template_name = "pass_reset/password_reset_email_body.html"
+    subject_template_name = "pass_reset/password_reset_subject.txt"
+    success_message = "Został wysłany na podany email link do resetowania hasła. " \
+                        "Jeśli nie widzisz maila, sprawdź folder spam, w przypadku gdy tam " \
+                        "również nie ma wiadomości - upewnij się czy podałeś poprawny adres email."
+    form_class=UserPasswordResetForm
+    success_url = reverse_lazy("home")
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            username = form.cleaned_data.get('username')
+            users = form.get_users(username)
+            
+            if users.exists():
+                user = users.first()
+                uid = urlsafe_base64_encode(force_bytes(user.pk))
+                token = default_token_generator.make_token(user)
+                # reset_link = f"{request.scheme}://{request.get_host()}/password_reset/confirm/{uid}/{token}"
+                # print(f"HOST = {request.get_host()}, \n Rest of req = {request}")
+                subject = f"Zmiana hasła dla {user} na stronie GLSR Gym"
+                message = render_to_string(self.email_template_name,{
+                    'email' : email,
+                    'domain': request.get_host(),
+                    'site_name': 'GLSR Gym',
+                    'uid': uid,
+                    'user': user,
+                    'token': token,
+                    'protocol': 'https' if request.is_secure() else 'http',
+                })
+                
+                send_mail(subject, message,settings.DEFAULT_FROM_EMAIL, [email])
+                
+            
+            return redirect(self.success_url)
+        else:
+            print("Form is invalid")
+            return render(request, self.template_name, {'form':form})
+    
 
 @login_required(login_url="/login/")
 def lobby(request):

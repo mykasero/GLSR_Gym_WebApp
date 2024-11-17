@@ -8,7 +8,7 @@ import datetime
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 import environ
-
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 env = environ.Env()
 environ.Env.read_env()
 
@@ -247,3 +247,99 @@ class BugReportForm(forms.ModelForm):
             'report_date' : forms.Select(choices=dates_bugreport()),
             'report_text' : forms.Textarea(attrs={'class' : 'form-group form-control','rows':'3','style':'height: 200px'}) 
         }
+
+
+
+class UserPasswordResetForm(PasswordResetForm):
+    def __init__(self, *args, **kwargs):
+        super(UserPasswordResetForm, self).__init__(*args,**kwargs)
+        
+    username = forms.CharField(label="Nazwa Użytkownika:",widget=forms.TextInput(attrs={
+        'placeholder':'koxu123',
+        'name':'username',
+    }))
+    
+    email = forms.EmailField(label="Email:", widget=forms.EmailInput(attrs={
+        'placeholder':'koxu123@gmail.com',
+        'type':'email',
+        'name':'email',
+    }))
+    
+    access_code = forms.CharField(label="Kod dostępu:",widget=forms.TextInput(attrs={
+        'name':'access_code',
+    }))
+    
+    def get_users(self, username):
+        User = get_user_model()
+        return User.objects.filter(username=username)
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        username = self.cleaned_data.get('username')
+        email = self.cleaned_data.get('email')
+        access_code = self.cleaned_data.get('access_code')
+        users = self.get_users(username)
+
+        if not users.exists():
+            self.add_error(None,forms.ValidationError(_("Podana nazwa (%(username)s) nie jest na liście zarejestrowanych użytkowników"),
+                                  code="invalid",
+                                  params = {'username' : username}))
+            
+        
+        if access_code not in [env("REGISTER_CODE"),env("ADMIN_REGISTER_CODE")]:
+            self.add_error(None,   
+                           forms.ValidationError(
+                               _("Podano zły kod dostępu"),
+                                code="invalid",
+                                )
+                           )  
+        
+class CustomSetPasswordForm(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super(CustomSetPasswordForm, self).__init__(*args,**kwargs)
+    
+    new_password1 = forms.CharField(
+        label=_("Nowe hasło"),
+        widget=forms.PasswordInput,
+        strip=False,
+        help_text=mark_safe('<ul><li>Nie podawaj swojego prawdziwego hasła.</li><li>Minimum 8 znaków.</li><li>Nie może być podobne do loginu.</li><li>Nie może być całkowicie złożone z cyfr.</li></ul>'),
+    )
+    
+    new_password2 = forms.CharField(
+        label=_("Potwierdź nowe hasło"),
+        widget=forms.PasswordInput,
+        strip=False,
+        help_text=mark_safe('Powtórz hasło'),
+    )
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        new_password1 = self.cleaned_data.get('new_password1')
+        new_password2 = self.cleaned_data.get('new_password2')
+        
+        # If passwords don't match throw error
+        if new_password1 != new_password2:
+            self.add_error(None,forms.ValidationError(_("Hasła nie są takie same"),
+                                  code="invalid",
+                                  ))
+        # If any of the passwords ( or both ) are empty, throw error
+        if new_password1 == "" or new_password2 == "" or (new_password1 == "" and new_password2 == ""):
+            self.add_error(None,forms.ValidationError(_("Pola haseł nie mogą być puste"),
+                                  code="invalid",
+                                  ))
+        # If password shorter than 8 chars, throw error
+        if len(new_password1) < 8:
+            self.add_error(None,forms.ValidationError(_("Hasło za krótkie, minimalna długość 8 znaków"),
+                                  code="invalid",
+                                  ))
+
+        # If password is only numeric, throw error
+        if new_password1.isdigit():
+            self.add_error(None,   
+                           forms.ValidationError(
+                               _("Hasło nie może być złożone z samych cyfr"),
+                                code="invalid",
+                                )
+                           )
+        
+        return cleaned_data
