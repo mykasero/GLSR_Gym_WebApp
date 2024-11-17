@@ -259,13 +259,18 @@ class UserPasswordResetForm(PasswordResetForm):
         'name':'username',
     }))
     
-    email = forms.EmailField(label="Email:", widget=forms.EmailInput(attrs={
+    email = forms.EmailField(label="Email:",
+        help_text='Adres email na który przyjdzie link do zmiany hasła',
+        widget=forms.EmailInput(attrs={
         'placeholder':'koxu123@gmail.com',
         'type':'email',
         'name':'email',
     }))
     
-    access_code = forms.CharField(label="Kod dostępu:",widget=forms.TextInput(attrs={
+    access_code = forms.CharField(
+        label="Kod dostępu:",
+        help_text='Ten sam kod, który podajemy przy rejestracji',
+        widget=forms.TextInput(attrs={
         'name':'access_code',
     }))
     
