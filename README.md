@@ -19,11 +19,13 @@
   <li>Schedule table for users to book a session</li>
   <li>Automated movement of records every day (APScheduler + custom job/ Heroku Scheduler + custom management command + custom job)</li>
   <li>Custom admin panel</li>
+  <li>Custom admin operations</li>
   <li>Security</li>
-  <li>REST (In works)</li>
+  <li>REST (DRF)</li>
+  <li>Clean and scalable UI</li>
 
-  <li>User profiles TODO</li>
-  <li>Chat STODO</li>
+  <li>User profiles (In progress)</li>
+  <li>Chat TODO</li>
   <li>Cleaner UI TODO</li>
   <li><b>... And more functionalities TBD</b></li>
 </ul></p>
