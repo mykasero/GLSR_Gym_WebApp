@@ -6,7 +6,6 @@ from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 from django.contrib.auth.models import Group
 from .models import Booking, Archive, Keycodes, BugReports
-from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404
 import json
@@ -36,7 +35,7 @@ def home(request):
     #Homepage with 2 buttons, one for login page, one gallery
     return render(request, "Schedule/home.html")
     
-def login(request, redirect_authenticated_user=True):
+def login(request):
     #Login page
     if request.user.is_authenticated:
         return redirect('login_success/')

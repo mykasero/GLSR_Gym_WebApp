@@ -13,6 +13,8 @@ from django.shortcuts import render, redirect
 
 from sys import stdout
 
+
+
 # Custom action for archiving bookings older than today
 @admin.action(description="Zarchiwizuj rezerwacje starsze niz dzisiejsze")
 def archive_bookings(modeladmin, request, queryset):
@@ -187,9 +189,7 @@ class MyAdminSite(admin.AdminSite):
         else:
             messages.warning(request, "Nie ma żadnych wystarczająco starych wpisów do usunięcia")
 
-
-        
-            
+      
 admin_site = MyAdminSite(name='admin_panel')
 
 # Create a Booking model in admin panel
