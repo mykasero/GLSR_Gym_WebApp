@@ -1,0 +1,93 @@
+{% extends "Schedule/base.html" %}
+{% load static %}
+{% block title %}<title>Profile Page</title>{% endblock %}
+{% block background_img %}
+    <style type="text/css">
+        body {
+        background:url('{% static 'images/profile-bg.jpg' %}') no-repeat center fixed;
+        background-size: cover;
+        background-color: #212429;
+        }
+    </style>
+
+{% endblock %}
+{% block stylings %}
+    <link href="{% static 'css/auth_styles.css'%}" rel="stylesheet" />    
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="text-center mt-5">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px;text-align:left;">
+                <b>Witaj, {{ context.username }} </b>
+            </div>
+            <div class="d-flex justify-content-between" style="padding-bottom:10px;">
+                <div class="wrapper" style="width:40%; min-height:150px; margin: 25px auto;">
+                    <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px; padding-bottom:30px;">
+                        Informacje
+                    </div>
+                    Zdjęcie Profilowe:
+                    <div class = "logo" style="padding-top:10px;padding-bottom:100px;">
+                        {% if context.user_info.first.profile_picture != "" %}
+                            <img style="height:80px;" src="{{ context.user_info.first.profile_picture.url }}" alt="Profile Picture" />
+                        {% else %}
+                            <img style="height:80px;" src="{{context.MEDIA_URL|add:'pfps/blank_user.png'}}" alt="Default Profile Picture" />
+                        {% endif %}
+                    </div>
+                    Adres Email: 
+                    <div class="form-field" style="padding:7px;">
+                        {{ context.user_info.first.email }}
+                    </div>
+                    Dołączono: 
+                    <div class="form-field">
+                        {{ context.user_info.first.date_joined }}
+                    </div>
+                </div>
+                <div class = "wrapper" style="width:40%; min-height:150px; margin: 25px 35px;">
+                    <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px; padding-bottom:30px;">
+                        Aktualna ranga:
+                    </div>
+                    <div>
+                        Tu będzie ranga
+                    </div>
+                </div>
+                <div class = "wrapper" style="width:40%; min-height:150px; margin: 25px auto;">
+                    <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px; padding-bottom:30px;">
+                        Operacje
+                    </div>
+                    
+                    <div>
+                        <button>Zmień hasło</button>
+                    </div>
+                    <div>
+                        <button>Zmień profilowe</button>
+                    </div>
+                    <div>
+                        <button>Zmień email</button>
+                    </div>
+                </div>
+            </div>
+            <div class = "wrapper" style="max-width:1000px; min-height:300px; margin: 10px auto;">
+                <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px; padding-bottom:30px;">
+                    Aktywność
+                </div>
+                <div>
+                    <canvas id="profile_activity_chart" data-url="{% url 'activity-chart' %}"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script src="{% static 'js/chart1.js' %}"></script>
+
+{% endblock %}
+
