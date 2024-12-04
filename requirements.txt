@@ -22,6 +22,7 @@ idna==3.10
 josepy==1.14.0
 packaging==24.1
 parsedatetime==2.6
+pillow==11.0.0
 psycopg2==2.9.9
 pycparser==2.22
 pyOpenSSL==24.2.1
