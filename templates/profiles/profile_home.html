@@ -15,6 +15,125 @@
     <link href="{% static 'css/auth_styles.css'%}" rel="stylesheet" />    
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    
+    <style type="text/css">
+        .button_style{
+            color: white;
+            background-color:#212529; border: none; cursor: pointer; padding: 8px;
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+        .form-width{
+            overflow: auto;
+        }
+        .wrapper3 {
+            max-width:1000px; 
+            width:90%; 
+            min-height:300px; 
+            margin: 10px auto;
+        }
+
+        @media screen
+        and (min-width: 1000px){
+            .form-width{
+                max-width:250px;
+                height:auto;
+                
+            }
+            .wrapper{
+                max-width: 1200px;
+                width:40%;
+            }
+            .wrapper3 {
+                max-width:1000px; 
+                width:90%; 
+                min-height:500px; 
+                margin: 10px auto;
+            }
+            .chart_style{
+                height:500px;
+            }
+        }
+        @media screen 
+        and (min-width: 768px)
+        and (max-width: 1000px){
+            .d-flex{
+                display: flex;
+                flex-wrap: wrap;
+                align-content: space-around;
+                flex-direction: column;
+            }
+            .form-width{
+                max-width:250px;
+                height: auto;
+            }
+            .wrapper{
+                max-width: 850px;
+                width:40%;
+            }
+            .wrapper3 {
+                max-width:1000px; 
+                width:90%; 
+                min-height:300px; 
+                margin: 10px auto;
+            }
+            .chart_style{
+                height:500px;
+            }
+        }
+        @media screen and (max-width: 768px){
+            .d-flex{
+                display: flex;
+                flex-wrap: wrap;
+                align-content: space-around;
+                flex-direction: column;
+            }
+            .col-9{
+                width:100%;
+            }
+            .form-width{
+                max-width:200px;
+                height: auto;
+            }
+            .wrapper{
+                max-width: 600px;
+                width:80%;
+            }
+            .chart_style{
+                width:100%;
+                height:500px;
+            }
+            .wrapper3 {
+                max-width:1000px; 
+                width:90%; 
+                min-height:300px; 
+                margin: 10px auto;
+            }
+        }
+        @media screen and (max-width:600px){
+            .col-9{
+                width:100%;
+            }
+            .form-width{
+                max-width:200px;
+                height: auto;
+            }
+            .wrapper{
+                max-width: 500px;
+                width:80%;
+            }
+            .chart_style{
+                width:90%;
+                height:500px;
+            }
+            .wrapper3 {
+                max-width:1000px; 
+                width:90%; 
+                min-height:300px; 
+                margin: 10px auto;
+            }
+        }
+    </style>
 {% endblock %}
 {% block content %}
     <div class="container">
@@ -30,28 +149,59 @@
                 <b>Witaj, {{ context.username }} </b>
             </div>
             <div class="d-flex justify-content-between" style="padding-bottom:10px;">
-                <div class="wrapper" style="width:40%; min-height:150px; margin: 25px auto;">
+                <div class="wrapper" style="min-height:150px; margin: 25px auto;">
                     <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px; padding-bottom:30px;">
                         Informacje
                     </div>
-                    Zdjęcie Profilowe:
-                    <div class = "logo" style="padding-top:10px;padding-bottom:100px;">
-                        {% if context.user_info.first.profile_picture != "" %}
-                            <img style="height:80px;" src="{{ context.user_info.first.profile_picture.url }}" alt="Profile Picture" />
-                        {% else %}
-                            <img style="height:80px;" src="{{context.MEDIA_URL|add:'pfps/blank_user.png'}}" alt="Default Profile Picture" />
-                        {% endif %}
+                
+                    <!-- Profile Picture Section -->
+                    <div style="margin-bottom: 20px;">
+                        <div>Zdjęcie Profilowe:</div>
+                        <div style="display: flex; align-items: center; margin-top: 10px;">
+                            <div class="logo">
+                                {% if context.user_info.first.profile_picture != "" %}
+                                    <img src="{{ context.user_info.first.profile_picture.url }}" alt="Profile Picture" />
+                                {% else %}
+                                    <img src="{{context.MEDIA_URL|add:'pfps/blank_user.png'}}" alt="Default Profile Picture" />
+                                {% endif %}
+                            </div>
+                        </div>
+                        <span>
+                            <button class="button_style">
+                                Edytuj <img height="16" src="{% static 'images/edit.svg' %}" alt="Edit" />
+                            </button>
+                        </span>
                     </div>
-                    Adres Email: 
-                    <div class="form-field" style="padding:7px;">
-                        {{ context.user_info.first.email }}
+                
+                    <!-- Email Section -->
+                    <div style="margin-bottom: 20px;">
+                        <div>Adres Email:</div>
+                        <span class="form-field col-9 d-flex align-items-center mx-auto" style="margin-bottom: 0px; display: flex; align-items: center;">
+                            <span class="form-width">{{ context.user_info.first.email }}</span>
+                        </span>
+                        <span>
+                            <button class="button_style">
+                                Edytuj <img height="16" src="{% static 'images/edit.svg' %}" alt="Edit" />
+                            </button>
+                        </span> 
                     </div>
-                    Dołączono: 
-                    <div class="form-field">
-                        {{ context.user_info.first.date_joined }}
+                
+                    <!-- Join Date Section -->
+                    <div style="margin-bottom: 20px;">
+                        <div>Dołączono:</div>
+                        <span class="form-field col-9 d-flex align-items-center mx-auto" style="margin-bottom: 0px; display: flex; align-items: center;">
+                            {{ context.user_info.first.date_joined|date:"H:i d.m.Y" }}
+                        </span>
+                    </div>
+                
+                    <!-- Change Password Button -->
+                    <div>
+                        <button class="button_style">
+                            Zmień hasło
+                        </button>
                     </div>
                 </div>
-                <div class = "wrapper" style="width:40%; min-height:150px; margin: 25px 35px;">
+                <div class = "wrapper" style="min-height:150px; margin: 25px 35px;">
                     <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px; padding-bottom:30px;">
                         Aktualna ranga:
                     </div>
@@ -59,28 +209,11 @@
                         Tu będzie ranga
                     </div>
                 </div>
-                <div class = "wrapper" style="width:40%; min-height:150px; margin: 25px auto;">
-                    <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px; padding-bottom:30px;">
-                        Operacje
-                    </div>
-                    
-                    <div>
-                        <button>Zmień hasło</button>
-                    </div>
-                    <div>
-                        <button>Zmień profilowe</button>
-                    </div>
-                    <div>
-                        <button>Zmień email</button>
-                    </div>
-                </div>
             </div>
-            <div class = "wrapper" style="max-width:1000px; min-height:300px; margin: 10px auto;">
-                <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px; padding-bottom:30px;">
-                    Aktywność
-                </div>
-                <div>
-                    <canvas id="profile_activity_chart" data-url="{% url 'activity-chart' %}"></canvas>
+            {% comment %} Look into proper sizing of the chart for small screen {% endcomment %}
+            <div class = "wrapper3">
+                <div class="chart_style">
+                    <canvas class="chart_style" id="profile_activity_chart" data-url="{% url 'activity-chart' %}"></canvas>
                 </div>
             </div>
         </div>

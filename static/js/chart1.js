@@ -6,32 +6,32 @@ $(function () {
         url: $activityChart.data("url"),
         success: function (data) {
             var ctx = $activityChart[0].getContext("2d");
+            
+            function calculateAxisMax(maxDataValue){
+                if (maxDataValue < 10)  {
+                    return maxDataValue % 2 === 0 ? axisMax = Math.ceil(maxDataValue+2) : axisMax = Math.ceil(maxDataValue + 3);
+                } else if (maxDataValue < 20) {
+                    return maxDataValue % 2 === 0 ? axisMax = Math.ceil(maxDataValue + 4) : axisMax = Math.ceil(maxDataValue + 5);
 
-            var maxDataValue = Math.max(...data.data);
-                    
-            if (maxDataValue < 10)  {
-                if (maxDataValue % 2 == 0){
-                    yAxisMax = Math.ceil(maxDataValue + 2);
-                } else {
-                    yAxisMax = Math.ceil(maxDataValue + 3);
-                }
-            } else if (maxDataValue < 20) {
-                if (maxDataValue % 2 == 0){
-                    yAxisMax = Math.ceil(maxDataValue + 4);
-                } else {
-                    yAxisMax = Math.ceil(maxDataValue + 5);
-                }
-            }  else {
-                if (Math.ceil(maxDataValue/10)%2 == 1){
-                    yAxisMax = (Math.ceil(maxDataValue/10)*10) + 10;
-                } else {
-                    yAxisMax = (Math.ceil(maxDataValue/10)*10);
+                }  else {
+                    return Math.ceil(maxDataValue / 10) % 2 === 1
+                        ? axisMax = (Math.ceil(maxDataValue / 10) * 10) + 10
+                        : axisMax = (Math.ceil(maxDataValue / 10) * 10);
                 }
             }
             
-            
+            //change chart to horizontal on small screens
+            function getChartOrientation(){
+                return window.matchMedia("(max-width:768px)").matches ? 'y' : 'x'; 
+            }
 
-            new Chart(ctx, {
+            var initialOrientation = getChartOrientation();
+            var maxDataValue = Math.max(...data.data);
+            var axisMax = calculateAxisMax(maxDataValue);
+            
+            Chart.defaults.scales.linear.max = axisMax; // set the new default max axis value to the calculated one
+
+            var activityChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: data.labels,
@@ -50,6 +50,8 @@ $(function () {
                     }]
                 },
                 options: {
+                    indexAxis: initialOrientation, // Dynamic orientation
+                    maintainAspectRatio: false,
                     responsive: true,
                     legend: {
                         position: 'top',
@@ -68,12 +70,32 @@ $(function () {
                             },
                         },
                     },  
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: yAxisMax,
-                    },
-                },
+                }
+            });
+           
+            // Add an event listener to re-render the chart on screen resize
+            window.addEventListener('resize', function(){
+                var newOrientation = getChartOrientation();
+                if (activityChart.options.indexAxis !== newOrientation){
+                    activityChart.options.indexAxis = newOrientation;
+                    
+                    axisMax = calculateAxisMax(maxDataValue);                   
+                    
+                    if (newOrientation === 'x') {
+                        activityChart.options.scales.x = {
+                            beginAtZero: true,
+                            max: axisMax, // Apply max value explicitly for x-axis
+                        };
+                        activityChart.options.scales.y = {}; // Clear inactive axis
+                    } else {
+                        activityChart.options.scales.y = {
+                            beginAtZero: true,
+                            max: axisMax, // Apply max value explicitly for y-axis
+                        };
+                        activityChart.options.scales.x = {}; // Clear inactive axis
+                    }
+                    
+                    activityChart.update(); //Update the chart
                 }
             });
         }
