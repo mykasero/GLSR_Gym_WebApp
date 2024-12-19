@@ -23,27 +23,30 @@
     })
   })()
 
-  ; (function () {
+; (function () {
 
-    const modal2 = new bootstrap.Modal(document.getElementById("remove_modal"))
+  const modal2 = new bootstrap.Modal(document.getElementById("remove_modal"))
 
-    htmx.on("htmx:afterSwap", (e) => {
-      // Response targeting #dialog => show the modal
-      if (e.detail.target.id == "remove_dialog") {
-        modal2.show()
-      }
-    })
+  htmx.on("htmx:afterSwap", (e) => {
+    // Response targeting #dialog => show the modal
+    if (e.detail.target.id == "remove_dialog") {
+      modal2.show()
+    }
+  })
 
-    htmx.on("htmx:beforeSwap", (e) => {
-      // Empty response targeting #dialog => hide the modal
-      if (e.detail.target.id == "remove_dialog" && !e.detail.xhr.response) {
-        modal2.hide()
-        e.detail.shouldSwap = false
-      }
-    })
+  htmx.on("htmx:beforeSwap", (e) => {
+    // Empty response targeting #dialog => hide the modal
+    if (e.detail.target.id == "remove_dialog" && !e.detail.xhr.response) {
+      modal2.hide()
+      e.detail.shouldSwap = false
+    }
+  })
 
-    // Remove dialog content after hiding
-    htmx.on("hidden.bs.modal", () => {
-      document.getElementById("remove_dialog").innerHTML = ""
-    })
-  })()
+  // Remove dialog content after hiding
+  htmx.on("hidden.bs.modal", () => {
+    document.getElementById("remove_dialog").innerHTML = ""
+  })
+})()
+
+
+  

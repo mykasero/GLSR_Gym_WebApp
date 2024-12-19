@@ -7,7 +7,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 from .utils import month_attendance_counter
 from django.http import JsonResponse
-
+from .forms import EmailForm
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
+import json
 
 @login_required(login_url="/login/")
 def profile_home(request):
@@ -49,4 +52,41 @@ def profile_activity_chart(request):
     return JsonResponse(data={
         'labels':labels,
         'data':data
+    })
+
+@login_required(login_url="/login/")
+def edit_email(request, pk):
+    User_info = get_object_or_404(User, pk=pk)
+    Profile_info = get_object_or_404(Profile, pk=pk)
+    if request.method == "POST":
+        form = EmailForm(request.POST, initial={
+            'email' : User_info.email,
+        })
+        if form.is_valid():
+            User_info.email = form.cleaned_data.get('email')
+            Profile_info.email = form.cleaned_data.get('email')
+            User_info.save()
+            Profile_info.save()
+            
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "bookListChanged": None,
+                        "showMessage": f"Zaktualizowano adres email."
+                    })
+                }
+            )
+        else:
+            return render(request, 'email_form.html', {
+                'form' : form,
+                'email' : User_info.email,
+            })
+    else:
+        form = EmailForm(initial={
+            'email' : User_info.email,
+        })
+    return render(request, 'profiles/email_form.html', {
+        'form' : form,
+        'email' : User_info.email,
     })
