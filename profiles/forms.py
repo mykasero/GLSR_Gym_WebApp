@@ -1,6 +1,7 @@
 from django import forms
 import environ
-
+from django.utils.translation import gettext as _
+from .models import Profile
 env = environ.Env()
 environ.Env.read_env()
 
@@ -26,3 +27,9 @@ class EmailForm(forms.Form):
                                 code="invalid",
                                 )
                            )
+            
+class PfpForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['profile_picture']
+    

@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 from .utils import month_attendance_counter
 from django.http import JsonResponse
-from .forms import EmailForm
+from .forms import EmailForm, PfpForm
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 import json
@@ -27,6 +27,7 @@ def profile_home(request):
         }
 
         # test what is inside of context
+        print(f"test user_info - {user_info}")
         # print(f"TEST request.user.id = {request.user.id} - - - {current_user} - - - {context}")
         
         # print(f"TEST function output - - - {month_attendance_counter(current_user)}")
@@ -78,7 +79,7 @@ def edit_email(request, pk):
                 }
             )
         else:
-            return render(request, 'email_form.html', {
+            return render(request, 'profiles/email_form.html', {
                 'form' : form,
                 'email' : User_info.email,
             })
@@ -89,4 +90,36 @@ def edit_email(request, pk):
     return render(request, 'profiles/email_form.html', {
         'form' : form,
         'email' : User_info.email,
+    })
+    
+@login_required(login_url="/login/")
+def edit_pfp(request, pk):
+    Profile_info = get_object_or_404(Profile, pk=pk)
+    print(Profile_info)
+    if request.method == "POST":
+        form = PfpForm(request.POST, request.FILES)
+        if form.is_valid():
+            Profile_info.profile_picture = form.cleaned_data.get('profile_picture')
+
+            Profile_info.save()
+            
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "bookListChanged": None,
+                        "showMessage": f"Zaktualizowano zdjęcie profilowe."
+                    })
+                }
+            )
+        else:
+            return render(request, 'profiles/pfp_form.html', {
+                'form' : form,
+                'profile_picture' : Profile_info.profile_picture,
+            })
+    else:
+        form = PfpForm()
+    return render(request, 'profiles/pfp_form.html', {
+        'form' : form,
+        'profile_picture' : Profile_info.profile_picture,
     })

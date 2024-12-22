@@ -1,0 +1,28 @@
+{% load static %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<form enctype="multipart/form-data" hx-post="{{ request.path }}" hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}' class="modal-content">
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-error">{{ error }}</div>
+        {% endfor %}
+    {% endif %}
+    <div class="modal-header">
+      <h5 class="modal-title">Zmiana zdjęcia profilowego</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="mb-3">
+            <label for="{{ form.profile_picture.id_for_label }}" class="form-label">Wybierz nowe zdjęcie profilowe</label>
+            <br>{{ form.profile_picture }}
+            <div class="invalid-feedback">{{ form.profile_picture.errors|first }}</div>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        Anuluj
+      </button>
+      <button type="submit" class="btn btn-primary">Zapisz</button>
+    </div>
+</form>
+  
