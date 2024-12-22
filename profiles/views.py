@@ -5,13 +5,13 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
-from .utils import month_attendance_counter
+from .utils import month_attendance_counter, yearly_counter, this_month_activity, current_month_name
 from django.http import JsonResponse
 from .forms import EmailForm, PfpForm
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 import json
-
+from datetime import datetime
 @login_required(login_url="/login/")
 def profile_home(request):
     if request.user.is_authenticated:
@@ -19,19 +19,16 @@ def profile_home(request):
         current_user = Profile.objects.get(user__id=request.user.id)
         # get all values by user id 
         user_info = Profile.objects.filter(user_id=request.user.id).values()
-        # test_user_info = list(user_info)[0]
+        
+        
+        
         context = {
             'user_info':user_info,
             'username': current_user, 
-            'MEDIA_URL': settings.MEDIA_URL, 
+            'MEDIA_URL': settings.MEDIA_URL,
+            'current_year' : datetime.now().year,
+            'current_month' : current_month_name(datetime.now().month),
         }
-
-        # test what is inside of context
-        print(f"test user_info - {user_info}")
-        # print(f"TEST request.user.id = {request.user.id} - - - {current_user} - - - {context}")
-        
-        # print(f"TEST function output - - - {month_attendance_counter(current_user)}")
-        # booking_activity = month_attendance_counter(current_user) # returns a dict k:month, v:amount of bookings for the user
         
         return render(request, "profiles/profile_home.html", {'context': context})
     else:

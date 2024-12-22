@@ -226,10 +226,16 @@
                 </div>
                 <div class = "wrapper" style="min-height:150px; margin: 25px 35px;">
                     <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px; padding-bottom:30px;">
-                        Aktualna ranga:
+                        Ranga Sezon {{ context.current_year }}
                     </div>
-                    <div>
-                        Tu będzie ranga
+                    <div class="logo2">
+                        <img src="{% static 'images/ranks_yearly/tier10.PNG' %}" alt="Profile Picture" />
+                    </div>
+                    <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px; padding-bottom:30px;">
+                        Ranga Sezon {{ context.current_month }}
+                    </div>
+                    <div class="logo2">
+                        <img src="{% static 'images/ranks_monthly/tier6.PNG' %}" alt="Profile Picture" />
                     </div>
                 </div>
             </div>
