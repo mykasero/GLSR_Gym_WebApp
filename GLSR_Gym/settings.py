@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import environ
 from pathlib import Path
 import os
+import json
 
 env = environ.Env()
 environ.Env.read_env()
@@ -36,7 +37,7 @@ else:
 
 CSRF_TRUSTED_ORIGINS=["http://localhost:8080", "http://127.0.0.1:8080"]
 CSRF_ALLOWED_ORIGINS=["http://localhost:8080", "http://127.0.0.1:8080"]
-CORS_ORIGINS_WHITELIST=["http://localhost:8080", "http://127.0.0.1:8080"]
+
 
 
 
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "corsheaders",
     'Schedule',
     'profiles',
     'rest_framework',
@@ -58,6 +60,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -216,3 +219,14 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS' : 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE' : 10
 }
+
+#CORS
+from corsheaders.defaults import default_methods, default_headers
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGINS = json.loads(env('CORS_ALLOWED_ORIGINS'))
+CORS_ALLOW_METHODS = (
+    *default_methods,
+)
+CORS_ALLOW_HEADERS = (
+    *default_headers,
+)
