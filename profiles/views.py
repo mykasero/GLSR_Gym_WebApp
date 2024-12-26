@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 from .utils import month_attendance_counter, yearly_counter, this_month_activity, current_month_name, yearly_rank, monthly_rank
 from django.http import JsonResponse
-from .forms import EmailForm, PfpForm
+from .forms import EmailForm, PfpForm, BlankForm
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 import json
@@ -122,3 +122,16 @@ def edit_pfp(request, pk):
         'form' : form,
         'profile_picture' : Profile_info.profile_picture,
     })
+    
+def rank_info(request):
+    if request.method=="POST":
+        form = BlankForm(request.POST)
+        if form.is_valid():
+            return render(request, 'profiles/profile_home.html')
+        else:
+            return render(request, 'profiles/rank_info.html', {'form' : form})
+        
+    else:
+        form = BlankForm()    
+        
+    return render(request, 'profiles/rank_info.html', {'form':form})

@@ -91,17 +91,21 @@ TEMPLATES = [
 WSGI_APPLICATION = 'GLSR_Gym.wsgi.application'
 
 # Media storage (AmazonS3)
-
-STORAGES = {
-    # Media file (image) management
-    "default" : {
-        "BACKEND" : "storages.backends.s3boto3.S3StaticStorage",
-    },
-    # Static file management
-    "staticfiles" : {
-        "BACKEND" : "storages.backends.s3boto3.S3StaticStorage",
-    },
-}
+# Static serving Staging / "Prod" and Prod
+# if DEBUG:
+#     STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+#     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+if not DEBUG:
+    STORAGES = {
+        # Media file (image) management
+        "default" : {
+            "BACKEND" : "storages.backends.s3boto3.S3StaticStorage",
+        },
+        # Static file management
+        "staticfiles" : {
+            "BACKEND" : "storages.backends.s3boto3.S3StaticStorage",
+        },
+    }
 
 AWS_ACCESS_KEY_ID =  env("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
@@ -181,15 +185,12 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR/'static']
 if DEBUG:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-    MEDIA_URL = '/media/'
+    MEDIA_URL = '/media/' 
 else:
     MEDIA_URL = env("MEDIA_URL")
     
 
-#heroku, after creating the S3 bucket, check if this should be here or not
-# if not DEBUG:
-#     STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
-#     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 
 # Default primary key field type
@@ -241,7 +242,9 @@ if DEBUG==1:
     CORS_ALLOWED_ORIGINS = json.loads(env('CORS_ALLOWED_ORIGINS'))
     # pass
 else:
-    CORS_ALLOWED_ORIGINS = [env("CORS_ALLOWED_ORIGINS_PROD")]
+    # CORS_ALLOWED_ORIGINS = [env("CORS_ALLOWED_ORIGINS_PROD")] #heroku
+    CORS_ALLOWED_ORIGINS = ["http://localhost:8000", "http://127.0.0.1:8000", "http://192.168.0.164:8000"]# docker "prod"
+    
     
 CORS_ALLOW_METHODS = (
     *default_methods,

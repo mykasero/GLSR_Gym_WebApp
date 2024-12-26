@@ -32,4 +32,7 @@ class PfpForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['profile_picture']
+        
+class BlankForm(forms.Form):
+    blank = forms.Textarea()
     

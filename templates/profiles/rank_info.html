@@ -1,0 +1,21 @@
+{% load static %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<form hx-post="{{ request.path }}" hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}' class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" style="-webkit-text-stroke: 0.25px #005dff;">Jak działa system rang?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+         <div class="mb-3">
+            Rangi są wyliczane na podstawie ilości rezerwacji, które użytkownik zapisał.
+            Jeśli idziesz z kimś na siłownie i robisz rezerwacje dla dwóch osób to tylko tobie 
+            jest naliczana rezerwacja do sumy punktów w rankingu. Jeśli ta druga osoba również chce
+            nabić sobie punkty, musi dodać rezerwacje z własnego konta.
+            
+        </div>
+    </div>
+    <div class="modal-footer">
+        <b>W przyszłości ten system zostanie zmieniony pod większą wygode użytkownika</b>
+    </div>
+</form>

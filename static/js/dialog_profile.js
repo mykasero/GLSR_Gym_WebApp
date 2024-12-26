@@ -47,4 +47,29 @@
     document.getElementById("edit_pfp_dialog").innerHTML = ""
   })
 })()
-  
+
+
+; (function () {
+
+  const modal5 = new bootstrap.Modal(document.getElementById("rank_info_modal"))
+
+  htmx.on("htmx:afterSwap", (e) => {
+    // Response targeting #dialog => show the modal
+    if (e.detail.target.id == "rank_info_dialog") {
+      modal5.show()
+    }
+  })
+
+  htmx.on("htmx:beforeSwap", (e) => {
+    // Empty response targeting #dialog => hide the modal
+    if (e.detail.target.id == "rank_info_dialog" && !e.detail.xhr.response) {
+      modal5.hide()
+      e.detail.shouldSwap = false
+    }
+  })
+
+  // Remove dialog content after hiding
+  htmx.on("hidden.bs.modal", () => {
+    document.getElementById("rank_info_dialog").innerHTML = ""
+  })
+})()
