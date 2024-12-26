@@ -149,10 +149,11 @@
                     </div>
                 {% endfor %}
             {% endif %}
+            <!-- User greeting -->
             <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px;text-align:left;">
                 <b>Witaj, {{ context.username }} </b>
             </div>
-
+            <!-- Edit user info/pfp modals -->
             <div id="edit_email_modal" class="modal fade">
                 <div id="edit_email_dialog" class="modal-dialog" hx-target="this"></div>
             </div>
@@ -181,9 +182,6 @@
                         <div><b>Zdjęcie Profilowe:</b></div>
                         <div style="display: flex; align-items: center; margin-top: 10px;">
                             <div class="logo" style="width: 160px; height: 160px;">
-                                {% comment %} debug version {% endcomment %}
-                                {% comment %} <img style="width: 160px; height: 160px;" src="{{ context.MEDIA_URL|add:context.user_info.first.profile_picture }}" alt="Profile Picture" /> {% endcomment %}
-                                {% comment %} prod version {% endcomment %}
                                 <img style="width: 160px; height: 160px;" src="{{ context.MEDIA_URL|add:context.user_info.first.profile_picture }}" alt="Profile Picture" />
                             </div>
                         </div>
@@ -227,6 +225,7 @@
                     </div>
 
                 </div>
+                <!-- Ranks and rank titles -->
                 <div class = "wrapper" style="min-height:150px; margin: 25px 35px;">
                     <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px; padding-bottom:30px;">
                         <b>Ranga Sezon {{ context.current_year }}</b>
@@ -252,7 +251,7 @@
 
                 </div>
             </div>
-            {% comment %} Look into proper sizing of the chart for small screen {% endcomment %}
+            <!-- Activity chart -->
             <div class = "wrapper3">
                 <div class="chart_style">
                     <canvas class="chart_style" id="profile_activity_chart" data-url="{% url 'activity-chart' %}"></canvas>
