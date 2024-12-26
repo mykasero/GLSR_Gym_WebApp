@@ -216,7 +216,8 @@ REST_FRAMEWORK = {
 from corsheaders.defaults import default_methods, default_headers
 CORS_ALLOW_ALL_ORIGINS = False
 if DEBUG:
-    CORS_ALLOWED_ORIGINS = json.loads(env('CORS_ALLOWED_ORIGINS'))
+    # CORS_ALLOWED_ORIGINS = json.loads(env('CORS_ALLOWED_ORIGINS'))
+    pass
 else:
     CORS_ALLOWED_ORIGINS = (env("CORS_ALLOWED_ORIGINS_PROD"))
 CORS_ALLOW_METHODS = (
