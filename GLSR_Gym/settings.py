@@ -242,7 +242,7 @@ if DEBUG==1:
     CORS_ALLOWED_ORIGINS = json.loads(env('CORS_ALLOWED_ORIGINS'))
     # pass
 else:
-    CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS_PROD")
+    CORS_ALLOWED_ORIGINS = json.loads(env("CORS_ALLOWED_ORIGINS_PROD"))
     
 CORS_ALLOW_METHODS = (
     *default_methods,
