@@ -95,7 +95,8 @@ WSGI_APPLICATION = 'GLSR_Gym.wsgi.application'
 STORAGES = {
     # Media file (image) management
     "default" : {
-        "BACKEND" : "storages.backends.s3boto3.S3StaticStorage",
+        # "BACKEND" : "storages.backends.s3boto3.S3StaticStorage",
+        "BACKEND" : "storages.settings.aws.storage_backends.MediaStorage",
     },
     # Static file management
     "staticfiles" : {
