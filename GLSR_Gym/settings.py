@@ -251,6 +251,8 @@ CORS_ALLOW_HEADERS = (
     *default_headers,
 )
 
+
+
 # # #Sec options
 
 # SECURE_SSL_REDIRECT = True
