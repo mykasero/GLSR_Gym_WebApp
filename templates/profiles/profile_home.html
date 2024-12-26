@@ -181,6 +181,9 @@
                         <div><b>Zdjęcie Profilowe:</b></div>
                         <div style="display: flex; align-items: center; margin-top: 10px;">
                             <div class="logo" style="width: 160px; height: 160px;">
+                                {% comment %} debug version {% endcomment %}
+                                {% comment %} <img style="width: 160px; height: 160px;" src="{{ context.MEDIA_URL|add:context.user_info.first.profile_picture }}" alt="Profile Picture" /> {% endcomment %}
+                                {% comment %} prod version {% endcomment %}
                                 <img style="width: 160px; height: 160px;" src="{{ context.MEDIA_URL|add:context.user_info.first.profile_picture }}" alt="Profile Picture" />
                             </div>
                         </div>

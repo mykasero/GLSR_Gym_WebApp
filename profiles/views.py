@@ -20,8 +20,6 @@ def profile_home(request):
         # get all values by user id 
         user_info = Profile.objects.filter(user_id=request.user.id).values()
         
-        
-        
         context = {
             'user_info':user_info,
             'username': current_user, 

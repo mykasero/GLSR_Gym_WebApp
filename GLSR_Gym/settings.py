@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "corsheaders",
+    'storages',
     'Schedule',
     'profiles',
     'rest_framework',
@@ -89,6 +90,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'GLSR_Gym.wsgi.application'
 
+# Media storage (AmazonS3)
+
+STORAGES = {
+    # Media file (image) management
+    "default" : {
+        "BACKEND" : "storages.backends.s3boto3.S3StaticStorage",
+    },
+    # Static file management
+    "staticfiles" : {
+        "BACKEND" : "storages.backends.s3boto3.S3StaticStorage",
+    },
+}
+
+AWS_ACCESS_KEY_ID =  env("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
+AWS_QUERYSTRING_AUTH = env("AWS_QUERYSTRING_AUTH")
+AWS_DEFAULT_ACL='public-read'
+AWS_S3_FILE_OVERWRITE = False
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -160,14 +180,17 @@ USE_TZ = False
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR/'static']
+if DEBUG:
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    MEDIA_URL = '/media/'
+else:
+    MEDIA_URL = env("MEDIA_URL")
+    
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
-
-#heroku
-if not DEBUG:
-    STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+#heroku, after creating the S3 bucket, check if this should be here or not
+# if not DEBUG:
+#     STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+#     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Default primary key field type
@@ -216,10 +239,10 @@ REST_FRAMEWORK = {
 from corsheaders.defaults import default_methods, default_headers
 CORS_ALLOW_ALL_ORIGINS = False
 if DEBUG:
-    # CORS_ALLOWED_ORIGINS = json.loads(env('CORS_ALLOWED_ORIGINS'))
-    pass
+    CORS_ALLOWED_ORIGINS = json.loads(env('CORS_ALLOWED_ORIGINS'))
+    # pass
 else:
-    CORS_ALLOWED_ORIGINS = [env("CORS_ALLOWED_ORIGINS_PROD")]
+    CORS_ALLOWED_ORIGINS = json.loads(env("CORS_ALLOWED_ORIGINS_PROD"))
 CORS_ALLOW_METHODS = (
     *default_methods,
 )
