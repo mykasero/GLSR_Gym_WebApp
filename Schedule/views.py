@@ -126,6 +126,18 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     form_class=UserPasswordResetForm
     success_url = reverse_lazy("home")
 
+    def get_initial(self):
+        initial = super().get_initial()
+        user = self.request.user
+        
+        if user.is_authenticated and user.email and user.email != "twoj_email@gmail.com":
+            initial['email'] = user.email
+            initial['username'] = user.username
+        elif user.is_authenticated:
+            initial['username'] = user.username
+            
+        return initial
+
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         
@@ -138,8 +150,6 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
                 user = users.first()
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
                 token = default_token_generator.make_token(user)
-                # reset_link = f"{request.scheme}://{request.get_host()}/password_reset/confirm/{uid}/{token}"
-                # print(f"HOST = {request.get_host()}, \n Rest of req = {request}")
                 subject = f"Zmiana hasła dla {user} na stronie GLSR Gym"
                 message = render_to_string(self.email_template_name,{
                     'email' : email,

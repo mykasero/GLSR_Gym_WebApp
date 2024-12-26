@@ -173,15 +173,15 @@
             <div class="d-flex justify-content-between" style="padding-bottom:10px;">
                 <div class="wrapper" style="min-height:150px; margin: 25px auto;">
                     <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px; padding-bottom:30px;">
-                        Informacje
+                        <b>Informacje</b>
                     </div>
                 
                     <!-- Profile Picture Section -->
                     <div style="margin-bottom: 20px;">
-                        <div>Zdjęcie Profilowe:</div>
+                        <div><b>Zdjęcie Profilowe:</b></div>
                         <div style="display: flex; align-items: center; margin-top: 10px;">
-                            <div class="logo">
-                                <img src="{{ context.MEDIA_URL|add:context.user_info.first.profile_picture }}" alt="Profile Picture" />
+                            <div class="logo" style="width: 160px; height: 160px;">
+                                <img style="width: 160px; height: 160px;" src="{{ context.MEDIA_URL|add:context.user_info.first.profile_picture }}" alt="Profile Picture" />
                             </div>
                         </div>
                         <span>
@@ -194,7 +194,7 @@
                 
                     <!-- Email Section -->
                     <div style="margin-bottom: 20px;">
-                        <div>Adres Email:</div>
+                        <div><b>Adres Email:</b></div>
                         <span class="form-field col-9 d-flex align-items-center mx-auto" style="margin-bottom: 0px; display: flex; align-items: center;">
                             <span class="form-width">{{ context.user_info.first.email }}</span>
                         </span>
@@ -208,7 +208,7 @@
                 
                     <!-- Join Date Section -->
                     <div style="margin-bottom: 20px;">
-                        <div>Dołączono:</div>
+                        <div><b>Dołączono:</b></div>
                         <span class="form-field col-9 d-flex align-items-center mx-auto" style="margin-bottom: 0px; display: flex; align-items: center;">
                             {{ context.user_info.first.date_joined|date:"H:i d.m.Y" }}
                         </span>
@@ -226,17 +226,27 @@
                 </div>
                 <div class = "wrapper" style="min-height:150px; margin: 25px 35px;">
                     <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px; padding-bottom:30px;">
-                        Ranga Sezon {{ context.current_year }}
+                        <b>Ranga Sezon {{ context.current_year }}</b>
                     </div>
                     <div class="logo2">
-                        <img src="{% static 'images/ranks_yearly/tier10.PNG' %}" alt="Profile Picture" />
+                        <img src="{% static 'images/ranks_yearly/'|add:context.yearly_rank|add:'.PNG' %}" alt="Profile Picture" />
                     </div>
+                    <div style="text-shadow: 5px 5px 10px rgb(0, 255, 4); padding-top:5px; padding-bottom:10px;">
+                        Obecna ranga: <b>{{ context.yearly_rank }}<br>
+                        {{ context.yearly_rank_name}}</b>
+                    </div>
+                    
                     <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px; padding-bottom:30px;">
-                        Ranga Sezon {{ context.current_month }}
+                        <b>Ranga Sezon {{ context.current_month }}</b>
                     </div>
                     <div class="logo2">
-                        <img src="{% static 'images/ranks_monthly/tier6.PNG' %}" alt="Profile Picture" />
+                        <img src="{% static 'images/ranks_monthly/'|add:context.monthly_rank|add:'.PNG' %}" alt="Profile Picture" />
                     </div>
+                    <div style="text-shadow: 5px 5px 10px rgb(0, 255, 4); padding-top:5px; padding-bottom:10px;">
+                        Obecna ranga: <b>{{ context.monthly_rank }}<br>
+                        {{ context.monthly_rank_name }}</b>
+                    </div>
+
                 </div>
             </div>
             {% comment %} Look into proper sizing of the chart for small screen {% endcomment %}

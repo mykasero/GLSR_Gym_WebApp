@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
-from .utils import month_attendance_counter, yearly_counter, this_month_activity, current_month_name
+from .utils import month_attendance_counter, yearly_counter, this_month_activity, current_month_name, yearly_rank, monthly_rank
 from django.http import JsonResponse
 from .forms import EmailForm, PfpForm
 from django.shortcuts import get_object_or_404
@@ -28,6 +28,10 @@ def profile_home(request):
             'MEDIA_URL': settings.MEDIA_URL,
             'current_year' : datetime.now().year,
             'current_month' : current_month_name(datetime.now().month),
+            'yearly_rank' : yearly_rank(current_user)[0],
+            'yearly_rank_name' : yearly_rank(current_user)[1],
+            'monthly_rank' : monthly_rank(current_user)[0],
+            'monthly_rank_name' : monthly_rank(current_user)[1],
         }
         
         return render(request, "profiles/profile_home.html", {'context': context})
