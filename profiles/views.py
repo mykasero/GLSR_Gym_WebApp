@@ -94,7 +94,7 @@ def edit_email(request, pk):
 @login_required(login_url="/login/")
 def edit_pfp(request, pk):
     Profile_info = get_object_or_404(Profile, pk=pk)
-    print(Profile_info)
+    # print(Profile_info)
     if request.method == "POST":
         form = PfpForm(request.POST, request.FILES)
         if form.is_valid():

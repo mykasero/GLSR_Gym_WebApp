@@ -8,7 +8,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email = models.EmailField(db_column="Adres Email",default="twoj_email@gmail.com")
     date_joined = models.DateTimeField(db_column="Data dołączenia",default="2024-09-01") 
-    profile_picture = models.ImageField(db_column="Zdjęcie profilowe",upload_to='pfps/',default='pfps/blank_user.png')
+    profile_picture = models.ImageField(db_column="Zdjęcie profilowe",upload_to='media/pfps/',default='media/pfps/blank_user.png')
     
     def __str__(self):
         return self.user.username
