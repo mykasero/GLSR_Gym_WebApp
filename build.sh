@@ -5,7 +5,7 @@
 pip install -r requirements.txt
 
 #collectstatic
-python manage.py collectstatic --no-input
+# python manage.py collectstatic --no-input
 
 #make migrations
 python manage.py makemigrations
