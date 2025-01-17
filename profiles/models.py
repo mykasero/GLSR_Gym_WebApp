@@ -17,6 +17,7 @@ class Profile(models.Model):
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
+        # Creates profiles for already registered users
         Profile.objects.create(user=instance, date_joined = instance.date_joined)
     else:
         profile, _ = Profile.objects.get_or_create(user=instance)

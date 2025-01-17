@@ -12,6 +12,8 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 import json
 from datetime import datetime
+
+#profile page main view
 @login_required(login_url="/login/")
 def profile_home(request):
     if request.user.is_authenticated:
@@ -34,9 +36,11 @@ def profile_home(request):
         
         return render(request, "profiles/profile_home.html", {'context': context})
     else:
+        # message - in order to access this view you need to be logged in
         messages.info(request, "Aby wejść w ten link musisz być zalogowany")
         return render(request, "Schedule/login.html")
-    
+
+# activity chart displayed on the profile page  
 def profile_activity_chart(request):
 
     # get the profile id
@@ -54,15 +58,20 @@ def profile_activity_chart(request):
         'data':data
     })
 
+# view for modal to edit the users email information
 @login_required(login_url="/login/")
 def edit_email(request, pk):
+    # get user based on the user id
     User_info = get_object_or_404(User, pk=pk)
+    # get profile based on user id
     Profile_info = get_object_or_404(Profile, pk=pk)
+    
     if request.method == "POST":
         form = EmailForm(request.POST, initial={
             'email' : User_info.email,
         })
         if form.is_valid():
+            # change email in both user and profile model
             User_info.email = form.cleaned_data.get('email')
             Profile_info.email = form.cleaned_data.get('email')
             User_info.save()
@@ -86,20 +95,21 @@ def edit_email(request, pk):
         form = EmailForm(initial={
             'email' : User_info.email,
         })
-    return render(request, 'profiles/email_form.html', {
-        'form' : form,
-        'email' : User_info.email,
-    })
+        return render(request, 'profiles/email_form.html', {
+            'form' : form,
+            'email' : User_info.email,
+        })
     
+# view for modal to edit the users profile picture
 @login_required(login_url="/login/")
 def edit_pfp(request, pk):
+    # get profile by user id
     Profile_info = get_object_or_404(Profile, pk=pk)
-    # print(Profile_info)
     if request.method == "POST":
         form = PfpForm(request.POST, request.FILES)
+        
         if form.is_valid():
             Profile_info.profile_picture = form.cleaned_data.get('profile_picture')
-
             Profile_info.save()
             
             return HttpResponse(
@@ -118,11 +128,12 @@ def edit_pfp(request, pk):
             })
     else:
         form = PfpForm()
-    return render(request, 'profiles/pfp_form.html', {
-        'form' : form,
-        'profile_picture' : Profile_info.profile_picture,
-    })
-    
+        return render(request, 'profiles/pfp_form.html', {
+            'form' : form,
+            'profile_picture' : Profile_info.profile_picture,
+        })
+
+# view for showing the information modal telling how the ranking system works
 def rank_info(request):
     if request.method=="POST":
         form = BlankForm(request.POST)

@@ -30,6 +30,7 @@ def month_attendance_counter(user_name):
     
     return months
 
+# function for calculating how many days user booked this year
 def yearly_counter(user_name):
     yearly_days_total = 0
     
@@ -37,7 +38,7 @@ def yearly_counter(user_name):
         yearly_days_total += month_total
         
     return yearly_days_total
-
+# function for calculating how many days user booked this month
 def this_month_activity(user_name):
     this_month_total = 0
     month_num = [1,2,3,4,5,6,7,8,9,10,11,12]
@@ -49,6 +50,7 @@ def this_month_activity(user_name):
         
     return this_month_total
 
+# function for getting the current month name
 def current_month_name(month_number):
     month_names = ["Styczeń", "Luty", "Marzec",
               "Kwiecień", "Maj", "Czerwiec",

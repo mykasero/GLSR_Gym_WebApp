@@ -5,6 +5,7 @@ from .models import Profile
 env = environ.Env()
 environ.Env.read_env()
 
+# email change form
 class EmailForm(forms.Form):
     email = forms.EmailField(label="Adres email")
     access_code = forms.CharField(
@@ -27,12 +28,13 @@ class EmailForm(forms.Form):
                                 code="invalid",
                                 )
                            )
-            
+# profile picture change form       
 class PfpForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['profile_picture']
-        
+
+# Blank form, currently used for the rank info modal to display text    
 class BlankForm(forms.Form):
     blank = forms.Textarea()
     
