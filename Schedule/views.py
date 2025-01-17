@@ -13,6 +13,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 
+# Dict with site names for dynamic message display
 SITE_NAMES = {
     'booking' : 'rezerwacji',
     'current_booking' : 'dzisiejszych rezerwacji',
@@ -31,24 +32,23 @@ def staff_required(login_url=None):
 env = environ.Env()
 environ.Env.read_env()
 
+#Homepage with 2 buttons, one for login page, one gallery
 def home(request):
-    #Homepage with 2 buttons, one for login page, one gallery
     return render(request, "Schedule/home.html")
-    
+
+# Login page view
 def login(request):
-    #Login page
+    
     if request.user.is_authenticated:
         return redirect('login_success/')
-    else:
-        
+    else:      
         if request.method == "POST":
-            
             form = LoginForm()
             username = request.POST['login']
             password = request.POST['haslo']
-            
-            
+        
             user = authenticate(request, username = username, password = password)
+            
             if user is not None:
                 auth_login(request,user)
                 return redirect('login_success/')
@@ -63,10 +63,12 @@ def login(request):
             form = LoginForm()
             return render(request, "Schedule/login.html", {'form' : form})
 
+#View with current key stash code displaying upon login
 @login_required(login_url="/login/")
 def login_success(request):
-    #View with current key stash code displaying upon login
+    # Get the latest keycode
     keycode = list(Keycodes.objects.all().order_by('-id').values_list('code'))[0][0]
+    # Display keycode upon successful login
     messages.success(request, f"Kod do skrzynki z kluczem: {keycode}.") 
     return render(request,"Schedule/login_success.html")
 
@@ -76,9 +78,9 @@ def logout(request):
     messages.info(request, "Wylogowano pomyslnie")
     return redirect('/')
 
-def register(request):
-    #Registration page, access code known only to the group in order to eliminate the possibility
-    # of not authorized people from making an account
+#Registration page, access code known only to the group in order to eliminate the possibility
+# of not authorized people from making an account
+def register(request): 
     form = RegisterForm()
     if request.method == "POST":
         form = RegisterForm(request.POST)
@@ -116,6 +118,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
 
+# CBV for resetting forgotten password
 class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     template_name = "pass_reset/password_reset.html"
     email_template_name = "pass_reset/password_reset_email_body.html"
@@ -163,27 +166,26 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
                 
                 send_mail(subject, message,settings.DEFAULT_FROM_EMAIL, [email])
                 
-            
             return redirect(self.success_url)
         else:
             print("Form is invalid")
             return render(request, self.template_name, {'form':form})
     
-
+# View with buttons that move to schedule to book a hour or go to archive 
 @login_required(login_url="/login/")
 def lobby(request):
-    #Buttons move to schedule to book a hour or go to archive 
     return render(request, "Schedule/lobby.html")
 
+# View for booking reservations 
 @login_required(login_url="/login/")
 def booking(request):
-    #Creating a booking
     form = BookingForm() 
     if request.method == "POST":
         form = BookingForm(request.POST)
         
         if form.is_valid():
             task_list = form.save(commit=False)
+            # Fill the additional field with the booking users username
             task_list.created_by = request.user
             task_list.save()
             return redirect("/current_bookings")
@@ -195,25 +197,24 @@ def booking(request):
         return render(request,'Schedule/booking.html', {'form':form})
     
 
-
+# View with a table with current bookings (booking gets moved to archive day after the specified date at ~1am)
 @login_required(login_url="/login/")
 def current_bookings(request):
-    #Table with current bookings (today's date and up to 2 days after)
-    
     context = Booking.objects.all().order_by('current_day')
     current_user = request.user.id
-    print(current_user)
     if context:
         return render(request, "Schedule/current_bookings.html", {'context' : context, 'current_user' : current_user})
     else:
         return render(request, "Schedule/current_bookings.html")
 
+# View for rendering the data in the table with current bookings
 @login_required(login_url="/login/")
 def booking_list(request):
     context = Booking.objects.all()
     current_user = request.user.id
     return render(request,'Schedule/booking_list.html', {'context' : context, 'current_user' : current_user})
 
+# View for the modal that renders a booking form which is used to edit the current booking
 @login_required(login_url="/login/")
 def edit_booking(request, pk):
     booking = get_object_or_404(Booking, pk=pk)
@@ -258,16 +259,18 @@ def edit_booking(request, pk):
             'current_day' : booking.current_day
         })
     
-    return render(request, 'Schedule/booking_form.html', {
-        'form' : form,
-        'booking' : booking
-        })
+        return render(request, 'Schedule/booking_form.html', {
+            'form' : form,
+            'booking' : booking
+            })
 
+# View for the modal that asks the user if he's sure that he wants to remove the booking
 @login_required(login_url="/login/")
 def remove_booking_conf(request, pk):
     booking = get_object_or_404(Booking, pk=pk)
     return render(request, 'Schedule/booking_delete_conf.html', {'booking' : booking})
 
+# View for the modal that allows the user to remove his booking
 @login_required(login_url="/login/")
 def remove_booking(request, pk):
     booking = get_object_or_404(Booking,pk=pk)
@@ -282,9 +285,10 @@ def remove_booking(request, pk):
         }
         )
 
+# View for a table with archived bookings, dataTables used for pagination and filtering 
+# custom JS added to fix the default sort by date bug
 @login_required(login_url="/login/")
 def archive_booking(request):
-    #Table with archived bookings, basic dataTables used for pagination and filtering
     context = Archive.objects.all()
     if context:
         return render(request, "Schedule/archive.html", {'context':context})
@@ -292,9 +296,10 @@ def archive_booking(request):
         messages.info(request, "No data available")
         return render(request, "Schedule/archive.html")
 
+#View with a form that allows users to report a bug
 @login_required(login_url="/login/")
 def bug_report(request):
-    #View for making reports when a bug pops up
+    
     form = BugReportForm()
     
     if request.method == "POST":
@@ -307,9 +312,10 @@ def bug_report(request):
         form = BugReportForm()
         return render(request, "Schedule/bug_report.html", {'form' : form})
 
+# View showing a datatable with user bug reports
 @staff_required(login_url="/admin/")
 def reports(request):
-    #Datatables with user bug reports
+    
     context = BugReports.objects.all().order_by('-report_date')
     
     if context:
@@ -318,6 +324,6 @@ def reports(request):
         messages.info(request, "Nie ma żadnych zgłoszeń :)")
         return render(request,"Schedule/reports.html")
 
+#View with a photo gallery of the gym TBD(?)
 def gallery(request):
-    #View with a photo gallery of the gym
     return render(request, "Schedule/gallery.html")
