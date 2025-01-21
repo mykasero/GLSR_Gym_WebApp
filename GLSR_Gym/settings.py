@@ -30,6 +30,10 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(env("DEBUG")))
 
+# WARNING: don't turn on DB_CHOICE in dev!
+DB_CHOICE = bool(int(env("DB_CHOICE"))) 
+
+
 if DEBUG:
     ALLOWED_HOSTS = env("DJANGO_LOCAL_HOSTS").split(" ")
 else:
@@ -90,11 +94,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'GLSR_Gym.wsgi.application'
 
-# Media storage (AmazonS3)
 # Static serving Staging / "Prod" and Prod
-# if DEBUG:
-#     STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
-#     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Settings for media storage (AmazonS3)
 if not DEBUG:
     STORAGES = {
         # Media file (image) management
@@ -106,6 +108,10 @@ if not DEBUG:
             "BACKEND" : "storages.backends.s3boto3.S3StaticStorage",
         },
     }
+else:
+    # Settings for basic media storage
+    STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 AWS_ACCESS_KEY_ID =  env("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
@@ -116,29 +122,35 @@ AWS_DEFAULT_ACL= None
 AWS_S3_FILE_OVERWRITE = False
 
 # Database
-#heroku
+if DB_CHOICE:
+    #AWS
+    
+    #heroku
+    import dj_database_url
+    import psycopg2
 
-import dj_database_url
-import psycopg2
+    DATABASE_URL = env('DATABASE_URL')
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
-DATABASE_URL = env('DATABASE_URL')
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-
-DATABASES = {
-    'default' : dj_database_url.config(conn_max_age=600, ssl_require=True),
-}
-
-#docker
-# DATABASES = {
-#     'default' : {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': env("DB_NAME"), 
-#         'USER': env("DB_USER"),
-#         'PASSWORD': env("DB_PASSWORD"),
-#         'HOST': env("DB_HOST"), 
-#         'PORT': env("DB_PORT"),
-#     },
-# }
+    DATABASES = {
+        'default' : dj_database_url.config(conn_max_age=600, ssl_require=True),
+    }
+else:
+    #docker
+    DATABASES = {
+        'default' : {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': env("DB_NAME"), 
+            'USER': env("DB_USER"),
+            'PASSWORD': env("DB_PASSWORD"),
+            'HOST': env("DB_HOST"), 
+            'PORT': env("DB_PORT"),
+            'TEST': {
+                "NAME" : "mytest"+env("DB_NAME"),
+            },
+                
+        },
+    }
 
 
 
