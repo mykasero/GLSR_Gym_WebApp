@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ValidationError
 # Current bookings model
 class Booking(models.Model):
     id = models.AutoField(primary_key=True)
@@ -10,6 +11,18 @@ class Booking(models.Model):
     current_day = models.DateField(db_column = "Data", help_text = "Wybierz dzień" )
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='created_by', blank = True, null = True)
     
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(users_amount__gt=0),
+                name='booking_users_amount_gt_0'
+            ),
+        ]
+    
+    def clean(self):
+        if self.users_amount <= 0:
+            raise ValidationError('Nalezy podac liczbe wieksza od 0')
+        
 # Bookings archive model
 class Archive(models.Model):
     id = models.AutoField(primary_key=True)
@@ -21,6 +34,16 @@ class Archive(models.Model):
     
     class Meta:
         ordering = ["-current_day"]
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(users_amount__gt=0),
+                name='archive_users_amount_gt_0'
+            ),
+        ]
+    
+    def clean(self):
+        if self.users_amount <= 0:
+            raise ValidationError('Nalezy podac liczbe wieksza od 0')
     
 # Key stash keycodes model
 class Keycodes(models.Model):
@@ -28,6 +51,20 @@ class Keycodes(models.Model):
     code = models.CharField(db_column="Kod_Skrytki", max_length=4, help_text="Cztery cyfry 0-9")
     code_date = models.DateField(db_column="Data dodania")
 
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                condition = models.Q(code__regex=r'^\d{4}$'),
+                name = 'code_must_be_4_digits',
+            ),
+        ]
+
+    def clean(self):
+        if not self.code.isnumeric():
+            raise ValidationError('Podany kod nie składa się tylko z liczb')
+        if len(self.code) < 4:
+            raise ValidationError('Podany kod jest za krótki')
+        
 # Bug Reports model  
 class BugReports(models.Model):
     id = models.AutoField(primary_key=True)
