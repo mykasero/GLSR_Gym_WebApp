@@ -5,7 +5,7 @@ from . import forms
 
 urlpatterns = [
     path("", views.home, name = "home"),
-    path("home/", views.home, name = "home"),
+#     path("home/", views.home, name = "home"),
     path('login/', views.login, name = "login"),
     path('login/login_success/', views.login_success, name = "login_success"),
     path('logout/', views.logout, name = "logout"),
