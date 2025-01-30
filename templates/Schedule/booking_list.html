@@ -1,21 +1,28 @@
 {% load static %}
-{% for item in context %}
-<tr id="item-{{ item.pk }}" class="booking-row">
-    {% if item.created_by_id == current_user %}
-    <td>
-    <button style="background-color:#212529" hx-get="{% url 'edit_booking' pk=item.pk %}" hx-target="#edit_dialog"
-    data-toggle="modal" data-target="#edit_modal"><img height="16" src="{% static 'images/edit.svg' %}"/></button><br>
-    <button style="background-color:#212529" hx-get="{% url 'remove_booking_conf' pk=item.pk %}" hx-target="#remove_dialog"
-    data-toggle="modal" data-target="#remove_modal"><img height = "16" src="{% static 'images/remove.svg' %}"/></button>
-    </td>
-    {% else %}
-    <td></td>
-    {% endif %}
-    <td>{{item.users}}</td>
-    <td>{{item.users_amount}}</td>
-    <td>{{item.start_hour|time:'H:i'}}</td>
-    <td>{{item.end_hour|time:'H:i'}}</td>
-    <td>{{item.current_day|date:'d.m.y'}}</td>
-    
-</tr>
-{% endfor %}
+{% if not context %}
+    <tr id="item-{{ item.pk }}" class="booking-row">
+        <td>Nie ma jeszcze żadnych rezerwacji</td>
+    </tr>
+{% else %} 
+    {% for item in context %}
+    <tr id="item-{{ item.pk }}" class="booking-row">
+        {% if item.created_by_id == current_user %}
+        <td>
+        <button style="background-color:#212529" hx-get="{% url 'edit_booking' pk=item.pk %}" hx-target="#edit_dialog"
+        data-toggle="modal" data-target="#edit_modal"><img height="16" src="{% static 'images/edit.svg' %}"/></button><br>
+        <button style="background-color:#212529" hx-get="{% url 'remove_booking_conf' pk=item.pk %}" hx-target="#remove_dialog"
+        data-toggle="modal" data-target="#remove_modal"><img height = "16" src="{% static 'images/remove.svg' %}"/></button>
+        </td>
+        {% else %}
+        <td></td>
+        {% endif %}
+        <td>{{item.users}}</td>
+        <td>{{item.users_amount}}</td>
+        <td>{{item.start_hour|time:'H:i'}}</td>
+        <td>{{item.end_hour|time:'H:i'}}</td>
+        <td>{{item.current_day|date:'d.m.y'}}</td>
+        
+    </tr>
+    {% endfor %}
+
+{% endif %}

@@ -16,7 +16,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 # Dict with site names for dynamic message display
 SITE_NAMES = {
     'booking' : 'rezerwacji',
-    'current_booking' : 'dzisiejszych rezerwacji',
+    'current_bookings' : 'dzisiejszych rezerwacji',
     'archive' : 'archiwum',
     'reports' : 'zgłoszeń',
     'bug_report' : 'zgłoszenia problemu',
@@ -171,7 +171,7 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
             print("Form is invalid")
             return render(request, self.template_name, {'form':form})
     
-# View with buttons that move to schedule to book a hour or go to archive 
+# View with buttons that move to schedule to book a session, check current bookings or go to archive 
 @login_required(login_url="/login/")
 def lobby(request):
     return render(request, "Schedule/lobby.html")
@@ -203,9 +203,10 @@ def current_bookings(request):
     context = Booking.objects.all().order_by('current_day')
     current_user = request.user.id
     if context:
+        
         return render(request, "Schedule/current_bookings.html", {'context' : context, 'current_user' : current_user})
-    else:
-        return render(request, "Schedule/current_bookings.html")
+    
+    return render(request, "Schedule/current_bookings.html")
 
 # View for rendering the data in the table with current bookings
 @login_required(login_url="/login/")
