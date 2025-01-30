@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from Schedule.models import Keycodes, Booking
 import os
-
+from django.contrib.auth import get_user_model
 
 class TestHomePageView(SimpleTestCase):
     def test_homepage_url_correct(self):
@@ -232,7 +232,6 @@ class TestLobbyView(TestCase):
         self.assertContains(response, logo_path)
 
 #add booking here
-    
 class TestCurrentBookingsView(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
@@ -279,20 +278,67 @@ class TestCurrentBookingsView(TestCase):
         self.assertTemplateUsed(response, 'Schedule/current_bookings.html')
         
         
-    # def test_current_bookings_empty_table(self):
-    #     response = self.client.post(
-    #             reverse('login'),
-    #             {'login':'Testuser1', 'haslo':'Testpassword123'},
-    #             follow=True,
-    #         )
+    def test_current_bookings_empty_table(self):
+        response = self.client.post(
+                reverse('login'),
+                {'login':'Testuser1', 'haslo':'Testpassword123'},
+                follow=True,
+            )
 
-    #     response = self.client.get(reverse('current_bookings'))
+        response = self.client.get(reverse('current_bookings'))
         
-    #     self.assertQuerySetEqual(response.context, [])
+        # test passed context if it's truly empty
+        self.assertQuerySetEqual(response.context['context'], [])
         
-    #     response = self.client.get(
-    #         reverse('booking_list'),
-    #         HTTP_HX_REQUEST='true'
-    #         )
+        response = self.client.get(
+            reverse('booking_list'),
+            HTTP_HX_REQUEST='true'
+            )
         
-    #     self.assertContains(response, "Nie ma jeszcze żadnych rezerwacji")
+        # test if the empty table info is present
+        self.assertContains(response, "Nie ma jeszcze żadnych rezerwacji")
+    
+    def test_current_bookings_filled_table(self):
+        User.objects.create_user(
+            username='Testuser2',
+            password='Testpassword123',
+        )
+        Booking.objects.create(
+            users='Testuser1', 
+            users_amount=3,
+            start_hour="10:30",
+            end_hour="11:30",
+            current_day="2025-01-30"
+            )
+        Booking.objects.create(
+            users='Testuser2', 
+            users_amount=1,
+            start_hour="12:30",
+            end_hour="15:30",
+            current_day="2025-01-30"
+            )
+        
+        response = self.client.post(
+            reverse('login'),
+            {'login':'Testuser1', 'haslo':'Testpassword123'},
+            follow=True,
+        )
+        
+        response = self.client.get(reverse('current_bookings'))
+        
+        # test proper response code and template load
+        self.assertEqual(response.status_code,200)
+        self.assertTemplateUsed(response, 'Schedule/current_bookings.html')
+        
+        # test if two bookings were uploaded correctly
+        self.assertEqual(len(response.context['context']), 2)
+
+        # check if currently logged in users id that's being passed in context is correct
+        self.assertEqual(response.context['current_user'], self.user.id)
+        
+        response = self.client.get(reverse('booking_list'))
+        
+        # check if both users bookings are in the table
+        self.assertContains(response, "Testuser1")
+        self.assertContains(response, "Testuser2")
+    

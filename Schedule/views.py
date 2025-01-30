@@ -202,11 +202,12 @@ def booking(request):
 def current_bookings(request):
     context = Booking.objects.all().order_by('current_day')
     current_user = request.user.id
+    
     if context:
         
         return render(request, "Schedule/current_bookings.html", {'context' : context, 'current_user' : current_user})
     
-    return render(request, "Schedule/current_bookings.html")
+    return render(request, "Schedule/current_bookings.html", {'context':context})
 
 # View for rendering the data in the table with current bookings
 @login_required(login_url="/login/")
