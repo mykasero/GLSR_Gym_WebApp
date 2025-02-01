@@ -7,6 +7,8 @@ from Schedule.models import Keycodes, Booking
 import os
 from django.contrib.auth import get_user_model
 
+
+# homepage view
 class TestHomePageView(SimpleTestCase):
     def test_homepage_url_correct(self):
         response = self.client.get(reverse('home'))
@@ -37,9 +39,46 @@ class TestHomePageView(SimpleTestCase):
         logo_path_template = os.path.join(settings.STATIC_URL, 'images/gym_name.png')
         self.assertTrue(os.path.exists(logo_path_os), f"Image file not found at the specified path")
         self.assertContains(response, logo_path_template)
-      
-#add class for login view here
-  
+   
+# register view  
+ 
+# login view
+class TestLoginView(TestCase):    
+    def test_login_url_correct(self):
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.status_code, 200)
+    
+    def test_login_uses_correct_template(self):
+        response = self.client.get(reverse('login'))
+        self.assertTemplateUsed(response, 'Schedule/login.html')
+        
+    def test_login_context_has_form(self):
+        response = self.client.get(reverse('login'))
+        self.assertIn('form', response.context)
+    
+    def test_login_template_has_form(self):
+        response = self.client.get(reverse('login'))
+        self.assertContains(response, '<form')       
+        self.assertContains(response, 'name="login"')
+        self.assertContains(response, 'name="haslo"')
+    
+    def test_login_template_has_login_button(self):
+        response = self.client.get(reverse('login'))
+        self.assertContains(response, '<button type="submit" class = "btn mt-3 text-center fs-6">Login</button>')
+    
+    def test_login_template_has_register_link(self):
+        response = self.client.get(reverse('login'))
+        self.assertContains(response,"Nie masz konta?")
+        self.assertContains(response, "Zarejestruj sie")
+        self.assertContains(response, '<a class="link_indv" href="/register">tutaj</a>')
+        
+    def test_login_template_has_forgot_password_link(self):
+        response = self.client.get(reverse('login'))
+        self.assertContains(response,"Zapomniałeś hasła?")
+        self.assertContains(response, "Przejdź")
+        self.assertContains(response, '<a class="link_indv" href="/password_reset/">tutaj</a>')
+        
+# login success view 
 class TestLoginSuccessView(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
@@ -136,6 +175,7 @@ class TestLoginSuccessView(TestCase):
         self.assertContains(response, 'Kod do skrzynki z kluczem: 1234.')
         self.assertContains(response, 'alert-success')
         
+# lobby view
 class TestLobbyView(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
@@ -232,6 +272,8 @@ class TestLobbyView(TestCase):
         self.assertContains(response, logo_path)
 
 #add booking here
+
+#current bookings view
 class TestCurrentBookingsView(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
@@ -342,3 +384,6 @@ class TestCurrentBookingsView(TestCase):
         self.assertContains(response, "Testuser1")
         self.assertContains(response, "Testuser2")
     
+#archive view
+class TestArchiveView(TestCase):
+    pass
