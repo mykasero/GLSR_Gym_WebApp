@@ -163,25 +163,37 @@
                 <div style="text-shadow: 5px 5px 10px #03A9F4; padding-bottom:10px;">
                     <b>Archiwum</b>
                 </div>
-                <table id="Archiwum" class="table table-sm table-bordered">
-                    <thead class="table-dark table-bordered">
-                        <th>Nazwa</th>
-                        <th>Osoby</th>
-                        <th>Start</th>
-                        <th>Koniec</th>
-                        <th>Dzien</th>
-                    </thead>
-                    
-                    {% for item in context %}
-                    <tr style="background:rgba(180,180,180,0.5);">
-                        <td>{{item.users}}</td>
-                        <td>{{item.users_amount}}</td>
-                        <td>{{item.start_hour|time:'H:i'}}</td>
-                        <td>{{item.end_hour|time:'H:i'}}</td>
-                        <td>{{item.current_day|date:'d.m.y'}}</td>
-                    </tr>
-                    {% endfor %}
-                </table>
+                {% if context %}
+                    <table id="Archiwum" class="table table-sm table-bordered">
+                        <thead class="table-dark table-bordered">
+                            <th>Nazwa</th>
+                            <th>Osoby</th>
+                            <th>Start</th>
+                            <th>Koniec</th>
+                            <th>Dzien</th>
+                        </thead>
+                        
+                        {% for item in context %}
+                            <tr style="background:rgba(180,180,180,0.5);">
+                                <td>{{item.users}}</td>
+                                <td>{{item.users_amount}}</td>
+                                <td>{{item.start_hour|time:'H:i'}}</td>
+                                <td>{{item.end_hour|time:'H:i'}}</td>
+                                <td>{{item.current_day|date:'d.m.y'}}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <table class="table table-sm table-bordered">
+                        <thead class = "table-dark table-bordered">
+                            <th></th>
+                        </thead>
+                        <tr style = "background:rgba(180,180,180,0.5);">
+                            <td> Brak rezerwacji w archiwum </td>
+                        </tr>
+                    </table>
+                {% endif %}
+                
             </div>
     </div>
 </div>

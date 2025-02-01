@@ -292,11 +292,8 @@ def remove_booking(request, pk):
 @login_required(login_url="/login/")
 def archive_booking(request):
     context = Archive.objects.all()
-    if context:
-        return render(request, "Schedule/archive.html", {'context':context})
-    else:
-        messages.info(request, "No data available")
-        return render(request, "Schedule/archive.html")
+    return render(request, "Schedule/archive.html", {'context':context})
+
 
 #View with a form that allows users to report a bug
 @login_required(login_url="/login/")
