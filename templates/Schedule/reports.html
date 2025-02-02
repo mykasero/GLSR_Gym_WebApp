@@ -160,19 +160,29 @@
                 <div style="text-shadow: 5px 5px 10px #03A9F4; padding-bottom:10px;">
                     <b>Lista zgłoszeń</b>
                 </div>
-                <table id="Reports" class="table table-sm table-bordered">
-                    <thead class="table-dark table-bordered">
-                        <th>Opis zgłoszenia</th>
-                        <th>Data</th>
-                    </thead>
-                    {% for item in context %}
-                    <tr style="background:rgba(180,180,180,0.5);">
-                        <td>{{item.report_text}}</td>
-                        <td>{{item.report_date|date:'d.m.y'}}</td>
-                    </tr>
-
-                {% endfor %}
-                </table>
+                {% if context %}
+                    <table id="Reports" class="table table-sm table-bordered">
+                        <thead class="table-dark table-bordered">
+                            <th>Opis zgłoszenia</th>
+                            <th>Data</th>
+                        </thead>
+                        
+                        {% for item in context %}
+                            <tr style="background:rgba(180,180,180,0.5);">
+                                <td>{{item.report_text}}</td>
+                                <td>{{item.report_date|date:'d.m.y'}}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-dark table-bordered">
+                        </thead>
+                        <tr style="background:rgba(180,180,180,0.5);">
+                            <td>Brak zgłoszeń</td>
+                        </tr>
+                    </table>
+                {% endif %}
             </div>
         </div>
         

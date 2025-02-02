@@ -3,7 +3,7 @@ from django.test import TestCase, Client, SimpleTestCase
 from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth.models import User
-from Schedule.models import Keycodes, Booking, Archive
+from Schedule.models import Keycodes, Booking, Archive, BugReports
 import os
 from django.contrib.auth import get_user_model
 
@@ -347,7 +347,7 @@ class BookingView(TestCase):
 
         self.assertContains(response,'Aby wyświetlić strone rezerwacji musisz być zalogowany')
         
-    def test_lobby_uses_correct_template_after_redirect(self):
+    def test_booking_uses_correct_template_after_redirect(self):
         response = self.client.get(
             reverse('booking'),
             follow = True
@@ -620,3 +620,235 @@ class TestArchiveView(TestCase):
         # check if both users bookings are in the table
         self.assertContains(response, "Testuser1")
         self.assertContains(response, "Testuser2")
+
+#bug_report view
+class TestBugReportView(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='Testuser1',
+            password='Testpassword123',
+        )
+        
+        self.keycode = Keycodes.objects.create(code="1234",code_date="2025-01-20")
+        
+    def test_bug_report_url_success(self):
+        response = self.client.post(
+            reverse('login'),
+            {'login':'Testuser1', 'haslo':'Testpassword123'},
+            follow=True,
+        )
+        
+        response = self.client.get(reverse('bug_report'))
+        self.assertEqual(response.status_code, 200)
+    
+    def test_bug_report_uses_correct_template(self):
+        response = self.client.post(
+            reverse('login'),
+            {'login':'Testuser1', 'haslo':'Testpassword123'},
+            follow=True,
+        )
+        
+        response = self.client.get(reverse('bug_report'))
+        self.assertTemplateUsed(response, 'Schedule/bug_report.html')
+        
+    def test_bug_report_unauthenticated_user_entry(self):
+        response = self.client.get(reverse('bug_report'))
+        self.assertEqual(response.status_code, 302)
+
+    def test_bug_report_unauthenticated_user_entry_message(self):
+        response = self.client.get(
+            reverse('bug_report'),
+            follow = True
+            )
+        
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), 'Aby wyświetlić strone zgłoszenia problemu musisz być zalogowany')
+    
+    def test_bug_report_unauthenticated_user_entry_message_in_template(self):
+        response = self.client.get(
+            reverse('bug_report'),
+            follow = True
+            )
+
+        self.assertContains(response,'Aby wyświetlić strone zgłoszenia problemu musisz być zalogowany')
+        
+    def test_bug_report_uses_correct_template_after_redirect(self):
+        response = self.client.get(
+            reverse('bug_report'),
+            follow = True
+        )
+        
+        self.assertTemplateUsed(response, 'Schedule/login.html')
+    
+    def test_bug_report_context_has_form(self):
+        response = self.client.post(
+            reverse('login'),
+            {'login':'Testuser1', 'haslo':'Testpassword123'},
+            follow=True,
+        )
+        
+        response = self.client.get(reverse('bug_report'))
+        self.assertIn('form', response.context)
+    
+    def test_bug_report_template_has_form(self):
+        response = self.client.post(
+            reverse('login'),
+            {'login':'Testuser1', 'haslo':'Testpassword123'},
+            follow=True,
+        )
+        
+        response = self.client.get(reverse('bug_report'))
+
+        self.assertContains(response, "Zgłoś błąd")
+        self.assertContains(response, '<form method="post" class="BugReportForm">')       
+        self.assertContains(response, 'name="report_text"')
+        self.assertContains(response, 'name="report_date"')
+    
+    def test_bug_report_template_has_create_booking_button(self):
+        response = self.client.post(
+            reverse('login'),
+            {'login':'Testuser1', 'haslo':'Testpassword123'},
+            follow=True,
+        )
+        
+        response = self.client.get(reverse('bug_report'))
+        self.assertContains(response, '<button type="submit" class = "btn mt-3 text-center fs-6">Wyślij zgłoszenie</button>')
+        
+# Reports view
+
+class TestReportsView(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='Testuser1',
+            password='Testpassword123',
+        )
+        
+        self.staff_user = User.objects.create_user(
+            username='Staffuser1',
+            password='Testpassword123',
+            is_staff = True
+        )
+        
+        self.keycode = Keycodes.objects.create(code="1234",code_date="2025-01-20")
+        
+    def test_reports_url_success(self):
+        response = self.client.post(
+            reverse('login'),
+            {'login':'Staffuser1', 'haslo':'Testpassword123'},
+            follow=True,
+        )
+        
+        self.client.get(reverse('reports'))
+        
+        self.assertEqual(response.status_code, 200)
+        
+    def test_reports_unauthenticated_user_entry(self):
+        response = self.client.get(reverse('reports'))
+        self.assertEqual(response.status_code, 302)
+        
+    def test_reports_unauthenticated_user_entry_message(self):
+        response = self.client.get(
+            reverse('reports'),
+            follow = True
+            )
+        
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), 'Aby wyświetlić strone zgłoszeń musisz być zalogowany jako administrator')
+    
+    def test_reports_responses_when_user_not_staff(self):
+        response = self.client.post(
+            reverse('login'),
+            {'login':'Testuser1', 'haslo':'Testpassword123'},
+            follow=True,
+        )
+        response = self.client.get(
+            reverse('reports'),
+            )
+        
+        self.assertEqual(response.status_code, 302)
+        
+        response = self.client.get(
+            reverse('reports'),
+            follow=True,
+            )
+        
+        self.assertTemplateUsed(response, 'Schedule/login_success.html')
+        self.assertContains(response, 'Aby wyświetlić strone zgłoszeń musisz być zalogowany jako administrator')
+        
+    def test_reports_correct_template_when_user_is_staff(self):
+        response = self.client.post(
+            reverse('login'),
+            {'login':'Staffuser1', 'haslo':'Testpassword123'},
+            follow = True,
+        )
+        
+        self.assertTrue(response.context['user'].is_staff)
+        
+        response = self.client.get(
+            reverse('reports'),
+            )
+                  
+        self.assertTemplateUsed(response, 'Schedule/reports.html')
+        
+    
+    def test_reports_unauthenticated_user_entry_message_in_template(self):
+        response = self.client.get(
+            reverse('reports'),
+            follow = True
+            )
+        
+        self.assertContains(response, 'Aby wyświetlić strone zgłoszeń musisz być zalogowany jako administrator')
+    
+    def test_reports_uses_correct_template_after_unauth_redirect(self):
+        response = self.client.get(
+            reverse('reports'),
+            follow = True
+            )
+            
+        self.assertTemplateUsed(response, 'Schedule/login.html')
+           
+    def test_reports_empty_table(self):
+        response = self.client.post(
+                reverse('login'),
+                {'login':'Staffuser1', 'haslo':'Testpassword123'},
+                follow=True,
+            )
+
+        response = self.client.get(reverse('reports'))
+        
+        # test passed context if it's truly empty
+        self.assertQuerySetEqual(response.context['context'], [])
+
+        # test if the empty table info is present
+        self.assertContains(response, "Brak zgłoszeń")
+    
+    def test_reports_filled_table(self):
+        BugReports.objects.create(
+            report_text = 'Test report text 1',
+            report_date = '2025-01-29'
+            )
+        BugReports.objects.create(
+            report_text = 'Test report text 2',
+            report_date = '2025-01-30'
+            )
+        
+        response = self.client.post(
+            reverse('login'),
+            {'login':'Staffuser1', 'haslo':'Testpassword123'},
+            follow=True,
+        )
+        
+        response = self.client.get(reverse('reports'))
+        
+        # test proper response code and template load
+        self.assertEqual(response.status_code,200)
+        self.assertTemplateUsed(response, 'Schedule/reports.html')
+        
+        # test if two bookings were uploaded correctly
+        self.assertEqual(len(response.context['context']), 2)
+        
+        # check if both users bookings are in the table
+        self.assertContains(response, "Test report text 1")
+        self.assertContains(response, "Test report text 2")
