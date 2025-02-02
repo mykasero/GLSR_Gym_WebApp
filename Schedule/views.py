@@ -40,7 +40,14 @@ def home(request):
 def login(request):
     
     if request.user.is_authenticated:
-        return redirect('login_success/')
+        if 'next' in request.GET:
+            if request.GET['next'][1:-1] == 'reports':
+                if request.user.is_staff:
+                    return render(request, 'Schedule/reports.html')
+                else:
+                    messages.warning(request, f"Aby wyświetlić strone {SITE_NAMES[request.GET['next'][1:-1]]} musisz być zalogowany jako administrator")
+        
+        return render(request, 'Schedule/login_success.html')
     else:      
         if request.method == "POST":
             form = LoginForm()
@@ -50,7 +57,7 @@ def login(request):
             user = authenticate(request, username = username, password = password)
             
             if user is not None:
-                auth_login(request,user)
+                auth_login(request,user)                          
                 return redirect('login_success/')
             
             else:
@@ -59,7 +66,11 @@ def login(request):
         else:
             if 'next' in request.GET:
                 if dict(request.GET)['next'][0][1:-1] in list(SITE_NAMES.keys()):  
-                    messages.warning(request, f"Aby wyświetlić strone {SITE_NAMES[dict(request.GET)['next'][0][1:-1]]} musisz być zalogowany")
+                    if dict(request.GET)['next'][0][1:-1] == 'reports' and not request.user.is_staff:
+                        messages.warning(request, f"Aby wyświetlić strone {SITE_NAMES[dict(request.GET)['next'][0][1:-1]]} musisz być zalogowany jako administrator")
+                    else:
+                        messages.warning(request, f"Aby wyświetlić strone {SITE_NAMES[dict(request.GET)['next'][0][1:-1]]} musisz być zalogowany")
+            
             form = LoginForm()
             return render(request, "Schedule/login.html", {'form' : form})
 
@@ -312,17 +323,13 @@ def bug_report(request):
         return render(request, "Schedule/bug_report.html", {'form' : form})
 
 # View showing a datatable with user bug reports
-@staff_required(login_url="/admin/")
+@staff_required(login_url="/login/")
 def reports(request):
     
     context = BugReports.objects.all().order_by('-report_date')
     
-    if context:
-        return render(request, "Schedule/reports.html", {'context' : context})
-    else:
-        messages.info(request, "Nie ma żadnych zgłoszeń :)")
-        return render(request,"Schedule/reports.html")
-
+    return render(request, "Schedule/reports.html", {'context' : context})
+ 
 #View with a photo gallery of the gym TBD(?)
 def gallery(request):
     return render(request, "Schedule/gallery.html")
