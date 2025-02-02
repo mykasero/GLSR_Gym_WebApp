@@ -3,7 +3,7 @@ from django.test import TestCase, Client, SimpleTestCase
 from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth.models import User
-from Schedule.models import Keycodes, Booking
+from Schedule.models import Keycodes, Booking, Archive
 import os
 from django.contrib.auth import get_user_model
 
@@ -41,7 +41,31 @@ class TestHomePageView(SimpleTestCase):
         self.assertContains(response, logo_path_template)
    
 # register view  
- 
+class TestRegisterView(TestCase):
+    def test_register_url_correct(self):
+        response = self.client.get(reverse('register'))
+        self.assertEqual(response.status_code, 200)
+        
+    def test_register_uses_correct_template(self):
+        response = self.client.get(reverse('register'))
+        self.assertTemplateUsed(response, 'Schedule/register.html')
+        
+    def test_register_context_has_form(self):
+        response = self.client.get(reverse('register'))
+        self.assertIn('form', response.context)
+        
+    def test_register_template_has_form(self):
+        response = self.client.get(reverse('register'))
+        self.assertContains(response, '<form')  
+        self.assertContains(response, 'name="username"')
+        self.assertContains(response, 'name="password1"')
+        self.assertContains(response, 'name="password2"')
+        self.assertContains(response, 'name="access_code"')
+        
+    def test_register_template_has_register_button(self):
+        response = self.client.get(reverse('register'))
+        self.assertContains(response, '<button type="submit" class = "btn mt-3">Zarejestruj</button>')
+        
 # login view
 class TestLoginView(TestCase):    
     def test_login_url_correct(self):
@@ -272,7 +296,103 @@ class TestLobbyView(TestCase):
         self.assertContains(response, logo_path)
 
 #add booking here
+class BookingView(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='Testuser1',
+            password='Testpassword123',
+        )
+        
+        self.keycode = Keycodes.objects.create(code="1234",code_date="2025-01-20")
+    
+    def test_booking_url_success(self):
+        response = self.client.post(
+            reverse('login'),
+            {'login':'Testuser1', 'haslo':'Testpassword123'},
+            follow=True,
+        )
+        
+        response = self.client.get(reverse('booking'))
+        self.assertEqual(response.status_code, 200)
+    
+    def test_booking_uses_correct_template(self):
+        response = self.client.post(
+            reverse('login'),
+            {'login':'Testuser1', 'haslo':'Testpassword123'},
+            follow=True,
+        )
+        
+        response = self.client.get(reverse('booking'))
+        self.assertTemplateUsed(response, 'Schedule/booking.html')
+        
+    def test_booking_unauthenticated_user_entry(self):
+        response = self.client.get(reverse('booking'))
+        self.assertEqual(response.status_code, 302)
 
+    def test_booking_unauthenticated_user_entry_message(self):
+        response = self.client.get(
+            reverse('booking'),
+            follow = True
+            )
+        
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), 'Aby wyświetlić strone rezerwacji musisz być zalogowany')
+    
+    def test_booking_unauthenticated_user_entry_message_in_template(self):
+        response = self.client.get(
+            reverse('booking'),
+            follow = True
+            )
+
+        self.assertContains(response,'Aby wyświetlić strone rezerwacji musisz być zalogowany')
+        
+    def test_lobby_uses_correct_template_after_redirect(self):
+        response = self.client.get(
+            reverse('booking'),
+            follow = True
+        )
+        
+        self.assertTemplateUsed(response, 'Schedule/login.html')
+    
+    def test_booking_context_has_form(self):
+        response = self.client.post(
+            reverse('login'),
+            {'login':'Testuser1', 'haslo':'Testpassword123'},
+            follow=True,
+        )
+        
+        response = self.client.get(reverse('booking'))
+        self.assertIn('form', response.context)
+    
+    def test_booking_template_has_form(self):
+        response = self.client.post(
+            reverse('login'),
+            {'login':'Testuser1', 'haslo':'Testpassword123'},
+            follow=True,
+        )
+        
+        response = self.client.get(reverse('booking'))
+
+        self.assertContains(response, "Rezerwacja")
+        self.assertContains(response, '<form method="post" class="BookingForm p-3 mt-3">')       
+        self.assertContains(response, 'name="users"')
+        self.assertContains(response, 'name="users_amount"')
+        self.assertContains(response, 'name="start_hour"')
+        self.assertContains(response, 'name="end_hour"')
+        self.assertContains(response, 'name="current_day"')
+    
+    def test_booking_template_has_create_booking_button(self):
+        response = self.client.post(
+            reverse('login'),
+            {'login':'Testuser1', 'haslo':'Testpassword123'},
+            follow=True,
+        )
+        
+        response = self.client.get(reverse('booking'))
+        self.assertContains(response, '<button type="submit" class = "btn mt-3">Zarezerwuj</button>')
+    
+        
 #current bookings view
 class TestCurrentBookingsView(TestCase):
     def setUp(self):
@@ -386,4 +506,117 @@ class TestCurrentBookingsView(TestCase):
     
 #archive view
 class TestArchiveView(TestCase):
-    pass
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='Testuser1',
+            password='Testpassword123',
+        )
+        
+        self.keycode = Keycodes.objects.create(code="1234",code_date="2025-01-20")
+        
+    def test_archive_url_success(self):
+        response = self.client.post(
+            reverse('login'),
+            {'login':'Testuser1', 'haslo':'Testpassword123'},
+            follow=True,
+        )
+        
+        self.client.get(reverse('archive'))
+        
+        self.assertEqual(response.status_code, 200)
+        
+    def test_archive_unauthenticated_user_entry(self):
+        response = self.client.get(reverse('archive'))
+        self.assertEqual(response.status_code, 302)
+        
+    def test_archive_unauthenticated_user_entry_message(self):
+        response = self.client.get(
+            reverse('archive'),
+            follow = True
+            )
+        
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), 'Aby wyświetlić strone archiwum musisz być zalogowany')
+    
+    def test_archive_unauthenticated_user_entry_message_in_template(self):
+        response = self.client.get(
+            reverse('archive'),
+            follow = True
+            )
+        
+        self.assertContains(response, 'Aby wyświetlić strone archiwum musisz być zalogowany')
+    
+    def test_archive_uses_correct_template_after_unauth_redirect(self):
+        response = self.client.get(
+            reverse('archive'),
+            follow = True
+            )
+            
+        self.assertTemplateUsed(response, 'Schedule/login.html')
+    
+    def test_archive_uses_correct_template(self):
+        response = self.client.post(
+                reverse('login'),
+                {'login':'Testuser1', 'haslo':'Testpassword123'},
+                follow=True,
+            )
+        
+        response = self.client.get(reverse('archive'))
+        
+        self.assertTemplateUsed(response, 'Schedule/archive.html')
+        
+        
+    def test_archive_empty_table(self):
+        response = self.client.post(
+                reverse('login'),
+                {'login':'Testuser1', 'haslo':'Testpassword123'},
+                follow=True,
+            )
+
+        response = self.client.get(reverse('archive'))
+        
+        # test passed context if it's truly empty
+        self.assertQuerySetEqual(response.context['context'], [])
+
+        # test if the empty table info is present
+        self.assertContains(response, "Brak rezerwacji w archiwum")
+    
+    def test_current_bookings_filled_table(self):
+        User.objects.create_user(
+            username='Testuser2',
+            password='Testpassword123',
+        )
+        Archive.objects.create(
+            users='Testuser1', 
+            users_amount=3,
+            start_hour="10:30",
+            end_hour="11:30",
+            current_day="2025-01-30"
+            )
+        Archive.objects.create(
+            users='Testuser2', 
+            users_amount=1,
+            start_hour="12:30",
+            end_hour="15:30",
+            current_day="2025-01-30"
+            )
+        
+        response = self.client.post(
+            reverse('login'),
+            {'login':'Testuser1', 'haslo':'Testpassword123'},
+            follow=True,
+        )
+        
+        response = self.client.get(reverse('archive'))
+        
+        # test proper response code and template load
+        self.assertEqual(response.status_code,200)
+        self.assertTemplateUsed(response, 'Schedule/archive.html')
+        
+        # test if two bookings were uploaded correctly
+        self.assertEqual(len(response.context['context']), 2)
+        
+        # check if both users bookings are in the table
+        self.assertContains(response, "Testuser1")
+        self.assertContains(response, "Testuser2")
