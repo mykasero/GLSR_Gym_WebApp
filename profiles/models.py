@@ -24,4 +24,10 @@ def create_profile(sender, instance, created, **kwargs):
         profile.date_joined = instance.date_joined
         profile.save()
         
+# Model for checking the users payment for the monthly access
+class Payment(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='subscription')
+    is_paid = models.BooleanField(default=False)
+    payment_date = models.DateField(null = True, blank = True)
+    expiry_date = models.DateField(null=True, blank = True)
      

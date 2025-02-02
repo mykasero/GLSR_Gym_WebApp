@@ -8,4 +8,6 @@ urlpatterns = [
     path('profile/email/<int:pk>/edit/', views.edit_email, name='edit_email'),
     path('profile/pfp/<int:pk>/edit/', views.edit_pfp, name='edit_pfp'),
     path('profile/rank_info', views.rank_info, name='rank_info'),
+    path('payments/', views.payments, name = 'payments'),
+    path('payments/<int:pk>/edit', views.edit_payments, name='edit_payments'),
 ]

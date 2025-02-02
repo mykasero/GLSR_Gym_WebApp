@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib import messages
-from .models import Profile
+from .models import Profile, Payment
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 import json
 from datetime import datetime
-
+from Schedule.views import staff_required
 #profile page main view
 @login_required(login_url="/login/")
 def profile_home(request):
@@ -146,3 +146,21 @@ def rank_info(request):
         form = BlankForm()    
         
     return render(request, 'profiles/rank_info.html', {'form':form})
+
+# view for admin to manage the users subscriptions
+@staff_required(login_url="/login/")
+def payments(request):
+    user_list = User.objects.all()
+    current_user = Profile.objects.get(user__id=request.user.id)
+    
+    context = {
+        'user_list' : user_list,
+        'current_user' : current_user,
+    }
+    
+    return render(request, 'profiles/payments.html', {'context':context})
+
+# view for the modal to edit payments
+@staff_required(login_url="/login/")
+def edit_payments(request):
+    pass

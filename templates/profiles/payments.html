@@ -1,0 +1,162 @@
+{% extends "Schedule/base.html" %}
+{% load static %}
+{% block title %}<title>Subs Management</title>{% endblock %}
+{% block background_img %}
+    <style type="text/css">
+        body {
+        background:url('{% static 'images/profile-bg.jpg' %}') no-repeat center fixed;
+        background-size: cover;
+        background-color: #212429;
+        }
+    </style>
+
+{% endblock %}
+
+{% block stylings %}
+<style type="text/css">
+    .table-scrollable {
+        overflow-x: auto;
+        max-width: 600px;
+        box-shadow: inset 0 0 5px rgba(150, 150 ,150,0.35);
+        margin: auto;
+    }
+</style>
+
+
+<link href="{% static 'css/auth_styles.css'%}" rel="stylesheet" />
+
+<style type="text/css">
+    @media only screen
+        and (min-width:1081px){
+            .div_pad {
+                padding-top: 60px;
+            }
+            .wrapper{
+                max-width: 1150px;
+            }
+        }
+    @media only screen 
+        and (min-width:801px)
+        and (max-width:1080px){
+            .div_pad {
+                padding-top:30px;
+            }
+            .wrapper{
+                max-width: 900px;
+            }
+        }
+    @media screen 
+    and (min-width:601px)
+    and (max-width: 800px) {
+        .div_pad{
+            padding-top:30px;
+        }
+        .wrapper{
+            max-width: 700px;
+            min-height: 400px;
+            margin-right: 5px;
+            margin-left: 5px;
+        }
+     
+    }
+
+    @media screen and (max-width: 600px) {
+        .div_pad{
+            padding-top:30px;
+        }
+        .wrapper{
+            max-width: 500px;
+            min-height: 400px;
+            margin-right: 5px;
+            margin-left: 5px;
+        }
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="text-center mt-5">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <!-- User greeting -->
+        <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px;text-align:left;">
+            <b>Witaj, {{ context.current_user }} </b>
+        </div>
+        
+        <div class="wrapper" style="min-height:150px; margin: 25px auto;">
+            <div class="logo">
+                <img style="height:80px;" src="{% static 'images/logo1.png' %}" alt=""/>
+            </div>
+            <b>GLSN Gym</b>
+            <div class="div_pad">
+                <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px; padding-bottom:30px;">
+                    <b>Zarządzanie płatnościami</b>
+                </div>
+                {% if context %}
+                    <div class = "table-scrollable">
+                        <table id="Payments" class="table table-sm table-bordered table-responsive">
+                            <thead class="table-dark table-bordered">
+                                <th>Edytuj</th>
+                                <th>ID</th>
+                                <th>Nazwa</th>
+                                <th>Opłacony miesiąc</th>
+                                <th>Data opłacenia</th>
+                                <th>Data wygaśnięcia</th>
+                            </thead>
+                            
+                            {% for user in context.user_list %}
+                                <tr style="background:rgba(180,180,180,0.5);">
+                                    <td><button style="background-color:#212529" hx-get="{% url 'edit_payment' pk=item.pk %}" hx-target="#edit_dialog"
+                                        data-toggle="modal" data-target="#edit_modal"><img height="16" src="{% static 'images/edit.svg' %}"/></button></td>
+                                    <td>{{user.id}}</td>
+                                    <td>{{user.username}}</td>
+                                    <td>Nie</td>
+                                    <td>xxxx-xx-xx</td>
+                                    <td>xxxx-xx-xx</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                {% else %}
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-dark table-bordered">
+                        </thead>
+                        <tr style="background:rgba(180,180,180,0.5);">
+                            <td>Brak użytkowników w bazie danych</td>
+                        </tr>
+                    </table>
+                {% endif %}
+                
+
+            </div>
+        </div>
+        <!-- Placeholder for the modal -->
+        <div id="edit_modal" class="modal fade">
+            <div id="edit_dialog" class="modal-dialog" hx-target="this"></div>
+        </div>
+
+        <!-- Empty toast to show the message -->
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div id="toast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive"
+            aria-atomic="true">
+                    <div class="d-flex">
+                        <div id="toast-body" class="toast-body"></div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+                    </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="{% static 'js/dialog.js' %}"></script>
+<script src="{% static 'js/toast.js' %}"></script>
+{% endblock %}
