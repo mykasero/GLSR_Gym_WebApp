@@ -1,6 +1,7 @@
 {% extends "Schedule/base.html" %}
 {% load static %}
-{% block title %}<title>Subs Management</title>{% endblock %}
+{% load custom_filters %}
+{% block title %}<title>Płatności</title>{% endblock %}
 {% block background_img %}
     <style type="text/css">
         body {
@@ -109,17 +110,23 @@
                                 <th>Opłacony miesiąc</th>
                                 <th>Data opłacenia</th>
                                 <th>Data wygaśnięcia</th>
+                                <th>Konto do deaktywacji</th>
                             </thead>
                             
-                            {% for user in context.user_list %}
+                            {% for user in context.user_list_payments %}
                                 <tr style="background:rgba(180,180,180,0.5);">
-                                    <td><button style="background-color:#212529" hx-get="{% url 'edit_payment' pk=item.pk %}" hx-target="#edit_dialog"
+                                    <td><button style="background-color:#212529" hx-get="{% url 'edit_payments' pk=user.pk %}" hx-target="#edit_dialog"
                                         data-toggle="modal" data-target="#edit_modal"><img height="16" src="{% static 'images/edit.svg' %}"/></button></td>
-                                    <td>{{user.id}}</td>
-                                    <td>{{user.username}}</td>
-                                    <td>Nie</td>
-                                    <td>xxxx-xx-xx</td>
-                                    <td>xxxx-xx-xx</td>
+                                    <td>{{user.user.id}}</td>
+                                    <td>{{user.user.username}}</td>
+                                    <td>{{user.is_paid|bool_in_pl}}</td>
+                                    <td>{{user.payment_date|date:'d.m.y'}}</td>
+                                    <td>{{user.expiry_date|date:'d.m.y'}}</td>
+                                    {% if user.is_expired != 'NONE' %}
+                                        <td>{{user.is_expired}}</td>
+                                    {% else %}
+                                        <td>---</td>
+                                    {% endif %}
                                 </tr>
                             {% endfor %}
                         </table>
