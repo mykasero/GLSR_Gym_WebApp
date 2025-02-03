@@ -110,4 +110,39 @@ def yearly_rank(user_name):
         if lower <= total_activity < upper:
             return ["TIER " + tier, name]
     
-   
+def next_month():
+    today = datetime.today()
+    
+    if today.month == 12:
+        next_month = today.replace(year=today.year+1, month=1,day=1)
+    else:
+        next_month = today.replace(month=today.month+1, day=1)
+        
+    return next_month.strftime('%Y-%m-%d')
+
+def check_last_payment(user_payments_info):
+    '''
+        Function to check if the last expiry of the payment was over 2months,
+        so the users account can be deactivated (not deleted!)
+    '''
+    user_payments_info = user_payments_info
+    expiry_dates = [item.expiry_date for item in user_payments_info]
+    current_date = datetime.strptime(datetime.today().strftime('%Y-%m-%d'),'%Y-%m-%d').date()
+    expired_accs = []
+    
+    if len(list(user_payments_info)) == len(expiry_dates):
+        for expiry_date, user_record in zip(expiry_dates, user_payments_info):
+            if expiry_date != None:
+                if (current_date-expiry_date).total_seconds()/(60*60*24) > 60:
+                    # expired_accs.append(f'Tak - {user_record.user.username}') #username for testing
+                    expired_accs.append('Tak')
+                else:
+                    # expired_accs.append(f'Nie - {user_record.user.username}') #username for testing
+                    expired_accs.append('Nie')
+            else:
+                expired_accs.append("NONE")
+    
+    for user_record, expired_account in zip(user_payments_info, expired_accs):
+        user_record.is_expired = expired_account
+    
+    return user_payments_info
