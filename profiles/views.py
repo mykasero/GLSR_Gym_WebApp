@@ -5,9 +5,9 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
-from .utils import month_attendance_counter, yearly_counter, this_month_activity, current_month_name, yearly_rank, monthly_rank
+from .utils import month_attendance_counter, yearly_counter, this_month_activity, current_month_name, yearly_rank, monthly_rank, next_month, check_last_payment
 from django.http import JsonResponse
-from .forms import EmailForm, PfpForm, BlankForm
+from .forms import EmailForm, PfpForm, BlankForm, PaymentForm
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 import json
@@ -150,17 +150,55 @@ def rank_info(request):
 # view for admin to manage the users subscriptions
 @staff_required(login_url="/login/")
 def payments(request):
-    user_list = User.objects.all()
+    user_list_payments = Payment.objects.all()
     current_user = Profile.objects.get(user__id=request.user.id)
+    acc_for_deactivation = check_last_payment(user_list_payments)
     
     context = {
-        'user_list' : user_list,
         'current_user' : current_user,
+        'user_list_payments' : acc_for_deactivation,
     }
-    
+    print("user_payments - ", user_list_payments)
     return render(request, 'profiles/payments.html', {'context':context})
 
 # view for the modal to edit payments
 @staff_required(login_url="/login/")
-def edit_payments(request):
-    pass
+def edit_payments(request, pk):
+    payment =  get_object_or_404(Payment, pk=pk)
+    if request.method == "POST":
+        form = PaymentForm(request.POST, initial={
+            'is_paid' : payment.is_paid,
+            'payment_date' : payment.payment_date,
+        })
+        if form.is_valid():
+            payment.user = payment.user
+            payment.is_paid = form.cleaned_data.get('is_paid')
+            payment.payment_date = form.cleaned_data.get('payment_date')
+            payment.expiry_date = next_month()
+            payment.save()
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger' : json.dumps({
+                        "bookingListChanged" : None,
+                        "showMessage" : f"Zaktualizowano status płatności"
+                    })
+                }
+            )
+        else:
+            return render(request, 'profiles/payments_form.html', {
+                'form' : form,
+                'payment' : payment,
+            })
+        
+        
+    else:
+        form = PaymentForm(request.POST, initial={
+            'is_paid' : payment.is_paid,
+            'payment_date' : payment.payment_date,
+        })
+    
+        return render(request, 'profiles/payments_form.html', {
+                'form' : form,
+                'payment' : payment,
+            })
