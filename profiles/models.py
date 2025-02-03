@@ -13,17 +13,6 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
-# Create User Profile on User account registration
-@receiver(post_save, sender=User)
-def create_profile(sender, instance, created, **kwargs):
-    if created:
-        # Creates profiles for already registered users
-        Profile.objects.create(user=instance, date_joined = instance.date_joined)
-    else:
-        profile, _ = Profile.objects.get_or_create(user=instance)
-        profile.date_joined = instance.date_joined
-        profile.save()
-        
 # Model for checking the users payment for the monthly access
 class Payment(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='subscription')
@@ -31,3 +20,23 @@ class Payment(models.Model):
     payment_date = models.DateField(null = True, blank = True)
     expiry_date = models.DateField(null=True, blank = True)
      
+
+# Create User Profile on User account registration + Create blank payment record
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        # Creates profiles for already registered users
+        Profile.objects.create(user=instance, date_joined = instance.date_joined)
+        # Creates payment record for already registered users
+        Payment.objects.create(user=instance)
+    else:
+        # Creates profile for newly registered user
+        profile, _ = Profile.objects.get_or_create(user=instance)
+        profile.date_joined = instance.date_joined
+        profile.save()
+        
+        # Creates payment record for newly registered user
+        payment, _ = Payment.objects.get_or_create(user=instance)
+        payment.save()
+        
+        
