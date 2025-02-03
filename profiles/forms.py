@@ -38,3 +38,12 @@ class PfpForm(forms.ModelForm):
 class BlankForm(forms.Form):
     blank = forms.Textarea()
     
+class PaymentForm(forms.Form):
+    is_paid = forms.BooleanField( 
+        label='Czy zapłacono?'
+        )
+    payment_date = forms.DateField(
+        input_formats=['%Y-%m-%d'],
+        help_text='Podaj date w formacie rok-miesiąc-dzień',
+        label = 'Data zapłacenia',
+        )
