@@ -44,6 +44,6 @@ class PaymentForm(forms.Form):
         )
     payment_date = forms.DateField(
         input_formats=['%Y-%m-%d'],
-        help_text='Podaj date w formacie rok-miesiąc-dzień',
+        help_text='Podaj date w formacie rok-miesiąc-dzień np. 2025-02-04',
         label = 'Data zapłacenia',
         )

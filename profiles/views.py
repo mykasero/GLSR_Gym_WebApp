@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
-from .utils import month_attendance_counter, yearly_counter, this_month_activity, current_month_name, yearly_rank, monthly_rank, next_month, check_last_payment
+from .utils import month_attendance_counter, yearly_counter, this_month_activity, current_month_name, yearly_rank, monthly_rank, next_month, check_last_payment, reset_is_paid
 from django.http import JsonResponse
 from .forms import EmailForm, PfpForm, BlankForm, PaymentForm
 from django.shortcuts import get_object_or_404
@@ -152,13 +152,18 @@ def rank_info(request):
 def payments(request):
     user_list_payments = Payment.objects.all()
     current_user = Profile.objects.get(user__id=request.user.id)
-    acc_for_deactivation = check_last_payment(user_list_payments)
+    user_list_info = check_last_payment(user_list_payments)
+    
+    
+    # call a function that checks if users payment is expired and reset the is_paid attr
+    reset_is_paid(user_list_info)
+        
     
     context = {
         'current_user' : current_user,
-        'user_list_payments' : acc_for_deactivation,
+        'user_list_payments' : user_list_info,
     }
-    print("user_payments - ", user_list_payments)
+    
     return render(request, 'profiles/payments.html', {'context':context})
 
 # view for the modal to edit payments

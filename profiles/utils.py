@@ -111,12 +111,15 @@ def yearly_rank(user_name):
             return ["TIER " + tier, name]
     
 def next_month():
+    '''
+        Function for calculating the next month (7th day) to use it in the users payment expiry_date
+    '''
     today = datetime.today()
     
     if today.month == 12:
-        next_month = today.replace(year=today.year+1, month=1,day=1)
+        next_month = today.replace(year=today.year+1, month=1,day=7)
     else:
-        next_month = today.replace(month=today.month+1, day=1)
+        next_month = today.replace(month=today.month+1, day=7)
         
     return next_month.strftime('%Y-%m-%d')
 
@@ -134,15 +137,21 @@ def check_last_payment(user_payments_info):
         for expiry_date, user_record in zip(expiry_dates, user_payments_info):
             if expiry_date != None:
                 if (current_date-expiry_date).total_seconds()/(60*60*24) > 60:
-                    # expired_accs.append(f'Tak - {user_record.user.username}') #username for testing
-                    expired_accs.append('Tak')
+                    expired_accs.append('+')
                 else:
-                    # expired_accs.append(f'Nie - {user_record.user.username}') #username for testing
-                    expired_accs.append('Nie')
+                    expired_accs.append('---')
             else:
-                expired_accs.append("NONE")
-    
+                expired_accs.append("NONE")        
+            
     for user_record, expired_account in zip(user_payments_info, expired_accs):
         user_record.is_expired = expired_account
     
     return user_payments_info
+
+def reset_is_paid(user_list):
+    user_list = user_list
+    
+    for users_info in user_list:
+        if users_info.is_paid == True and datetime.today().date() > users_info.expiry_date:#datetime.strptime(users_info.expiry_date, '%Y-%m-%d').date():
+            users_info.is_paid = False
+            users_info.save()
