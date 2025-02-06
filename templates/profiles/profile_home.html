@@ -181,7 +181,19 @@
                     <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px; padding-bottom:30px;">
                         <b>Informacje</b>
                     </div>
-                
+                    <!-- Payment information -->
+                    <div style="margin-bottom: 20px;">
+                        {% if context.payment_info.is_paid == True %}
+                            <div class="alert alert-success">
+                                Składka opłacona, data wygaśnięcia - {{ context.payment_info.expiry_date|date:"d.m.Y" }}
+                            </div>
+                        {% else %}
+                            <div class="alert alert-error">
+                                Składka nieopłacona, po dwóch miesiącach od wygaśnięcia konto zostanie deaktywowane (nie usunięte).
+                                <br> Data wygaśnięcia - {{ context.payment_info.expiry_date|date:"d.m.Y" }}
+                            </div>
+                        {% endif %}
+                    </div>
                     <!-- Profile Picture Section -->
                     <div style="margin-bottom: 20px;">
                         <div><b>Zdjęcie Profilowe:</b></div>
@@ -219,7 +231,8 @@
                             {{ context.user_info.first.date_joined|date:"H:i d.m.Y" }}
                         </span>
                     </div>
-                
+                    
+                    
                     <!-- Change Password Button -->
                     <div>
                         <a href="{% url 'password_reset' %}">

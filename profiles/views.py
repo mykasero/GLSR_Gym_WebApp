@@ -21,6 +21,8 @@ def profile_home(request):
         current_user = Profile.objects.get(user__id=request.user.id)
         # get all values by user id 
         user_info = Profile.objects.filter(user_id=request.user.id).values()
+        # get the payment information for current user
+        payment_info = Payment.objects.filter(user=request.user)
         
         context = {
             'user_info':user_info,
@@ -32,6 +34,7 @@ def profile_home(request):
             'yearly_rank_name' : yearly_rank(current_user)[1],
             'monthly_rank' : monthly_rank(current_user)[0],
             'monthly_rank_name' : monthly_rank(current_user)[1],
+            'payment_info' : payment_info[0],
         }
         
         return render(request, "profiles/profile_home.html", {'context': context})
