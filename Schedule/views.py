@@ -12,7 +12,7 @@ import json
 from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
-
+from profiles.models import Payment
 # Dict with site names for dynamic message display
 SITE_NAMES = {
     'booking' : 'rezerwacji',
@@ -46,8 +46,10 @@ def login(request):
                     return render(request, 'Schedule/reports.html')
                 else:
                     messages.warning(request, f"Aby wyświetlić strone {SITE_NAMES[request.GET['next'][1:-1]]} musisz być zalogowany jako administrator")
-        
-        return render(request, 'Schedule/login_success.html')
+            else:
+                return redirect('login_success/')
+            
+        return redirect('login_success/')
     else:      
         if request.method == "POST":
             form = LoginForm()
@@ -79,8 +81,15 @@ def login(request):
 def login_success(request):
     # Get the latest keycode
     keycode = list(Keycodes.objects.all().order_by('-id').values_list('code'))[0][0]
-    # Display keycode upon successful login
-    messages.success(request, f"Kod do skrzynki z kluczem: {keycode}.") 
+    
+    user_payment_is_paid = Payment.objects.filter(user=request.user)[0].is_paid
+    
+    if user_payment_is_paid == True:
+        # Display keycode upon successful login if user has paid
+        messages.success(request, f"Kod do skrzynki z kluczem: {keycode}.") 
+    else:
+        messages.error(request, f"Aby uzyskać informację o kodzie do skrytki należy opłacić składke.")
+    
     return render(request,"Schedule/login_success.html")
 
 
