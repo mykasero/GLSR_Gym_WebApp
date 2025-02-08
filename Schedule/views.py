@@ -13,6 +13,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from profiles.models import Payment
+from .decorators import user_is_active
 # Dict with site names for dynamic message display
 SITE_NAMES = {
     'booking' : 'rezerwacji',
@@ -57,7 +58,6 @@ def login(request):
             password = request.POST['haslo']
         
             user = authenticate(request, username = username, password = password)
-            
             if user is not None:
                 auth_login(request,user)                          
                 return redirect('login_success/')
@@ -193,11 +193,13 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     
 # View with buttons that move to schedule to book a session, check current bookings or go to archive 
 @login_required(login_url="/login/")
+@user_is_active(redirect_url = "/login/")
 def lobby(request):
     return render(request, "Schedule/lobby.html")
 
 # View for booking reservations 
 @login_required(login_url="/login/")
+@user_is_active(redirect_url = "/login/")
 def booking(request):
     form = BookingForm() 
     if request.method == "POST":
@@ -219,6 +221,7 @@ def booking(request):
 
 # View with a table with current bookings (booking gets moved to archive day after the specified date at ~1am)
 @login_required(login_url="/login/")
+@user_is_active(redirect_url = "/login/")
 def current_bookings(request):
     context = Booking.objects.all().order_by('current_day')
     current_user = request.user.id
@@ -231,6 +234,7 @@ def current_bookings(request):
 
 # View for rendering the data in the table with current bookings
 @login_required(login_url="/login/")
+@user_is_active(redirect_url = "/login/")
 def booking_list(request):
     context = Booking.objects.all()
     current_user = request.user.id
@@ -238,6 +242,7 @@ def booking_list(request):
 
 # View for the modal that renders a booking form which is used to edit the current booking
 @login_required(login_url="/login/")
+@user_is_active(redirect_url = "/login/")
 def edit_booking(request, pk):
     booking = get_object_or_404(Booking, pk=pk)
     if request.method == "POST":
@@ -288,12 +293,14 @@ def edit_booking(request, pk):
 
 # View for the modal that asks the user if he's sure that he wants to remove the booking
 @login_required(login_url="/login/")
+@user_is_active(redirect_url = "/login/")
 def remove_booking_conf(request, pk):
     booking = get_object_or_404(Booking, pk=pk)
     return render(request, 'Schedule/booking_delete_conf.html', {'booking' : booking})
 
 # View for the modal that allows the user to remove his booking
 @login_required(login_url="/login/")
+@user_is_active(redirect_url = "/login/")
 def remove_booking(request, pk):
     booking = get_object_or_404(Booking,pk=pk)
     booking.delete()
@@ -310,6 +317,7 @@ def remove_booking(request, pk):
 # View for a table with archived bookings, dataTables used for pagination and filtering 
 # custom JS added to fix the default sort by date bug
 @login_required(login_url="/login/")
+@user_is_active(redirect_url = "/login/")
 def archive_booking(request):
     context = Archive.objects.all()
     return render(request, "Schedule/archive.html", {'context':context})
@@ -317,6 +325,7 @@ def archive_booking(request):
 
 #View with a form that allows users to report a bug
 @login_required(login_url="/login/")
+@user_is_active(redirect_url = "/login/")
 def bug_report(request):
     
     form = BugReportForm()

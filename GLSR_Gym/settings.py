@@ -214,7 +214,9 @@ LOGIN_REDIRECT_URL = 'Schedule/login_success.html'
 LOGOUT_REDIRECT_URL = 'Schedule/home.html'
 
 AUTHENTICATION_BACKENDS = (
-        'django.contrib.auth.backends.ModelBackend',
+        # 'django.contrib.auth.backends.ModelBackend',
+        #test for inactive users
+        'django.contrib.auth.backends.AllowAllUsersModelBackend',
     )
 
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
