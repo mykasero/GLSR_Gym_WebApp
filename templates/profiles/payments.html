@@ -27,6 +27,9 @@
 <link href="{% static 'css/auth_styles.css'%}" rel="stylesheet" />
 
 <style type="text/css">
+    .d-flex{
+        flex-direction: column
+    }
     @media only screen
         and (min-width:1081px){
             .div_pad {
@@ -99,6 +102,15 @@
             <div class="div_pad">
                 <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px; padding-bottom:30px;">
                     <b>Zarządzanie płatnościami</b>
+                </div>
+                <div class="col-4 d-flex align-items-center mx-auto" style="margin: 25px;border-style: groove;border-color: #03a9f4;">
+                    <b>Deaktywacja użytkowników spełniających warunki</b>
+                    <form method="post" action = "{% url 'payments' %}">
+                        {% csrf_token %}
+                        <div style="margin:10px;">
+                            <button class="btn mt-3 text-center fs-6" style="width: fit-content;" type="submit" name="deactivate_users">Deaktywuj</button>
+                        </div>
+                    </form>
                 </div>
                 {% if context %}
                     <div class = "table-scrollable">
