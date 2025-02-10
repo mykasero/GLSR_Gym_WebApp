@@ -152,6 +152,6 @@ def reset_is_paid(user_list):
     user_list = user_list
     
     for users_info in user_list:
-        if users_info.is_paid == True and datetime.today().date() > users_info.expiry_date:#datetime.strptime(users_info.expiry_date, '%Y-%m-%d').date():
+        if users_info.is_paid == True and datetime.today().date() > users_info.expiry_date:
             users_info.is_paid = False
             users_info.save()

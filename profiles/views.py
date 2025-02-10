@@ -157,15 +157,18 @@ def payments(request):
     current_user = Profile.objects.get(user__id=request.user.id)
     user_list_info = check_last_payment(user_list_payments)
     
-    
     # call a function that checks if users payment is expired and reset the is_paid attr
     reset_is_paid(user_list_info)
-        
     
     context = {
         'current_user' : current_user,
         'user_list_payments' : user_list_info,
     }
+    
+    if request.method == "POST":
+        if 'deactivate_users' in request.POST:
+            # call the function that checks all users and deactivates the eligible ones
+            print("button works")
     
     return render(request, 'profiles/payments.html', {'context':context})
 
@@ -210,3 +213,5 @@ def edit_payments(request, pk):
                 'form' : form,
                 'payment' : payment,
             })
+        
+        
