@@ -32,7 +32,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                                                 
-                        {% if user.is_authenticated %}
+                        {% if user.is_authenticated and user_is_active == True %}
                             <a class="nav-link" href="/bug_report">Zgłoś błąd</a></li>
                         {% endif%}
                         {% if user.is_staff or user.is_superuser %}
@@ -49,7 +49,7 @@
                         <li class = "nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdown2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Zakladki</a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                {% if user.is_authenticated %}
+                                {% if user.is_authenticated and user.is_active == True %}
                                     <li><a class="dropdown-item" href="/booking">Rezerwacja</a></li>
                                     <li><a class="dropdown-item" href="/current_bookings">Dzisiejsze rezerwacje</a></li>
                                     <li><a class="dropdown-item" href="/archive">Archiwum</a></li>
