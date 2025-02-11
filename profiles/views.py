@@ -5,7 +5,16 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
-from .utils import month_attendance_counter, yearly_counter, this_month_activity, current_month_name, yearly_rank, monthly_rank, next_month, check_last_payment, reset_is_paid
+from .utils import (
+    month_attendance_counter, 
+    current_month_name, 
+    yearly_rank, 
+    monthly_rank, 
+    next_month, 
+    check_last_payment, 
+    reset_is_paid,
+    deactivate_users,
+)
 from django.http import JsonResponse
 from .forms import EmailForm, PfpForm, BlankForm, PaymentForm
 from django.shortcuts import get_object_or_404
@@ -168,7 +177,12 @@ def payments(request):
     if request.method == "POST":
         if 'deactivate_users' in request.POST:
             # call the function that checks all users and deactivates the eligible ones
-            print("button works")
+            deactv_result = deactivate_users(user_list_info)
+            
+            if deactv_result > 0:
+                messages.success(request, f"Pomyślnie deaktywowano {deactv_result} kont.")
+            else:
+                messages.warning(request, "Brak kont spełniających kryteria do deaktywacji.")
     
     return render(request, 'profiles/payments.html', {'context':context})
 
