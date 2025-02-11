@@ -155,3 +155,25 @@ def reset_is_paid(user_list):
         if users_info.is_paid == True and datetime.today().date() > users_info.expiry_date:
             users_info.is_paid = False
             users_info.save()
+            
+def deactivate_users(user_list_info):
+    '''
+        Function that goes through all the users payment information to deactivate
+        accounts that haven't paid for >60days
+        
+        Returns how many accounts were deactivated for usage inside the message in payment view
+    '''
+    user_list_info = user_list_info
+    counter = 0
+    
+    for user in user_list_info:
+        if user.is_expired == "+":
+            user.user.is_active = False
+            user.is_expired = "Deaktywowano"
+            counter += 1
+            user.user.save()
+            user.save()
+    
+    return counter 
+        
+    
