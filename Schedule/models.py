@@ -70,3 +70,9 @@ class BugReports(models.Model):
     id = models.AutoField(primary_key=True)
     report_text = models.CharField(db_column="Opis bledu", max_length=1000, help_text="Opisz problem, jakie kroki zrobiles zanim sie pojawil")
     report_date = models.DateField(db_column="Data zgloszenia", help_text="Data dnia wystapienia problemu")
+    
+class CleaningSchedule(models.Model):
+    id = models.AutoField(primary_key = True)
+    user = models.TextField(db_column="Nazwa_Użytkownika")
+    period_start = models.DateField(db_column="Okres obowiązywania start")
+    period_end = models.DateField(db_column="Okres obowiązywania koniec")
