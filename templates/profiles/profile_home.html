@@ -149,6 +149,11 @@
                     </div>
                 {% endfor %}
             {% endif %}
+            {% if user.is_active == False %}
+                <div class = "alert alert-error">
+                    <b>Konto jest deaktywowane.</b> W celu ponownej aktywacji konta należy opłacić składke.
+                </div>
+            {% endif %}
             <!-- User greeting -->
             <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px;text-align:left;">
                 <b>Witaj, {{ context.username }} </b>
