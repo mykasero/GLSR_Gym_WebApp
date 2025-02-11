@@ -20,6 +20,7 @@ urlpatterns = [
     path('archive/', views.archive_booking, name = "archive"),
     path('bug_report/', views.bug_report, name="bug_report"),
     path('reports/', views.reports, name = "reports"),
+    path('cleaning/',views.cleaning_schedule, name="cleaning_schedule"),
     path('gallery/', views.gallery, name = "gallery"),
     path('password_reset/', views.ResetPasswordView.as_view(), name="password_reset"),
     path('password_reset/confirm/<uidb64>/<token>/', 
