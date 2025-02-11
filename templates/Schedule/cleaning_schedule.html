@@ -1,0 +1,178 @@
+{% extends "Schedule/base.html" %}
+{% load static %}
+{% block title %}
+    <title>Sprzątanie</title>
+{% endblock %}
+{% block background_img %}
+    <style type="text/css">
+        body {
+        background:url('{% static 'images/tables.jpg' %}') no-repeat center fixed;
+        background-size: cover;
+        background-color: #212429;
+        }
+    </style>
+{% endblock %}
+{% block stylings %}
+    <link href="{% static 'css/auth_styles.css'%}" rel="stylesheet" /> 
+
+    <style type="text/css">
+        .table-scrollable {
+            overflow-x: auto;
+            max-width: 750px;
+            box-shadow: inset 0 0 5px rgba(150, 150 ,150,0.35);
+            margin: auto;
+        }
+
+        .center_text{
+            width: 50%;
+            padding: 20px;
+        }
+
+        div.dt-length{
+            text-align: left;
+        }
+        div.dt-search{
+            text-align: right;
+        }
+
+        @media only screen
+            and (min-width:1081px){
+                .div_pad {
+                    padding-top: 60px;
+                }
+                .wrapper{
+                    max-width: 1150px;
+                }
+                div.dt-length{
+                    text-align: left;
+                }
+                div.dt-search{
+                    text-align: right;
+                }
+            }
+        @media only screen 
+            and (min-width:801px)
+            and (max-width:1080px){
+                .div_pad {
+                    padding-top:30px;
+                }
+                .wrapper{
+                    max-width: 900px;
+                }
+                div.dt-length{
+                    text-align: left;
+                }
+                div.dt-search{
+                    text-align: right;
+                }
+            }
+        @media screen 
+        and (min-width:601px)
+        and (max-width: 800px) {
+            .div_pad{
+                padding-top:30px;
+            }
+            .wrapper{
+                max-width: 700px;
+                min-height: 400px;
+                margin-right: 5px;
+                margin-left: 5px;
+            }
+            div.dt-container .row {
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            div.dt-container .dt-layout-start,
+            div.dt-container .dt-layout-end {
+                flex: 1;
+            }
+            @media screen 
+                and (min-width:768px)
+                and (max-width:800px){
+                div.dt-container .dt-layout-start,
+                div.dt-container .dt-layout-end {
+                flex: 0;
+                }
+            }      
+        }
+
+        @media screen and (max-width: 600px) {
+            .div_pad{
+                padding-top:30px;
+            }
+            .wrapper{
+                max-width: 500px;
+                min-height: 400px;
+                margin-right: 5px;
+                margin-left: 5px;
+            }
+            div.dt-container .row {
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: center;
+                gap: 0.5rem;
+            }
+        
+            div.dt-container .dt-layout-start,
+            div.dt-container .dt-layout-end {
+                flex: 1;
+            }
+
+        
+        }
+
+    </style>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="text-center mt-5">
+        <div class="wrapper">
+            <div class="logo">
+                <img style="height:80px;" src="{% static 'images/logo1.png' %}" alt=""/>
+            </div>
+            <b>GLSN Gym</b>
+            <div class="div_pad">
+                <div style="text-shadow: 5px 5px 10px #03A9F4; padding-bottom:10px;">
+                    <b>Kolejka sprzątania</b>
+                </div>
+                {% if context %}
+                    <div class="table-scrollable">
+                        <table id="Cleanup" class="table table-sm table-bordered">
+                            <thead class="table-dark table-bordered">
+                                <tr>
+                                    <th rowspan="2" class="center_text">Nazwa</th>
+                                    <th colspan="2" scope="colgroup">Obowiązuje</th>
+                                </tr>
+                                <tr>
+                                    <th scope="col">od:</th>
+                                    <th scope="col">do:</th>
+                                </tr>
+                            </thead>
+                            
+                            {% for item in context %}
+                                <tr style="background:rgba(180,180,180,0.5);">
+                                    <td>{{item.user}}</td>
+                                    <td>{{item.period_start|date:'d.m.y'}}</td>
+                                    <td>{{item.period_end|date:'d.m.y'}}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% else %}
+                        <table class="table table-sm table-bordered">
+                            <thead class = "table-dark table-bordered">
+                                <th></th>
+                            </thead>
+                            <tr style = "background:rgba(180,180,180,0.5);">
+                                <td> Brak rezerwacji w archiwum </td>
+                            </tr>
+                        </table>
+                    {% endif %}
+                </div>
+                
+            </div>
+    </div>
+</div>
+
+{% endblock %}
