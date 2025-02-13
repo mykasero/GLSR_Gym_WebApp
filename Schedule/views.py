@@ -5,7 +5,7 @@ from .forms import LoginForm, RegisterForm, BookingForm, BugReportForm, UserPass
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 from django.contrib.auth.models import Group
-from .models import Booking, Archive, Keycodes, BugReports, CleaningSchedule
+from .models import Booking, Archive, Keycodes, BugReports, CleaningSchedule, CleaningScheduleArchive
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404
 import json
@@ -355,6 +355,17 @@ def gallery(request):
 @login_required(login_url="/login/")
 @user_is_active(redirect_url="/login/")
 def cleaning_schedule(request):
-    context = CleaningSchedule.objects.all()
+
+    if CleaningSchedule.objects.all():
+        currently_picked_user = list(CleaningSchedule.objects.all().order_by('-id').values_list('user'))[0][0]
+    else:
+        currently_picked_user = "---"
+    
+    cleaning_archive = CleaningScheduleArchive.objects.all().order_by('-id')
+    
+    context = {
+        'currently_picked_user' : currently_picked_user,
+        'cleaning_archive' : cleaning_archive,
+    }
     
     return render(request,'Schedule/cleaning_schedule.html',{'context':context})

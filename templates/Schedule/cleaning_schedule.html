@@ -137,8 +137,12 @@
                 <div style="text-shadow: 5px 5px 10px #03A9F4; padding-bottom:10px;">
                     <b>Kolejka sprzątania</b>
                 </div>
-                {% if context %}
-                    <div class="table-scrollable">
+                <div class = "col-5 d-flex align-items-center mx-auto alert alert-success" style="max-width:500px;">
+                    Obecnie wylosowany użytkownik: {{ context.currently_picked_user}}
+                </div>
+                <!-- somewhere here the reroll button-->
+                <div class="table-scrollable">
+                    {% if context.cleaning_archive %}
                         <table id="Cleanup" class="table table-sm table-bordered">
                             <thead class="table-dark table-bordered">
                                 <tr>
@@ -151,7 +155,7 @@
                                 </tr>
                             </thead>
                             
-                            {% for item in context %}
+                            {% for item in context.cleaning_archive %}
                                 <tr style="background:rgba(180,180,180,0.5);">
                                     <td>{{item.user}}</td>
                                     <td>{{item.period_start|date:'d.m.y'}}</td>
