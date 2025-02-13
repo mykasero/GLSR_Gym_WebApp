@@ -76,3 +76,9 @@ class CleaningSchedule(models.Model):
     user = models.TextField(db_column="Nazwa_Użytkownika")
     period_start = models.DateField(db_column="Okres obowiązywania start")
     period_end = models.DateField(db_column="Okres obowiązywania koniec")
+    
+class CleaningScheduleArchive(models.Model):
+    id = models.AutoField(primary_key = True)
+    user = models.TextField(db_column="Nazwa_Użytkownika")
+    period_start = models.DateField(db_column="Okres obowiązywania start")
+    period_end = models.DateField(db_column="Okres obowiązywania koniec")
