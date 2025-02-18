@@ -225,4 +225,4 @@ class BugReportAdmin(admin.ModelAdmin):
 @admin.register(CleaningSchedule)
 class CleaningScheduleAdmin(admin.ModelAdmin):
     ordering = ['-period_start']
-    list_display=('user','period_start','period_end')
+    list_display=('username','period_start','period_end')
