@@ -352,16 +352,29 @@ def reports(request):
 def gallery(request):
     return render(request, "Schedule/gallery.html")
 
+from Schedule.jobs import cleaning_user_roll
 @login_required(login_url="/login/")
 @user_is_active(redirect_url="/login/")
 def cleaning_schedule(request):
 
     if CleaningSchedule.objects.all():
-        currently_picked_user = list(CleaningSchedule.objects.all().order_by('-id').values_list('user'))[0][0]
+        currently_picked_user = list(CleaningSchedule.objects.all().order_by('-id').values_list('username'))[0][0]
     else:
         currently_picked_user = "---"
     
     cleaning_archive = CleaningScheduleArchive.objects.all().order_by('-id')
+    
+    if request.method == "POST":
+        if 'roll_user' in request.POST:
+            # test cleaning roll
+            print("test start")
+            print("przed losowaniem = ", CleaningSchedule.objects.all().values())
+            print("archiwum przed = ", CleaningScheduleArchive.objects.all().values() )
+            cleaning_user_roll()
+            print("obecny user po losowaniu = ", CleaningSchedule.objects.all().values())
+            print("archiwum po = ", CleaningScheduleArchive.objects.all().values())
+            print("test end")
+            
     
     context = {
         'currently_picked_user' : currently_picked_user,

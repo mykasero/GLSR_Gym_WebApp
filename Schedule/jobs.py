@@ -1,3 +1,7 @@
+'''
+Job for archiving bookings that are older than today
+'''
+
 from Schedule.models import Booking, Archive
 def archive_bookings():
     print("Archiving started")
@@ -91,3 +95,58 @@ Obsolete due to the use of Heroku Scheduler on prod
         
     # scheduler.start()
     # scheduler.start()
+
+
+'''
+Job for rolling a new user from the pool for cleaning duty in the current week
+'''
+from django.contrib.auth.models import User
+from Schedule.models import CleaningSchedule, CleaningScheduleArchive
+from random import choice
+from datetime import date, timedelta
+def cleaning_user_roll():
+    # get all users that are not superuser
+    all_users = [user['username'] for user in User.objects.exclude(username='Super').values()]
+    
+    # get all the users usernames from CleaningSchedule that were already picked in this set
+    
+    picked_users = [user['username'] for user in CleaningSchedule.objects.all().values()]
+    
+    # check if all the users already have been picked
+    if len(all_users) == len(picked_users):
+        user_to_archive = CleaningSchedule.objects.filter(username=picked_users[0])[0]
+        
+        CleaningScheduleArchive.objects.create(
+            username = user_to_archive.username,
+            period_start = user_to_archive.period_start,
+            period_end = user_to_archive.period_end,
+        )
+        
+        CleaningSchedule.objects.all().delete()
+    
+    # check if CleaningSchedule is empty
+    elif len(picked_users) == 0:
+        # roll the user for this week
+        this_weeks_user = choice(all_users)
+    else:
+        # if there are more than 1 users in the recent picks, archive the most recent one before creating a new cleaning schedule entry
+        if len(picked_users) > 1:
+            user_to_archive = CleaningSchedule.objects.filter(username=picked_users[0])
+            CleaningScheduleArchive.objects.create(
+                username = user_to_archive.username,
+                period_start = user_to_archive.period_start,
+                period_end = user_to_archive.period_end,
+            )
+        
+        this_weeks_user = choice(all_users)
+        #check if user was already picked
+        if this_weeks_user in picked_users:
+            # keep rolling until new user is picked
+            while this_weeks_user in picked_users:
+                this_weeks_user = choice(all_users)
+
+    CleaningSchedule.objects.create(
+        username = this_weeks_user,
+        period_start = date.today(),
+        period_end = date.today()+timedelta(days=7),
+    )
