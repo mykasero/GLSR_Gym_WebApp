@@ -366,14 +366,14 @@ def cleaning_schedule(request):
     
     if request.method == "POST":
         if 'roll_user' in request.POST:
-            # test cleaning roll
-            print("test start")
-            print("przed losowaniem = ", CleaningSchedule.objects.all().values())
-            print("archiwum przed = ", CleaningScheduleArchive.objects.all().values() )
+            # # test cleaning roll
+            # print("test start")
+            # print("przed losowaniem = ", CleaningSchedule.objects.all().values())
+            # print("archiwum przed = ", CleaningScheduleArchive.objects.all().values() )
             cleaning_user_roll()
-            print("obecny user po losowaniu = ", CleaningSchedule.objects.all().values())
-            print("archiwum po = ", CleaningScheduleArchive.objects.all().values())
-            print("test end")
+            # print("obecny user po losowaniu = ", CleaningSchedule.objects.all().values())
+            # print("archiwum po = ", CleaningScheduleArchive.objects.all().values())
+            # print("test end")
             
     
     context = {
