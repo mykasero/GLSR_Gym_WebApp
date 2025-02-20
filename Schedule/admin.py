@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Booking, Archive, Keycodes, BugReports, CleaningSchedule
+from .models import Booking, Archive, Keycodes, BugReports, CleaningSchedule, CleaningScheduleArchive
 import logging
 from django.http import HttpResponse
 from django.contrib import messages
@@ -224,5 +224,11 @@ class BugReportAdmin(admin.ModelAdmin):
 # Create a CleaningSchedule model in admin panel    
 @admin.register(CleaningSchedule)
 class CleaningScheduleAdmin(admin.ModelAdmin):
+    ordering = ['-period_start']
+    list_display=('username','period_start','period_end')
+    
+# Create a CleaningScheduleArchive model in admin panel    
+@admin.register(CleaningScheduleArchive)
+class CleaningScheduleArchiveAdmin(admin.ModelAdmin):
     ordering = ['-period_start']
     list_display=('username','period_start','period_end')
