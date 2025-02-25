@@ -353,6 +353,7 @@ def gallery(request):
     return render(request, "Schedule/gallery.html")
 
 from Schedule.jobs import cleaning_user_roll
+from Schedule.utils import cleaning_user_reroll
 @login_required(login_url="/login/")
 @user_is_active(redirect_url="/login/")
 def cleaning_schedule(request):
@@ -370,11 +371,13 @@ def cleaning_schedule(request):
             # print("test start")
             # print("przed losowaniem = ", CleaningSchedule.objects.all().values())
             # print("archiwum przed = ", CleaningScheduleArchive.objects.all().values() )
-            cleaning_user_roll()
+            # cleaning_user_roll()
+            cleaning_user_roll(False,7, False)
             # print("obecny user po losowaniu = ", CleaningSchedule.objects.all().values())
             # print("archiwum po = ", CleaningScheduleArchive.objects.all().values())
             # print("test end")
-            
+        elif 'reroll_user' in request.POST:
+            cleaning_user_reroll()
     
     context = {
         'currently_picked_user' : currently_picked_user,
