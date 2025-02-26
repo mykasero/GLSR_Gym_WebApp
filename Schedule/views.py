@@ -14,6 +14,7 @@ from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from profiles.models import Payment
 from .decorators import user_is_active
+from Schedule.utils import cleaning_user_reroll, cleaning_user_roll_cleanup
 # Dict with site names for dynamic message display
 SITE_NAMES = {
     'booking' : 'rezerwacji',
@@ -82,13 +83,22 @@ def login_success(request):
     # Get the latest keycode
     keycode = list(Keycodes.objects.all().order_by('-id').values_list('code'))[0][0]
     
+    # Check if user has paid the monthly membership
     user_payment_is_paid = Payment.objects.filter(user=request.user)[0].is_paid
+    
+    # Check if user is currently picked for cleanup if yes then show the info message
+    if CleaningSchedule.objects.all():
+        user_cleanup_pick = CleaningSchedule.objects.all().order_by('-id').values()[0]['username']
+        if user_cleanup_pick == str(request.user):
+            messages.success(request, f"Zostałeś wybrany w kolejce sprzątania na ten tydzień. Wystarczy że sprzątniesz raz w tym tygodniu :)")
+    
     
     if user_payment_is_paid == True:
         # Display keycode upon successful login if user has paid
         messages.success(request, f"Kod do skrzynki z kluczem: {keycode}.") 
     else:
         messages.error(request, f"Aby uzyskać informację o kodzie do skrytki należy opłacić składke.")
+    
     
     return render(request,"Schedule/login_success.html")
 
@@ -351,9 +361,7 @@ def reports(request):
 #View with a photo gallery of the gym TBD(?)
 def gallery(request):
     return render(request, "Schedule/gallery.html")
-
 from Schedule.jobs import cleaning_user_roll
-from Schedule.utils import cleaning_user_reroll
 @login_required(login_url="/login/")
 @user_is_active(redirect_url="/login/")
 def cleaning_schedule(request):
@@ -367,18 +375,13 @@ def cleaning_schedule(request):
     
     if request.method == "POST":
         if 'roll_user' in request.POST:
-            # # test cleaning roll
-            # print("test start")
-            # print("przed losowaniem = ", CleaningSchedule.objects.all().values())
-            # print("archiwum przed = ", CleaningScheduleArchive.objects.all().values() )
-            # cleaning_user_roll()
-            cleaning_user_roll(False,7, False)
-            # print("obecny user po losowaniu = ", CleaningSchedule.objects.all().values())
-            # print("archiwum po = ", CleaningScheduleArchive.objects.all().values())
-            # print("test end")
+            cleaning_user_roll(False,7,False)
+        
         elif 'reroll_user' in request.POST:
             cleaning_user_reroll()
-    
+        elif 'cleanup_pool' in request.POST:
+            cleaning_user_roll_cleanup()
+        
     context = {
         'currently_picked_user' : currently_picked_user,
         'cleaning_archive' : cleaning_archive,

@@ -22,6 +22,7 @@ from django.http import HttpResponse
 import json
 from datetime import datetime
 from Schedule.views import staff_required
+from Schedule.models import CleaningSchedule
 #profile page main view
 @login_required(login_url="/login/")
 def profile_home(request):
@@ -32,6 +33,12 @@ def profile_home(request):
         user_info = Profile.objects.filter(user_id=request.user.id).values()
         # get the payment information for current user
         payment_info = Payment.objects.filter(user=request.user)
+        
+        # Check if user is currently picked for cleanup if yes then show the info message
+        if CleaningSchedule.objects.all():
+            user_cleanup_pick = CleaningSchedule.objects.all().order_by('-id').values()[0]['username']
+            if user_cleanup_pick == str(current_user):
+                messages.success(request, f"Zostałeś wybrany w kolejce sprzątania na ten tydzień. Wystarczy że sprzątniesz raz w tym tygodniu :)")
         
         context = {
             'user_info':user_info,
