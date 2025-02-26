@@ -146,7 +146,7 @@ def cleaning_user_roll(reroll, days_until_monday, scheduler):
             
             # roll a new user
             this_weeks_user = choice(list(set(all_users)-set(picked_users)))
-
+        # if admin called reroll - remove the currently picked user pick and his archive, create a new pick
         if reroll:
             if CleaningSchedule.objects.all():
                 CleaningSchedule.objects.order_by('-id')[0].delete()
@@ -158,10 +158,7 @@ def cleaning_user_roll(reroll, days_until_monday, scheduler):
             )
             
             if CleaningScheduleArchive.objects.all():
-                print("test -", CleaningScheduleArchive.objects.order_by('-id').values()[0])
-                print("removing")
                 CleaningScheduleArchive.objects.order_by('-id')[0].delete()
-                print("removed")
         else:
             CleaningSchedule.objects.create(
                 username = this_weeks_user,
