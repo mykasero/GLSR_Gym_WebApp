@@ -9,7 +9,7 @@ from .models import Booking, Archive, Keycodes, BugReports, CleaningSchedule, Cl
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404
 import json
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from profiles.models import Payment
@@ -373,18 +373,18 @@ def cleaning_schedule(request):
     
     cleaning_archive = CleaningScheduleArchive.objects.all().order_by('-id')
     
-    if request.method == "POST":
-        if 'roll_user' in request.POST:
-            cleaning_user_roll(False,7,False)
-        
-        elif 'reroll_user' in request.POST:
-            cleaning_user_reroll()
-        elif 'cleanup_pool' in request.POST:
-            cleaning_user_roll_cleanup()
-        
     context = {
         'currently_picked_user' : currently_picked_user,
         'cleaning_archive' : cleaning_archive,
     }
     
-    return render(request,'Schedule/cleaning_schedule.html',{'context':context})
+    if request.method == "POST":
+        if 'reroll_user' in request.POST:
+            cleaning_user_reroll()
+
+        elif 'cleanup_pool' in request.POST:
+            cleaning_user_roll_cleanup()
+            
+        return redirect(reverse('cleaning_schedule'))
+    else:
+        return render(request,'Schedule/cleaning_schedule.html',{'context':context})
