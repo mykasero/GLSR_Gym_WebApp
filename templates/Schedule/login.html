@@ -8,11 +8,37 @@
         background-size: cover;
         background-color: #212429;
         }
-         
+
     </style>
 {% endblock %}
 {% block stylings %}
-    <link href="{% static 'css/auth_styles.css'%}" rel="stylesheet" />    
+    <link href="{% static 'css/auth_styles.css'%}" rel="stylesheet" />   
+    <style type="text/css">
+        
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active{
+            
+            padding-left: 10px; 
+            border-radius: 20px !important;
+            box-shadow: inset 8px 8px 8px #cbced1, inset -8px -8px 8px #fff !important;
+        }
+         
+        input[type="password"]:-webkit-autofill,
+        input[type="password"]:-webkit-autofill:hover,
+        input[type="password"]:-webkit-autofill:focus,
+        input[type="password"]:-webkit-autofill:active{
+            padding-left: 10px; 
+            border-radius: 20px !important;
+            box-shadow: inset 8px 8px 8px #cbced1, inset -8px -8px 8px #fff !important;
+        }
+
+        .wrapper .form-field{
+            padding-left:0px;
+        }
+        
+    </style>
 {% endblock %}
 {% block content %}
     <div class="container">
