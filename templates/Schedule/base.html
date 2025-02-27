@@ -32,8 +32,9 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                                                 
-                        {% if user.is_authenticated and user_is_active == True %}
-                            <a class="nav-link" href="/bug_report">Zgłoś błąd</a></li>
+                        {% if user.is_authenticated and user.is_active == True and user.is_staff == False %}
+                            {% comment %} <a class="nav-link" href="/bug_report">Zgłoś błąd</a></li> {% endcomment %}
+                            <li class="nav-item"><a class="nav-link" href="/bug_report">Zgłoś błąd</a></li>
                         {% endif%}
                         {% if user.is_staff or user.is_superuser %}
                         <li class="nav-item dropdown">
