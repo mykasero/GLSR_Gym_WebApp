@@ -20,6 +20,9 @@ which helps to reduce the time spent on waiting for the equipment to be availabl
   <li>Clean and scalable UI</li>
   <li>Custom User profiles</li>
   <li>Ranking system</li>
+  <li>Custom management commands</li>
+  <li>Membership payments management system for Admins</li>
+  <li>Cleaning duty user rolling system and management of it for Admins</li>
 
   <li>Chat TODO</li>
   <li><b>... And more functionalities TBD</b></li>
@@ -34,6 +37,7 @@ which helps to reduce the time spent on waiting for the equipment to be availabl
   <li>Git</li>
   <li>PostgreSQL 16</li>
   <li>DataTables</li>
+  <li>HTMX</li>
   <li>Docker</li>
   <li>APScheduler (local) / Heroku Scheduler (prod)</li>
   
