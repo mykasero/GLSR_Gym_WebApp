@@ -109,7 +109,7 @@ def cleaning_user_roll(reroll, days_until_monday, scheduler):
     if date.today().strftime("%A") == "Monday" or scheduler == False:
 
         # get all users that are not superuser
-        all_users = [user['username'] for user in User.objects.exclude(username='Super').values()]
+        all_users = [user['username'] for user in User.objects.exclude(username='Super').values() if user['is_active']==True]
         
         # get all the users usernames from CleaningSchedule that were already picked in this set
         
