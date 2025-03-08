@@ -197,7 +197,7 @@ def payments(request):
 @staff_required(login_url="/login/")
 def edit_payments(request, pk):
     payment =  get_object_or_404(Payment, pk=pk)
-    user = get_object_or_404(User, pk=pk)
+    user = get_object_or_404(User, pk=payment.user.id)
     if request.method == "POST":
         form = PaymentForm(request.POST, initial={
             'is_paid' : payment.is_paid,
