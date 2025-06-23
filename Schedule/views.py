@@ -277,7 +277,8 @@ def edit_booking(request, pk):
                     'HX-Trigger' : json.dumps({
                         "bookingListChanged" : None,
                         "showMessage" : f"Zaktualizowano rezerwacje"
-                    })
+                    }),
+                    'HX-Refresh':"true",
                 }
             )
         else:
@@ -320,7 +321,8 @@ def remove_booking(request, pk):
             'HX-Trigger' : json.dumps({
                 "bookingListChanged" : None,
                 "showMessage" : f"Rezerwacja usunięta"
-            })
+            }),
+            'HX-Refresh':"true",
         }
         )
 
@@ -361,6 +363,8 @@ def reports(request):
 #View with a photo gallery of the gym TBD(?)
 def gallery(request):
     return render(request, "Schedule/gallery.html")
+
+
 from Schedule.jobs import cleaning_user_roll
 @login_required(login_url="/login/")
 @user_is_active(redirect_url="/login/")

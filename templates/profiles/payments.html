@@ -27,6 +27,14 @@
 <link href="{% static 'css/auth_styles.css'%}" rel="stylesheet" />
 
 <style type="text/css">
+    .user_unpaid{
+        color: red;
+    }
+
+    .user_paid{
+        color: green;
+    }
+
     .d-flex{
         flex-direction: column
     }
@@ -129,8 +137,12 @@
                                 <tr style="background:rgba(180,180,180,0.5);">
                                     <td><button style="background-color:#212529" hx-get="{% url 'edit_payments' pk=user.pk %}" hx-target="#edit_dialog"
                                         data-toggle="modal" data-target="#edit_modal"><img height="16" src="{% static 'images/edit.svg' %}"/></button></td>
-                                    <td>{{user.user.id}}</td>
-                                    <td>{{user.user.username}}</td>
+                                    <td >{{user.user.id}}</td>
+                                    {% if user.is_paid|bool_in_pl == "Tak" %}
+                                        <td class="user_paid">{{user.user.username}}</td>
+                                    {% elif user.is_paid|bool_in_pl == "Nie" %}
+                                        <td class="user_unpaid">{{user.user.username}}</td>
+                                    {% endif %}
                                     <td>{{user.is_paid|bool_in_pl}}</td>
                                     <td>{{user.payment_date|date:'d.m.y'}}</td>
                                     <td>{{user.expiry_date|date:'d.m.y'}}</td>

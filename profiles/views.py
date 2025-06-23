@@ -102,7 +102,8 @@ def edit_email(request, pk):
                     'HX-Trigger': json.dumps({
                         "bookListChanged": None,
                         "showMessage": f"Zaktualizowano adres email."
-                    })
+                    }),
+                    'HX-Refresh':"true",
                 }
             )
         else:
@@ -137,7 +138,8 @@ def edit_pfp(request, pk):
                     'HX-Trigger': json.dumps({
                         "bookListChanged": None,
                         "showMessage": f"Zaktualizowano zdjęcie profilowe."
-                    })
+                    }),
+                    'HX-Refresh':"true",
                 }
             )
         else:
@@ -219,7 +221,8 @@ def edit_payments(request, pk):
                     'HX-Trigger' : json.dumps({
                         "bookingListChanged" : None,
                         "showMessage" : f"Zaktualizowano status płatności"
-                    })
+                    }),
+                    'HX-Refresh':"true",
                 }
             )
         else:
