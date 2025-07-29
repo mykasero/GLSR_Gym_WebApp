@@ -28,16 +28,22 @@ class TestHomePageView(SimpleTestCase):
         
     def test_homepage_contains_logo(self):
         response = self.client.get(reverse('home'))
-        logo_path_os = os.path.join(settings.STATICFILES_DIRS[0], 'images/logo1.png')
-        logo_path_template = os.path.join(settings.STATIC_URL, 'images/logo1.png')
-        self.assertTrue(os.path.exists(logo_path_os), f"Image file not found at the specified path")
+        logo_path_os = os.path.join(settings.STATICFILES_DIRS[0],
+                                    'images/logo1.png')
+        logo_path_template = os.path.join(settings.STATIC_URL,
+                                          'images/logo1.png')
+        self.assertTrue(os.path.exists(logo_path_os),
+                        f"Image file not found at the specified path")
         self.assertContains(response, logo_path_template)
         
     def test_navbar_contains_name_img(self):
         response = self.client.get(reverse('home'))
-        logo_path_os = os.path.join(settings.STATICFILES_DIRS[0], 'images/gym_name.png')
-        logo_path_template = os.path.join(settings.STATIC_URL, 'images/gym_name.png')
-        self.assertTrue(os.path.exists(logo_path_os), f"Image file not found at the specified path")
+        logo_path_os = os.path.join(settings.STATICFILES_DIRS[0], 
+                                    'images/gym_name.png')
+        logo_path_template = os.path.join(settings.STATIC_URL, 
+                                          'images/gym_name.png')
+        self.assertTrue(os.path.exists(logo_path_os), 
+                        f"Image file not found at the specified path")
         self.assertContains(response, logo_path_template)
    
 # register view  
@@ -64,7 +70,10 @@ class TestRegisterView(TestCase):
         
     def test_register_template_has_register_button(self):
         response = self.client.get(reverse('register'))
-        self.assertContains(response, '<button type="submit" class = "btn mt-3">Zarejestruj</button>')
+        self.assertContains(
+            response, 
+            '<button type="submit" class = "btn mt-3">Zarejestruj</button>'
+            )
         
 # login view
 class TestLoginView(TestCase):    
@@ -88,19 +97,29 @@ class TestLoginView(TestCase):
     
     def test_login_template_has_login_button(self):
         response = self.client.get(reverse('login'))
-        self.assertContains(response, '<button type="submit" class = "btn mt-3 text-center fs-6">Login</button>')
+        self.assertContains(
+            response, 
+            '<button type="submit"\
+                class = "btn mt-3 text-center fs-6">Login</button>'
+            )
     
     def test_login_template_has_register_link(self):
         response = self.client.get(reverse('login'))
         self.assertContains(response,"Nie masz konta?")
         self.assertContains(response, "Zarejestruj sie")
-        self.assertContains(response, '<a class="link_indv" href="/register">tutaj</a>')
+        self.assertContains(
+            response, 
+            '<a class="link_indv" href="/register">tutaj</a>'
+            )
         
     def test_login_template_has_forgot_password_link(self):
         response = self.client.get(reverse('login'))
         self.assertContains(response,"Zapomniałeś hasła?")
         self.assertContains(response, "Przejdź")
-        self.assertContains(response, '<a class="link_indv" href="/password_reset/">tutaj</a>')
+        self.assertContains(
+            response, 
+            '<a class="link_indv" href="/password_reset/">tutaj</a>'
+            )
         
 # login success view 
 class TestLoginSuccessView(TestCase):
@@ -109,7 +128,10 @@ class TestLoginSuccessView(TestCase):
             username='Testuser1',
             password='Testpassword123',
         )
-        self.keycode = Keycodes.objects.create(code="1234",code_date="2025-01-20")
+        self.keycode = Keycodes.objects.create(
+            code="1234",
+            code_date="2025-01-20"
+            )
         
     def test_login_success_url_correct(self):
         response = self.client.post(
@@ -132,7 +154,9 @@ class TestLoginSuccessView(TestCase):
         
         messages = list(response.context['messages'])
         self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), 'Aby wyświetlić strone ekranu powitalnego musisz być zalogowany')
+        self.assertEqual(
+            str(messages[0]), 
+            'Aby wyświetlić strone ekranu powitalnego musisz być zalogowany')
     
     def test_login_success_uses_correct_template(self):
         response = self.client.post(
@@ -206,7 +230,10 @@ class TestLobbyView(TestCase):
             username='Testuser1',
             password='Testpassword123',
         )
-        self.keycode = Keycodes.objects.create(code="1234",code_date="2025-01-20")
+        self.keycode = Keycodes.objects.create(
+            code="1234",
+            code_date="2025-01-20"
+            )
         
     def test_lobby_url_correct(self):
         response = self.client.post(
@@ -229,7 +256,10 @@ class TestLobbyView(TestCase):
         
         messages = list(response.context['messages'])
         self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), 'Aby wyświetlić strone poczekalni musisz być zalogowany')
+        self.assertEqual(
+            str(messages[0]), 
+            'Aby wyświetlić strone poczekalni musisz być zalogowany'
+            )
         
     def test_lobby_uses_correct_template(self):
         response = self.client.post(
@@ -303,7 +333,10 @@ class BookingView(TestCase):
             password='Testpassword123',
         )
         
-        self.keycode = Keycodes.objects.create(code="1234",code_date="2025-01-20")
+        self.keycode = Keycodes.objects.create(
+            code="1234",
+            code_date="2025-01-20"
+            )
     
     def test_booking_url_success(self):
         response = self.client.post(
@@ -337,7 +370,10 @@ class BookingView(TestCase):
         
         messages = list(response.context['messages'])
         self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), 'Aby wyświetlić strone rezerwacji musisz być zalogowany')
+        self.assertEqual(
+            str(messages[0]), 
+            'Aby wyświetlić strone rezerwacji musisz być zalogowany'
+            )
     
     def test_booking_unauthenticated_user_entry_message_in_template(self):
         response = self.client.get(
@@ -345,7 +381,10 @@ class BookingView(TestCase):
             follow = True
             )
 
-        self.assertContains(response,'Aby wyświetlić strone rezerwacji musisz być zalogowany')
+        self.assertContains(
+            response,
+            'Aby wyświetlić strone rezerwacji musisz być zalogowany'
+            )
         
     def test_booking_uses_correct_template_after_redirect(self):
         response = self.client.get(
@@ -375,7 +414,10 @@ class BookingView(TestCase):
         response = self.client.get(reverse('booking'))
 
         self.assertContains(response, "Rezerwacja")
-        self.assertContains(response, '<form method="post" class="BookingForm p-3 mt-3">')       
+        self.assertContains(
+            response, 
+            '<form method="post" class="BookingForm p-3 mt-3">'
+            )       
         self.assertContains(response, 'name="users"')
         self.assertContains(response, 'name="users_amount"')
         self.assertContains(response, 'name="start_hour"')
@@ -390,7 +432,10 @@ class BookingView(TestCase):
         )
         
         response = self.client.get(reverse('booking'))
-        self.assertContains(response, '<button type="submit" class = "btn mt-3">Zarezerwuj</button>')
+        self.assertContains(
+            response, 
+            '<button type="submit" class = "btn mt-3">Zarezerwuj</button>'
+            )
     
         
 #current bookings view
@@ -401,7 +446,10 @@ class TestCurrentBookingsView(TestCase):
             password='Testpassword123',
         )
         
-        self.keycode = Keycodes.objects.create(code="1234",code_date="2025-01-20")
+        self.keycode = Keycodes.objects.create(
+            code="1234",
+            code_date="2025-01-20"
+            )
         
     def test_current_bookings_url_success(self):
         response = self.client.post(
@@ -426,7 +474,11 @@ class TestCurrentBookingsView(TestCase):
         
         messages = list(response.context['messages'])
         self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), 'Aby wyświetlić strone dzisiejszych rezerwacji musisz być zalogowany')
+        self.assertEqual(
+            str(messages[0]), 
+            'Aby wyświetlić strone dzisiejszych \
+            rezerwacji musisz być zalogowany'
+            )
         
     def test_current_bookings_uses_correct_template(self):
         response = self.client.post(
@@ -495,7 +547,8 @@ class TestCurrentBookingsView(TestCase):
         # test if two bookings were uploaded correctly
         self.assertEqual(len(response.context['context']), 2)
 
-        # check if currently logged in users id that's being passed in context is correct
+        # check if currently logged in users id that's 
+        # being passed in context is correct
         self.assertEqual(response.context['current_user'], self.user.id)
         
         response = self.client.get(reverse('booking_list'))
@@ -512,7 +565,10 @@ class TestArchiveView(TestCase):
             password='Testpassword123',
         )
         
-        self.keycode = Keycodes.objects.create(code="1234",code_date="2025-01-20")
+        self.keycode = Keycodes.objects.create(
+            code="1234",
+            code_date="2025-01-20"
+            )
         
     def test_archive_url_success(self):
         response = self.client.post(
@@ -537,7 +593,10 @@ class TestArchiveView(TestCase):
         
         messages = list(response.context['messages'])
         self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), 'Aby wyświetlić strone archiwum musisz być zalogowany')
+        self.assertEqual(
+            str(messages[0]), 
+            'Aby wyświetlić strone archiwum musisz być zalogowany'
+            )
     
     def test_archive_unauthenticated_user_entry_message_in_template(self):
         response = self.client.get(
@@ -545,7 +604,10 @@ class TestArchiveView(TestCase):
             follow = True
             )
         
-        self.assertContains(response, 'Aby wyświetlić strone archiwum musisz być zalogowany')
+        self.assertContains(
+            response, 
+            'Aby wyświetlić strone archiwum musisz być zalogowany'
+            )
     
     def test_archive_uses_correct_template_after_unauth_redirect(self):
         response = self.client.get(
@@ -629,7 +691,10 @@ class TestBugReportView(TestCase):
             password='Testpassword123',
         )
         
-        self.keycode = Keycodes.objects.create(code="1234",code_date="2025-01-20")
+        self.keycode = Keycodes.objects.create(
+            code="1234",
+            code_date="2025-01-20"
+            )
         
     def test_bug_report_url_success(self):
         response = self.client.post(
@@ -663,7 +728,10 @@ class TestBugReportView(TestCase):
         
         messages = list(response.context['messages'])
         self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), 'Aby wyświetlić strone zgłoszenia problemu musisz być zalogowany')
+        self.assertEqual(
+            str(messages[0]), 
+            'Aby wyświetlić strone zgłoszenia problemu musisz być zalogowany'
+            )
     
     def test_bug_report_unauthenticated_user_entry_message_in_template(self):
         response = self.client.get(
@@ -671,7 +739,10 @@ class TestBugReportView(TestCase):
             follow = True
             )
 
-        self.assertContains(response,'Aby wyświetlić strone zgłoszenia problemu musisz być zalogowany')
+        self.assertContains(
+            response,
+            'Aby wyświetlić strone zgłoszenia problemu musisz być zalogowany'
+            )
         
     def test_bug_report_uses_correct_template_after_redirect(self):
         response = self.client.get(
@@ -701,7 +772,10 @@ class TestBugReportView(TestCase):
         response = self.client.get(reverse('bug_report'))
 
         self.assertContains(response, "Zgłoś błąd")
-        self.assertContains(response, '<form method="post" class="BugReportForm">')       
+        self.assertContains(
+            response, 
+            '<form method="post" class="BugReportForm">'
+            )       
         self.assertContains(response, 'name="report_text"')
         self.assertContains(response, 'name="report_date"')
     
@@ -713,7 +787,11 @@ class TestBugReportView(TestCase):
         )
         
         response = self.client.get(reverse('bug_report'))
-        self.assertContains(response, '<button type="submit" class = "btn mt-3 text-center fs-6">Wyślij zgłoszenie</button>')
+        self.assertContains(
+            response, 
+            '<button type="submit" \
+            class = "btn mt-3 text-center fs-6">Wyślij zgłoszenie</button>'
+            )
         
 # Reports view
 
@@ -730,7 +808,8 @@ class TestReportsView(TestCase):
             is_staff = True
         )
         
-        self.keycode = Keycodes.objects.create(code="1234",code_date="2025-01-20")
+        self.keycode = Keycodes.objects.create(code="1234",
+                                               code_date="2025-01-20")
         
     def test_reports_url_success(self):
         response = self.client.post(
@@ -755,7 +834,11 @@ class TestReportsView(TestCase):
         
         messages = list(response.context['messages'])
         self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), 'Aby wyświetlić strone zgłoszeń musisz być zalogowany jako administrator')
+        self.assertEqual(
+            str(messages[0]), 
+            'Aby wyświetlić strone zgłoszeń musisz być \
+                zalogowany jako administrator'
+                )
     
     def test_reports_responses_when_user_not_staff(self):
         response = self.client.post(
@@ -775,7 +858,11 @@ class TestReportsView(TestCase):
             )
         
         self.assertTemplateUsed(response, 'Schedule/login_success.html')
-        self.assertContains(response, 'Aby wyświetlić strone zgłoszeń musisz być zalogowany jako administrator')
+        self.assertContains(
+            response, 
+            'Aby wyświetlić strone zgłoszeń musisz być \
+            zalogowany jako administrator'
+            )
         
     def test_reports_correct_template_when_user_is_staff(self):
         response = self.client.post(
@@ -799,7 +886,11 @@ class TestReportsView(TestCase):
             follow = True
             )
         
-        self.assertContains(response, 'Aby wyświetlić strone zgłoszeń musisz być zalogowany jako administrator')
+        self.assertContains(
+            response, 
+            'Aby wyświetlić strone zgłoszeń musisz \
+                być zalogowany jako administrator'
+                )
     
     def test_reports_uses_correct_template_after_unauth_redirect(self):
         response = self.client.get(

@@ -1,11 +1,14 @@
 import environ
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .forms import LoginForm, RegisterForm, BookingForm, BugReportForm, UserPasswordResetForm
+from .forms import LoginForm, RegisterForm, BookingForm, \
+BugReportForm, UserPasswordResetForm
 from django.contrib import messages
-from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
+from django.contrib.auth import login as auth_login, \
+authenticate, logout as auth_logout
 from django.contrib.auth.models import Group
-from .models import Booking, Archive, Keycodes, BugReports, CleaningSchedule, CleaningScheduleArchive
+from .models import Booking, Archive, Keycodes, BugReports, \
+CleaningSchedule, CleaningScheduleArchive
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404
 import json
@@ -47,7 +50,10 @@ def login(request):
                 if request.user.is_staff:
                     return render(request, 'Schedule/reports.html')
                 else:
-                    messages.warning(request, f"Aby wyświetlić strone {SITE_NAMES[request.GET['next'][1:-1]]} musisz być zalogowany jako administrator")
+                    messages.warning(request, 
+                        f"Aby wyświetlić strone \
+                        {SITE_NAMES[request.GET['next'][1:-1]]}\
+                        musisz być zalogowany jako administrator")
             else:
                 return redirect('login_success/')
             
@@ -58,7 +64,9 @@ def login(request):
             username = request.POST['login']
             password = request.POST['haslo']
         
-            user = authenticate(request, username = username, password = password)
+            user = authenticate(request, 
+                                username = username, 
+                                password = password)
             if user is not None:
                 auth_login(request,user)                          
                 return redirect('login_success/')
@@ -69,10 +77,17 @@ def login(request):
         else:
             if 'next' in request.GET:
                 if dict(request.GET)['next'][0][1:-1] in list(SITE_NAMES.keys()):  
-                    if dict(request.GET)['next'][0][1:-1] == 'reports' and not request.user.is_staff:
-                        messages.warning(request, f"Aby wyświetlić strone {SITE_NAMES[dict(request.GET)['next'][0][1:-1]]} musisz być zalogowany jako administrator")
+                    if dict(request.GET)['next'][0][1:-1] == 'reports' and \
+                    not request.user.is_staff:
+                        messages.warning(request, 
+                            f"Aby wyświetlić strone \
+                            {SITE_NAMES[dict(request.GET)['next'][0][1:-1]]} \
+                            musisz być zalogowany jako administrator")
                     else:
-                        messages.warning(request, f"Aby wyświetlić strone {SITE_NAMES[dict(request.GET)['next'][0][1:-1]]} musisz być zalogowany")
+                        messages.warning(request, 
+                            f"Aby wyświetlić strone \
+                            {SITE_NAMES[dict(request.GET)['next'][0][1:-1]]}\
+                            musisz być zalogowany")
             
             form = LoginForm()
             return render(request, "Schedule/login.html", {'form' : form})
@@ -86,18 +101,22 @@ def login_success(request):
     # Check if user has paid the monthly membership
     user_payment_is_paid = Payment.objects.filter(user=request.user)[0].is_paid
     
-    # Check if user is currently picked for cleanup if yes then show the info message
+    # Check if user is currently picked for cleanup if yes 
+    # then show the info message
     if CleaningSchedule.objects.all():
         user_cleanup_pick = CleaningSchedule.objects.all().order_by('-id').values()[0]['username']
         if user_cleanup_pick == str(request.user):
-            messages.success(request, f"Zostałeś wybrany w kolejce sprzątania na ten tydzień. Wystarczy że sprzątniesz raz w tym tygodniu :)")
+            messages.success(request, 
+            f"Zostałeś wybrany w kolejce sprzątania na ten tydzień. \
+            Wystarczy że sprzątniesz raz w tym tygodniu :)")
     
     
     if user_payment_is_paid == True:
         # Display keycode upon successful login if user has paid
         messages.success(request, f"Kod do skrzynki z kluczem: {keycode}.") 
     else:
-        messages.error(request, f"Aby uzyskać informację o kodzie do skrytki należy opłacić składke.")
+        messages.error(request, 
+        f"Aby uzyskać informację o kodzie do skrytki należy opłacić składke.")
     
     
     return render(request,"Schedule/login_success.html")
@@ -108,8 +127,8 @@ def logout(request):
     messages.info(request, "Wylogowano pomyslnie")
     return redirect('/')
 
-#Registration page, access code known only to the group in order to eliminate the possibility
-# of not authorized people from making an account
+#Registration page, access code known only to the group in order to 
+# eliminate the possibility of unauthorized people from making an account
 def register(request): 
     form = RegisterForm()
     if request.method == "POST":
@@ -163,9 +182,13 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
         initial = super().get_initial()
         user = self.request.user
         
-        if user.is_authenticated and user.email and user.email != "twoj_email@gmail.com":
+        if user.is_authenticated \
+            and user.email \
+            and user.email != "twoj_email@gmail.com":
+            
             initial['email'] = user.email
             initial['username'] = user.username
+        
         elif user.is_authenticated:
             initial['username'] = user.username
             
@@ -201,7 +224,8 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
             print("Form is invalid")
             return render(request, self.template_name, {'form':form})
     
-# View with buttons that move to schedule to book a session, check current bookings or go to archive 
+# View with buttons that move to schedule to book a session, 
+# check current bookings or go to archive 
 @login_required(login_url="/login/")
 @user_is_active(redirect_url = "/login/")
 def lobby(request):
@@ -229,7 +253,8 @@ def booking(request):
         return render(request,'Schedule/booking.html', {'form':form})
     
 
-# View with a table with current bookings (booking gets moved to archive day after the specified date at ~1am)
+# View with a table with current bookings 
+# (booking gets moved to archive day after the specified date at ~1am)
 @login_required(login_url="/login/")
 @user_is_active(redirect_url = "/login/")
 def current_bookings(request):
@@ -238,9 +263,13 @@ def current_bookings(request):
     
     if context:
         
-        return render(request, "Schedule/current_bookings.html", {'context' : context, 'current_user' : current_user})
+        return render(request, 
+                      "Schedule/current_bookings.html", 
+                      {'context' : context, 'current_user' : current_user})
     
-    return render(request, "Schedule/current_bookings.html", {'context':context})
+    return render(request, 
+                  "Schedule/current_bookings.html",
+                  {'context':context})
 
 # View for rendering the data in the table with current bookings
 @login_required(login_url="/login/")
@@ -248,9 +277,12 @@ def current_bookings(request):
 def booking_list(request):
     context = Booking.objects.all()
     current_user = request.user.id
-    return render(request,'Schedule/booking_list.html', {'context' : context, 'current_user' : current_user})
+    return render(request,
+                  'Schedule/booking_list.html', 
+                  {'context' : context, 'current_user' : current_user})
 
-# View for the modal that renders a booking form which is used to edit the current booking
+# View for the modal that renders a booking form 
+# which is used to edit the current booking
 @login_required(login_url="/login/")
 @user_is_active(redirect_url = "/login/")
 def edit_booking(request, pk):
@@ -302,12 +334,15 @@ def edit_booking(request, pk):
             'booking' : booking
             })
 
-# View for the modal that asks the user if he's sure that he wants to remove the booking
+# View for the modal that asks the user if he's sure 
+# that he wants to remove the booking
 @login_required(login_url="/login/")
 @user_is_active(redirect_url = "/login/")
 def remove_booking_conf(request, pk):
     booking = get_object_or_404(Booking, pk=pk)
-    return render(request, 'Schedule/booking_delete_conf.html', {'booking' : booking})
+    return render(request, 
+                  'Schedule/booking_delete_conf.html', 
+                  {'booking' : booking})
 
 # View for the modal that allows the user to remove his booking
 @login_required(login_url="/login/")
@@ -326,8 +361,8 @@ def remove_booking(request, pk):
         }
         )
 
-# View for a table with archived bookings, dataTables used for pagination and filtering 
-# custom JS added to fix the default sort by date bug
+# View for a table with archived bookings, dataTables used for pagination and 
+# filtering custom JS added to fix the default sort by date bug
 @login_required(login_url="/login/")
 @user_is_active(redirect_url = "/login/")
 def archive_booking(request):
@@ -391,4 +426,6 @@ def cleaning_schedule(request):
             
         return redirect(reverse('cleaning_schedule'))
     else:
-        return render(request,'Schedule/cleaning_schedule.html',{'context':context})
+        return render(request,
+                      'Schedule/cleaning_schedule.html',
+                      {'context':context})

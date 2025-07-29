@@ -4,7 +4,8 @@ from .models import Profile, Payment
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
+from django.contrib.auth import login as auth_login, \
+authenticate, logout as auth_logout
 from .utils import (
     month_attendance_counter, 
     current_month_name, 
@@ -34,11 +35,16 @@ def profile_home(request):
         # get the payment information for current user
         payment_info = Payment.objects.filter(user=request.user)
         
-        # Check if user is currently picked for cleanup if yes then show the info message
+        # Check if user is currently picked for cleanup 
+        # if yes then show the info message
         if CleaningSchedule.objects.all():
             user_cleanup_pick = CleaningSchedule.objects.all().order_by('-id').values()[0]['username']
             if user_cleanup_pick == str(current_user):
-                messages.success(request, f"Zostałeś wybrany w kolejce sprzątania na ten tydzień. Wystarczy że sprzątniesz raz w tym tygodniu :)")
+                messages.success(
+                    request, 
+                    f"Zostałeś wybrany w kolejce sprzątania na ten tydzień.\
+                        Wystarczy że sprzątniesz raz w tym tygodniu :)"
+                    )
         
         context = {
             'user_info':user_info,
@@ -53,7 +59,10 @@ def profile_home(request):
             'payment_info' : payment_info[0],
         }
         
-        return render(request, "profiles/profile_home.html", {'context': context})
+        return render(request,
+                      "profiles/profile_home.html", 
+                      {'context': context}
+                      )
     else:
         # message - in order to access this view you need to be logged in
         messages.info(request, "Aby wejść w ten link musisz być zalogowany")
@@ -175,7 +184,8 @@ def payments(request):
     current_user = Profile.objects.get(user__id=request.user.id)
     user_list_info = check_last_payment(user_list_payments)
     
-    # call a function that checks if users payment is expired and reset the is_paid attr
+    # call a function that checks if users payment is 
+    # expired and reset the is_paid attr
     reset_is_paid(user_list_info)
     
     context = {
@@ -185,13 +195,20 @@ def payments(request):
     
     if request.method == "POST":
         if 'deactivate_users' in request.POST:
-            # call the function that checks all users and deactivates the eligible ones
+            # call the function that checks all users and deactivates 
+            # the eligible ones
             deactv_result = deactivate_users(user_list_info)
             
             if deactv_result > 0:
-                messages.success(request, f"Pomyślnie deaktywowano {deactv_result} kont.")
+                messages.success(
+                    request, 
+                    f"Pomyślnie deaktywowano {deactv_result} kont."
+                    )
             else:
-                messages.warning(request, "Brak kont spełniających kryteria do deaktywacji.")
+                messages.warning(
+                    request, 
+                    "Brak kont spełniających kryteria do deaktywacji."
+                    )
     
     return render(request, 'profiles/payments.html', {'context':context})
 

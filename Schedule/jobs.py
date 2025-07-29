@@ -109,9 +109,12 @@ def cleaning_user_roll(reroll, days_until_monday, scheduler):
     if date.today().strftime("%A") == "Monday" or scheduler == False:
 
         # get all users that are not superuser
-        all_users = [user['username'] for user in User.objects.exclude(username='Super').values() if user['is_active']==True]
+        all_users = [user['username'] for user in User.objects.exclude(
+                username='Super'
+            ).values() if user['is_active']==True]
         
-        # get all the users usernames from CleaningSchedule that were already picked in this set
+        # get all the users usernames from CleaningSchedule 
+        # that were already picked in this set
         
         picked_users = [user['username'] for user in CleaningSchedule.objects.all().values()]
         
@@ -119,7 +122,9 @@ def cleaning_user_roll(reroll, days_until_monday, scheduler):
         # check if all the users already have been picked
         if len(all_users) == len(picked_users):
             print("all users already picked")
-            user_to_archive = CleaningSchedule.objects.filter(username=picked_users[-1])[0]
+            user_to_archive = CleaningSchedule.objects.filter(
+                username=picked_users[-1]
+             )[0]
             
             CleaningScheduleArchive.objects.create(
                 username = user_to_archive.username,
@@ -129,14 +134,24 @@ def cleaning_user_roll(reroll, days_until_monday, scheduler):
             
             CleaningSchedule.objects.all().delete()
             
-            # adding this to prevent the last picked user from the previous set to be picked instatly again since random tends to do this way too often
-            user_last_picked_last_set = [CleaningScheduleArchive.objects.all().order_by('-id')[0].username]
+            # adding this to prevent the last picked user from the previous set 
+            # to be picked instatly again since random tends to do 
+            # this way too often
+            user_last_picked_last_set = [
+                CleaningScheduleArchive.objects.all().order_by('-id')[0].username
+                ]
             # now the recent picks are empty so roll a new user
-            this_weeks_user = choice(list(set(all_users)-set(user_last_picked_last_set)))
+            this_weeks_user = choice(
+                list(set(all_users)-set(user_last_picked_last_set))
+                )
         else:
-            # if there are more than 1 users in the recent picks, archive the most recent one before creating a new cleaning schedule entry
+            # if there are more than 1 users in the recent picks, 
+            # archive the most recent one before creating a new 
+            # cleaning schedule entry
             if len(picked_users) > 0:
-                user_to_archive = CleaningSchedule.objects.filter(username=picked_users[-1])[0]
+                user_to_archive = CleaningSchedule.objects.filter(
+                        username=picked_users[-1]
+                    )[0]
 
                 CleaningScheduleArchive.objects.create(
                     username = user_to_archive.username,
@@ -146,7 +161,8 @@ def cleaning_user_roll(reroll, days_until_monday, scheduler):
             
             # roll a new user
             this_weeks_user = choice(list(set(all_users)-set(picked_users)))
-        # if admin called reroll - remove the currently picked user pick and his archive, create a new pick
+        # if admin called reroll - remove the currently picked user pick 
+        # and his archive, create a new pick
         if reroll:
             if CleaningSchedule.objects.all():
                 CleaningSchedule.objects.order_by('-id')[0].delete()

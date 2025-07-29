@@ -13,7 +13,9 @@ env = environ.Env()
 environ.Env.read_env()
 
 def dates1():
-    DATES1 = [datetime.date.today() + datetime.timedelta(days=i) for i in range(0,3)]
+    DATES1 = [
+        datetime.date.today() + datetime.timedelta(days=i) for i in range(0,3)
+        ]
     DAYS1 = ["Dzisiaj", "Jutro", "Pojutrze"]
     DATES_SELECT1 = [(date, day) for date, day in zip(DATES1, DAYS1)]
     
@@ -21,11 +23,15 @@ def dates1():
 
 def dates_bugreport():
     # Create a list of dates starting from 3days ago until today included)    
-    DATES_BUGREPORT = [datetime.date.today() + datetime.timedelta(days=i) for i in range(-3,1)]
+    DATES_BUGREPORT = [
+        datetime.date.today() + datetime.timedelta(days=i) for i in range(-3,1)
+        ]
     # List of days names
     DAYS_BUGREPORT = ["3 dni temu","2 dni temu", "Wczoraj", "Dzisiaj"]
     # Creating a list of tuples for SELECT widget
-    DATES_SELECT_BUGREPORT = [(date, day) for date, day in zip(DATES_BUGREPORT, DAYS_BUGREPORT)]
+    DATES_SELECT_BUGREPORT = [(date, day) for date, day in zip(
+        DATES_BUGREPORT, DAYS_BUGREPORT
+        )]
 
     return DATES_SELECT_BUGREPORT
 
@@ -85,8 +91,16 @@ class KeycodeForm(forms.ModelForm):
 
 # Login Form
 class LoginForm(forms.Form):
-    login = forms.CharField(label = '', max_length=50, widget=forms.TextInput(attrs={'placeholder': 'Login'}))
-    haslo = forms.CharField(label = '', widget=forms.PasswordInput(attrs={'placeholder': 'Haslo'}), max_length=40)
+    login = forms.CharField(label = '', 
+                            max_length=50, 
+                            widget=forms.TextInput(
+                                attrs={'placeholder': 'Login'}
+                                ))
+    haslo = forms.CharField(label = '', 
+                            widget=forms.PasswordInput(
+                                    attrs={'placeholder': 'Haslo'}
+                                ), 
+                            max_length=40)
     
 # Register form
 class RegisterForm(UserCreationForm):
@@ -94,9 +108,16 @@ class RegisterForm(UserCreationForm):
         super().__init__(*args,**kwargs)
         # override Djangos default label
         self.fields['password1'].label = mark_safe('<strong>Hasło</strong>')
-        self.fields['password2'].label = mark_safe('<strong>Potwierdź hasło</strong>')
+        self.fields['password2'].label = mark_safe(
+            '<strong>Potwierdź hasło</strong>'
+            )
         # override Djangos default helptext
-        self.fields['password1'].help_text = mark_safe('<ul><li>Nie podawaj swojego prawdziwego hasła.</li><li>Minimum 8 znaków.</li><li>Nie może być podobne do loginu.</li><li>Nie może być całkowicie złożone z cyfr.</li></ul>')
+        self.fields['password1'].help_text = mark_safe(
+            '<ul><li>Nie podawaj swojego prawdziwego hasła.\
+            </li><li>Minimum 8 znaków.</li>\
+            <li>Nie może być podobne do loginu.</li>\
+            <li>Nie może być całkowicie złożone z cyfr.</li></ul>'
+            )
         self.fields['password2'].help_text = ' '
     
     # Add an access_code field for register form
@@ -113,7 +134,8 @@ class RegisterForm(UserCreationForm):
             'username' : mark_safe('<strong>Nazwa użytkownika</strong>'),
         }
         help_texts= {
-            'username' : 'Max długość 50 znaków. Dozwolone litery, cyfry i symbole @/./+/-/_',
+            'username' : 'Max długość 50 znaków. Dozwolone litery, \
+                cyfry i symbole @/./+/-/_',
         }
     
     # Create validation checks
@@ -127,19 +149,24 @@ class RegisterForm(UserCreationForm):
         
         # If passwords don't match throw error
         if password1 != password2:
-            self.add_error(None,forms.ValidationError(_("Hasła nie są takie same"),
-                                  code="invalid",
-                                  ))
+            self.add_error(None,forms.ValidationError(
+                _("Hasła nie są takie same"),
+                code="invalid",
+            ))
         # If any of the passwords ( or both ) are empty, throw error
-        if password1 == "" or password2 == "" or (password1 == "" and password2 == ""):
-            self.add_error(None,forms.ValidationError(_("Pola haseł nie mogą być puste"),
-                                  code="invalid",
-                                  ))
+        if password1 == "" or \
+            password2 == "" or \
+            (password1 == "" and password2 == ""):
+            self.add_error(None,forms.ValidationError(
+                _("Pola haseł nie mogą być puste"),
+                code="invalid",
+            ))
         # If password shorter than 8 chars, throw error
         if len(password1) < 8:
-            self.add_error(None,forms.ValidationError(_("Hasło za krótkie, minimalna długość 8 znaków"),
-                                  code="invalid",
-                                  ))
+            self.add_error(None,forms.ValidationError(
+                _("Hasło za krótkie, minimalna długość 8 znaków"),
+                code="invalid",
+            ))
         
         # If username is empty, throw error
         if username is None:
@@ -151,9 +178,10 @@ class RegisterForm(UserCreationForm):
                            )
         # If username is longer than 50 chars, throw error
         elif len(username) > 50:
-            self.add_error(None,forms.ValidationError(_("Nazwa za długa, maksymalna długość - 50 znaków"),
-                                  code="invalid",
-                                  ))
+            self.add_error(None,forms.ValidationError(
+                _("Nazwa za długa, maksymalna długość - 50 znaków"),
+                code="invalid",
+            ))
         
         # If access_code is wrong, throw error
         if access_code not in [env("REGISTER_CODE"),env("ADMIN_REGISTER_CODE")]:
@@ -180,7 +208,10 @@ class BookingForm(forms.ModelForm):
         super(BookingForm, self).__init__(*args,**kwargs)
         self.fields['start_hour'].widget = forms.Select(choices=hour_list())
         self.fields['end_hour'].widget = forms.Select(choices=hour_list())
-        self.fields['current_day'].widget = forms.Select(choices=dates1(),attrs={'class':"form-select"})
+        self.fields['current_day'].widget = forms.Select(
+            choices=dates1(),
+            attrs={'class':"form-select"}
+        )
     class Meta:
         model = Booking
         fields = ["users","users_amount","start_hour","end_hour","current_day"]
@@ -210,29 +241,40 @@ class BookingForm(forms.ModelForm):
         User = get_user_model()
         users_list = User.objects.values('username')
         if username not in [value['username'] for value in list(users_list)]:
-             self.add_error(None,forms.ValidationError(_("Podana nazwa (%(username)s) nie jest na liście zarejestrowanych użytkowników"),
-                                  code="invalid",
-                                  params = {'username' : username}))
+             self.add_error(None,forms.ValidationError(
+                 _("Podana nazwa (%(username)s) nie jest na liście\
+                     zarejestrowanych użytkowników"),
+                code="invalid",
+                params = {'username' : username})
+                )
         
         #Look into form taking only hour as well with hour:minute
         
-        # If start or end is in wrong format (only hour for example) throw this error
+        # If start or end is in wrong format (only hour for example) 
+        # throw this error
         # !!!This is a temporary solution!!!
         if start is None or end is None:
-            self.add_error(None,forms.ValidationError(_("Podano zły format godziny."),
-                                  code="invalid",
-                                  ))
+            self.add_error(None,forms.ValidationError(
+                _("Podano zły format godziny."),
+                code="invalid",
+            ))
         # If end hour is earlier than start hour throw error    
         elif end < start:
-            self.add_error(None,forms.ValidationError(_("Godzina końca %(end)s nie może być mniejsza niż godzina startu %(start)s"),
-                                  code="invalid",
-                                  params = {'end' : end, 'start' : start}))
+            self.add_error(None,forms.ValidationError(
+                _("Godzina końca %(end)s nie może być mniejsza \
+                    niż godzina startu %(start)s"),
+                code="invalid",
+                params = {'end' : end, 'start' : start})
+            )
         
         # If amount of users in booking are more than 5 throw error    
         if amount > 5:
-            self.add_error(None,forms.ValidationError(_("Przekroczono maksymalna ilosc osob (%(amount)s) w rezerwacji"),
-                                  code="invalid",
-                                  params = {'amount' : amount}))   
+            self.add_error(None,forms.ValidationError(
+                _("Przekroczono maksymalna ilosc osob \
+                    (%(amount)s) w rezerwacji"),
+                code="invalid",
+                params = {'amount' : amount})
+            )   
         
         
         
@@ -245,7 +287,9 @@ class BugReportForm(forms.ModelForm):
         fields = ["report_date","report_text"]
         widgets = {
             'report_date' : forms.Select(choices=dates_bugreport()),
-            'report_text' : forms.Textarea(attrs={'class' : 'form-group form-control','rows':'3','style':'height: 200px'}) 
+            'report_text' : forms.Textarea(attrs={
+                'class' : 'form-group form-control',
+                'rows':'3','style':'height: 200px'}) 
         }
 
 
@@ -254,10 +298,12 @@ class UserPasswordResetForm(PasswordResetForm):
     def __init__(self, *args, **kwargs):
         super(UserPasswordResetForm, self).__init__(*args,**kwargs)
         
-    username = forms.CharField(label="Nazwa Użytkownika:",widget=forms.TextInput(attrs={
-        'placeholder':'koxu123',
-        'name':'username',
-    }))
+    username = forms.CharField(label="Nazwa Użytkownika:",
+                               widget=forms.TextInput(attrs={
+                                    'placeholder':'koxu123',
+                                    'name':'username',
+                                    })
+                                )
     
     email = forms.EmailField(label="Email:",
         help_text='Adres email na który przyjdzie link do zmiany hasła',
@@ -286,9 +332,12 @@ class UserPasswordResetForm(PasswordResetForm):
         users = self.get_users(username)
 
         if not users.exists():
-            self.add_error(None,forms.ValidationError(_("Podana nazwa (%(username)s) nie jest na liście zarejestrowanych użytkowników"),
-                                  code="invalid",
-                                  params = {'username' : username}))
+            self.add_error(None,forms.ValidationError(
+                _("Podana nazwa (%(username)s) nie jest na\
+                    liście zarejestrowanych użytkowników"),
+                code="invalid",
+                params = {'username' : username})
+            )
             
         
         if access_code not in [env("REGISTER_CODE"),env("ADMIN_REGISTER_CODE")]:
@@ -307,7 +356,12 @@ class CustomSetPasswordForm(SetPasswordForm):
         label=_("Nowe hasło"),
         widget=forms.PasswordInput,
         strip=False,
-        help_text=mark_safe('<ul><li>Nie podawaj swojego prawdziwego hasła.</li><li>Minimum 8 znaków.</li><li>Nie może być podobne do loginu.</li><li>Nie może być całkowicie złożone z cyfr.</li></ul>'),
+        help_text=mark_safe(
+            '<ul><li>Nie podawaj swojego prawdziwego hasła.</li>\
+            <li>Minimum 8 znaków.</li>\
+            <li>Nie może być podobne do loginu.</li>\
+            <li>Nie może być całkowicie złożone z cyfr.</li></ul>'
+        ),
     )
     
     new_password2 = forms.CharField(
@@ -324,19 +378,27 @@ class CustomSetPasswordForm(SetPasswordForm):
         
         # If passwords don't match throw error
         if new_password1 != new_password2:
-            self.add_error(None,forms.ValidationError(_("Hasła nie są takie same"),
-                                  code="invalid",
-                                  ))
+            self.add_error(None,forms.ValidationError(
+                _("Hasła nie są takie same"),
+                code="invalid",
+                )
+            )
         # If any of the passwords ( or both ) are empty, throw error
-        if new_password1 == "" or new_password2 == "" or (new_password1 == "" and new_password2 == ""):
-            self.add_error(None,forms.ValidationError(_("Pola haseł nie mogą być puste"),
-                                  code="invalid",
-                                  ))
+        if new_password1 == "" or \
+            new_password2 == "" or \
+            (new_password1 == "" and new_password2 == ""):
+            self.add_error(None,forms.ValidationError(
+                _("Pola haseł nie mogą być puste"),
+                code="invalid",
+                )
+            )
         # If password shorter than 8 chars, throw error
         if len(new_password1) < 8:
-            self.add_error(None,forms.ValidationError(_("Hasło za krótkie, minimalna długość 8 znaków"),
-                                  code="invalid",
-                                  ))
+            self.add_error(None,forms.ValidationError(
+                _("Hasło za krótkie, minimalna długość 8 znaków"),
+                code="invalid",
+                )
+            )
 
         # If password is only numeric, throw error
         if new_password1.isdigit():

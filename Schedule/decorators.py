@@ -12,7 +12,8 @@ def user_is_active(redirect_url=None):
             if not request.user.is_active:
                 messages.error(
                     request, 
-                    "Nie można wyświelić żądanej strony, ponieważ konto jest deaktywowane." +
+                    "Nie można wyświelić żądanej strony, \
+                        ponieważ konto jest deaktywowane." +
                     " Aby aktywować konto, należy opłacić składke.")
                 return redirect(redirect_url)
             return view_func(request, *args, **kwargs)

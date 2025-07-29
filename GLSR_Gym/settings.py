@@ -17,6 +17,7 @@ import json
 
 env = environ.Env()
 environ.Env.read_env()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -257,7 +258,10 @@ if DEBUG==1:
     # pass
 else:
     # CORS_ALLOWED_ORIGINS = [env("CORS_ALLOWED_ORIGINS_PROD")] #heroku
-    CORS_ALLOWED_ORIGINS = ["http://localhost:8000", "http://127.0.0.1:8000", "http://192.168.0.164:8000"]# docker "prod"
+    # docker "prod"
+    CORS_ALLOWED_ORIGINS = ["http://localhost:8000", 
+                            "http://127.0.0.1:8000",
+                            "http://192.168.0.164:8000"]
     
     
 CORS_ALLOW_METHODS = (
@@ -266,30 +270,3 @@ CORS_ALLOW_METHODS = (
 CORS_ALLOW_HEADERS = (
     *default_headers,
 )
-
-
-
-# # #Sec options
-
-# SECURE_SSL_REDIRECT = True
-# SECURE_HSTS_SECONDS = 31536000 #1year
-# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-# SECURE_HSTS_PRELOAD = True
-
-# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-
-# Logger for traceback messages in "prod" testing inside docker
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#         },
-#     },
-#     'root': {
-#         'handlers': ['console'],
-#         'level': 'DEBUG',
-#     },
-# }

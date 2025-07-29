@@ -13,7 +13,9 @@ def cleaning_user_reroll():
         cleaning_user_roll(True, days_until_monday, False)
     
 '''
-    Function to clean the CleaningSchedule table manually, which will prevent rarely active users from being leftover in the pool and rolled constatly.
+    Function to clean the CleaningSchedule table manually, 
+    which will prevent rarely active users from being leftover 
+    in the pool and rolled constatly.
 '''    
 def cleaning_user_roll_cleanup():
     CleaningSchedule.objects.all().delete()

@@ -5,7 +5,8 @@ from datetime import datetime
 
 def month_attendance_counter(user_name):
     '''
-        Function for splitting booked days into a list with month : amount of days format.
+        Function for splitting booked days into a list 
+        with month : amount of days format.
         Ex.: [{'April':15,'May':9}]
     '''
     
@@ -21,7 +22,8 @@ def month_attendance_counter(user_name):
     for month_name, month_number in zip(months.keys(),month_num):
         ctr = 0
         for row_data in all_user_rows:
-            if row_data['current_day'].strftime("%-m") == str(month_number) and row_data['current_day'].strftime("%Y") == datetime.now().strftime("%Y"):
+            if row_data['current_day'].strftime("%-m") == str(month_number) \
+                and row_data['current_day'].strftime("%Y") == datetime.now().strftime("%Y"):
                 ctr+=1
             
             
@@ -44,7 +46,9 @@ def this_month_activity(user_name):
     month_num = [1,2,3,4,5,6,7,8,9,10,11,12]
     current_month = datetime.now().month
     
-    for month_days, month_num in zip(month_attendance_counter(user_name).items(),month_num):
+    for month_days, month_num in zip(
+        month_attendance_counter(user_name).items(),
+        month_num):
         if month_num == current_month:
             this_month_total = month_days[1]
         
@@ -69,7 +73,8 @@ def monthly_rank(user_name):
              "Szczur Bojowy", "Wielki Chłop", "Ogromny Chłop",]
     
     '''
-        ~30 Days in a month, let's take avg of 3 days per week which gives 12 (4weeks * 3) total days so:
+        ~30 Days in a month, let's take avg of 3 days per week which 
+        gives 12 (4weeks * 3) total days so:
         <2 attendance - rank 1
         2 - 5 - rank 2
         5 - 6 - rank 3
@@ -89,11 +94,13 @@ def yearly_rank(user_name):
     lower_req = [0,10,25,40,55,70,85,100,130,150]
     upper_req = [10,25,40,55,70,85,100,130,150,367]
     tiers = ["I","II","III","IV","V","VI","VII","VIII","IX","X"]
-    names = ["Świeżak", "Crossfitowiec", "Chudy Szczur", "Chudzielec", "Człowiek Szczupły (obelga)",
-             "Wyszczurzony", "Szczur Bojowy", "Duży Chłop", "Wielki Chłop", "Ogromny Chłop",]
+    names = ["Świeżak", "Crossfitowiec", "Chudy Szczur", "Chudzielec", 
+             "Człowiek Szczupły (obelga)", "Wyszczurzony", "Szczur Bojowy", 
+             "Duży Chłop", "Wielki Chłop", "Ogromny Chłop",]
     
     '''
-        ~365 Days in a year, let's take avg of 3 days per week which gives 156 (52weeks * 3) total days so:
+        ~365 Days in a year, let's take avg of 3 days per week which 
+        gives 156 (52weeks * 3) total days so:
         <10 attendance - rank 1
         10 - 25 - rank 2
         25 - 40 - rank 3
@@ -112,7 +119,8 @@ def yearly_rank(user_name):
     
 def next_month():
     '''
-        Function for calculating the next month (7th day) to use it in the users payment expiry_date
+        Function for calculating the next month (7th day) to use 
+        it in the users payment expiry_date
     '''
     today = datetime.today()
     
@@ -130,7 +138,9 @@ def check_last_payment(user_payments_info):
     '''
     user_payments_info = user_payments_info
     expiry_dates = [item.expiry_date for item in user_payments_info]
-    current_date = datetime.strptime(datetime.today().strftime('%Y-%m-%d'),'%Y-%m-%d').date()
+    current_date = datetime.strptime(
+        datetime.today().strftime('%Y-%m-%d'),'%Y-%m-%d'
+        ).date()
     expired_accs = []
     
     if len(list(user_payments_info)) == len(expiry_dates):
@@ -152,16 +162,18 @@ def reset_is_paid(user_list):
     user_list = user_list
     
     for users_info in user_list:
-        if users_info.is_paid == True and datetime.today().date() > users_info.expiry_date:
+        if users_info.is_paid == True and \
+            datetime.today().date() > users_info.expiry_date:
             users_info.is_paid = False
             users_info.save()
             
 def deactivate_users(user_list_info):
     '''
-        Function that goes through all the users payment information to deactivate
-        accounts that haven't paid for >60days
+        Function that goes through all the users payment 
+        information to deactivate accounts that haven't paid for >60days
         
-        Returns how many accounts were deactivated for usage inside the message in payment view
+        Returns how many accounts were deactivated for usage 
+        inside the message in payment view
     '''
     user_list_info = user_list_info
     counter = 0

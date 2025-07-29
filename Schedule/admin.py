@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Booking, Archive, Keycodes, BugReports, CleaningSchedule, CleaningScheduleArchive
+from .models import Booking, Archive, Keycodes, BugReports, \
+    CleaningSchedule, CleaningScheduleArchive
 import logging
 from django.http import HttpResponse
 from django.contrib import messages
@@ -24,7 +25,9 @@ def archive_bookings(modeladmin, request, queryset):
     # Get all bookings older than today    
     old_bookings = Booking.objects.filter(current_day__lt=timezone.now())
     
-    # If there are such bookings, loop through them and copy + add the records to the Archive table
+    # If there are such bookings, loop through them and copy 
+    # + 
+    # add the records to the Archive table
     if old_bookings.exists():
         with transaction.atomic():
             for booking in old_bookings:
@@ -61,7 +64,8 @@ class MyAdminSite(admin.AdminSite):
         
         context = self.each_context(request)
         
-        # If sent method is POST, start the archive function and redirect to admin base URL
+        # If sent method is POST, start the archive function and redirect 
+        # to admin base URL
         if request.method == "POST":
             self.archive_function(request)
             return redirect('/admin')
@@ -88,15 +92,23 @@ class MyAdminSite(admin.AdminSite):
             form = KeycodeForm(request.POST)
             
             if form.is_valid():
-                # If the new keycode is not the same as the last 10 keycodes then save the new code
+                # If the new keycode is not the same as the last 10 keycodes 
+                # then save the new code
                 if self.not_last_ten(form.cleaned_data['code']) == True:
                     form.save() 
                     print(form)
-                    messages.info(request,f"Pomyslnie dodano nowy kod: {form.cleaned_data['code']}")
+                    messages.info(
+                        request,
+                        f"Pomyslnie dodano nowy kod: \
+                            {form.cleaned_data['code']}"
+                    )
                     return redirect('/admin')
-                # If the new keycode is the same as one of the last 10 keycodes, throw a message to the user
+                # If the new keycode is the same as one of the last 10 keycodes,
+                # throw a message to the user
                 else:
-                    messages.error(request,"Kod ostatnio uzywany, podaj inny kod")  
+                    messages.error(request,
+                                   "Kod ostatnio uzywany, podaj inny kod"
+                                   )  
                     return render(request, 'admin/new_keycode.html', context)
         else:
             form = KeycodeForm()
@@ -106,7 +118,8 @@ class MyAdminSite(admin.AdminSite):
     def clean_archive(self, request):      
         context = self.each_context(request)
         
-        # If the method is POST, start the removing function and after that redirect to admin base URL
+        # If the method is POST, start the removing function and after 
+        # that redirect to admin base URL
         if request.method == "POST":
             self.remove_archives(request)
             
@@ -120,9 +133,15 @@ class MyAdminSite(admin.AdminSite):
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
-            path('archive_action/', self.admin_view(self.archive_action), name='archive_action'),
-            path('new_keycode/', self.admin_view(self.new_keycode), name='new_keycode'),
-            path('clean_archive/', self.admin_view(self.clean_archive), name='clean_archive'),
+            path('archive_action/', 
+                 self.admin_view(self.archive_action), 
+                 name='archive_action'),
+            path('new_keycode/', 
+                 self.admin_view(self.new_keycode), 
+                 name='new_keycode'),
+            path('clean_archive/', 
+                 self.admin_view(self.clean_archive), 
+                 name='clean_archive'),
         ]
 
         return custom_urls + urls
@@ -135,7 +154,8 @@ class MyAdminSite(admin.AdminSite):
         # Get all bookings older than today    
         old_bookings = Booking.objects.filter(current_day__lt=timezone.now())
         
-        # If there are such bookings, loop through them and copy + add the records to the Archive table
+        # If there are such bookings, loop through them and copy + add 
+        # the records to the Archive table
         if old_bookings.exists():
             with transaction.atomic():
                 for booking in old_bookings:
@@ -153,7 +173,8 @@ class MyAdminSite(admin.AdminSite):
         else:
             messages.warning(request, "Nie ma danych do archiwizacji")
     
-    # Function for checking if the new keycode has already been used in the last 10 codes        
+    # Function for checking if the new keycode has already been used in 
+    # the last 10 codes        
     def not_last_ten(self, code):
         code = code
         # Get the list of codes sorted by the newest to oldest
@@ -177,17 +198,27 @@ class MyAdminSite(admin.AdminSite):
     def remove_archives(self, request):
         self.rows_deleted = 0
         # Get all archive records older than 1 month
-        removable_archives = Archive.objects.filter(current_day__lt=(timezone.now()-timedelta(days=30)))
+        removable_archives = Archive.objects.filter(
+            current_day__lt=(timezone.now()-timedelta(days=30))
+            )
         
-        # If there are any such records, loop over them and delete each one + count how many got deleted
+        # If there are any such records, loop over them and delete each one 
+        # + 
+        # count how many got deleted
         if removable_archives.exists():
             for record in removable_archives:
                 record.delete()
                 self.rows_deleted += 1
-            messages.info(request, f"Usunięto pomyślnie {self.rows_deleted} starych wpisów")        
+            messages.info(
+                request, 
+                f"Usunięto pomyślnie {self.rows_deleted} starych wpisów"
+                )        
             
         else:
-            messages.warning(request, "Nie ma żadnych wystarczająco starych wpisów do usunięcia")
+            messages.warning(
+                request, 
+                "Nie ma żadnych wystarczająco starych wpisów do usunięcia"
+                )
 
       
 admin_site = MyAdminSite(name='admin_panel')
@@ -196,7 +227,8 @@ admin_site = MyAdminSite(name='admin_panel')
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
     ordering = ['current_day']
-    list_display=('id','users','users_amount','start_hour','end_hour','current_day', 'created_by')
+    list_display=('id','users','users_amount',
+                  'start_hour','end_hour','current_day', 'created_by')
     search_fields=('users','current_day')
     list_filter=('current_day','users')
     actions=[archive_bookings]
@@ -205,7 +237,8 @@ class BookingAdmin(admin.ModelAdmin):
 @admin.register(Archive)
 class ArchiveAdmin(admin.ModelAdmin):
     ordering = ['current_day']
-    list_display=('id','users','users_amount','start_hour','end_hour','current_day')
+    list_display=('id','users','users_amount',
+                  'start_hour','end_hour','current_day')
     search_fields=('users','current_day')
     list_filter=('users','start_hour','current_day')     
    
