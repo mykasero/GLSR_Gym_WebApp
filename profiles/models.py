@@ -22,9 +22,9 @@ class Payment(models.Model):
     user = models.OneToOneField(User, 
                                 on_delete=models.CASCADE, 
                                 related_name='subscription')
-    is_paid = models.BooleanField(default=False)
-    payment_date = models.DateField(null = True, blank = True)
-    expiry_date = models.DateField(null=True, blank = True)
+    # is_paid = models.BooleanField(default=False)
+    # payment_date = models.DateField(null = True, blank = True)
+    # expiry_date = models.DateField(null=True, blank = True)
      
 
 # Create User Profile on User account registration + Create blank payment record

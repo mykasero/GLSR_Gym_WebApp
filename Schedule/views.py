@@ -99,7 +99,7 @@ def login_success(request):
     keycode = list(Keycodes.objects.all().order_by('-id').values_list('code'))[0][0]
     
     # Check if user has paid the monthly membership
-    user_payment_is_paid = Payment.objects.filter(user=request.user)[0].is_paid
+    # user_payment_is_paid = Payment.objects.filter(user=request.user)[0].is_paid
     
     # Check if user is currently picked for cleanup if yes 
     # then show the info message
@@ -110,13 +110,15 @@ def login_success(request):
             f"Zostałeś wybrany w kolejce sprzątania na ten tydzień. \
             Wystarczy że sprzątniesz raz w tym tygodniu :)")
     
+    messages.success(request, f"Kod do skrzynki z kluczem: {keycode}.") 
     
-    if user_payment_is_paid == True:
+    # Payment system became obsolete
+    # if user_payment_is_paid == True:
         # Display keycode upon successful login if user has paid
-        messages.success(request, f"Kod do skrzynki z kluczem: {keycode}.") 
-    else:
-        messages.error(request, 
-        f"Aby uzyskać informację o kodzie do skrytki należy opłacić składke.")
+    
+    # else:
+    #     messages.error(request, 
+    #     f"Aby uzyskać informację o kodzie do skrytki należy opłacić składke.")
     
     
     return render(request,"Schedule/login_success.html")

@@ -33,7 +33,7 @@ def profile_home(request):
         # get all values by user id 
         user_info = Profile.objects.filter(user_id=request.user.id).values()
         # get the payment information for current user
-        payment_info = Payment.objects.filter(user=request.user)
+        # payment_info = Payment.objects.filter(user=request.user)
         
         # Check if user is currently picked for cleanup 
         # if yes then show the info message
@@ -56,7 +56,7 @@ def profile_home(request):
             'yearly_rank_name' : yearly_rank(current_user)[1],
             'monthly_rank' : monthly_rank(current_user)[0],
             'monthly_rank_name' : monthly_rank(current_user)[1],
-            'payment_info' : payment_info[0],
+            # 'payment_info' : payment_info[0],
         }
         
         return render(request,
@@ -180,84 +180,87 @@ def rank_info(request):
 # view for admin to manage the users subscriptions
 @staff_required(login_url="/login/")
 def payments(request):
-    user_list_payments = Payment.objects.all()
+    # Payments system became obsolete
+    # user_list_payments = Payment.objects.all()
     current_user = Profile.objects.get(user__id=request.user.id)
-    user_list_info = check_last_payment(user_list_payments)
+    
+    
+    # user_list_info = check_last_payment(user_list_payments)
     
     # call a function that checks if users payment is 
     # expired and reset the is_paid attr
-    reset_is_paid(user_list_info)
+    # reset_is_paid(user_list_info)
     
     context = {
         'current_user' : current_user,
-        'user_list_payments' : user_list_info,
+        # 'user_list_payments' : user_list_info,
     }
     
-    if request.method == "POST":
-        if 'deactivate_users' in request.POST:
-            # call the function that checks all users and deactivates 
-            # the eligible ones
-            deactv_result = deactivate_users(user_list_info)
+    # if request.method == "POST":
+    #     if 'deactivate_users' in request.POST:
+    #         # call the function that checks all users and deactivates 
+    #         # the eligible ones
+    #         # deactv_result = deactivate_users(user_list_info)
             
-            if deactv_result > 0:
-                messages.success(
-                    request, 
-                    f"Pomyślnie deaktywowano {deactv_result} kont."
-                    )
-            else:
-                messages.warning(
-                    request, 
-                    "Brak kont spełniających kryteria do deaktywacji."
-                    )
+    #         if deactv_result > 0:
+    #             messages.success(
+    #                 request, 
+    #                 f"Pomyślnie deaktywowano {deactv_result} kont."
+    #                 )
+    #         else:
+    #             messages.warning(
+    #                 request, 
+    #                 "Brak kont spełniających kryteria do deaktywacji."
+    #                 )
     
     return render(request, 'profiles/payments.html', {'context':context})
 
 # view for the modal to edit payments
 @staff_required(login_url="/login/")
 def edit_payments(request, pk):
-    payment =  get_object_or_404(Payment, pk=pk)
-    user = get_object_or_404(User, pk=payment.user.id)
-    if request.method == "POST":
-        form = PaymentForm(request.POST, initial={
-            'is_paid' : payment.is_paid,
-            'payment_date' : payment.payment_date,
-        })
-        if form.is_valid():
-            payment.user = payment.user
-            payment.is_paid = form.cleaned_data.get('is_paid')
-            payment.payment_date = form.cleaned_data.get('payment_date')
-            payment.expiry_date = next_month()
-            payment.save()
-            if user.is_active == False:
-                user.is_active = True
-                user.save()
+    # payment =  get_object_or_404(Payment, pk=pk)
+    # user = get_object_or_404(User, pk=payment.user.id)
+    # if request.method == "POST":
+    #     form = PaymentForm(request.POST, initial={
+    #         'is_paid' : payment.is_paid,
+    #         'payment_date' : payment.payment_date,
+    #     })
+    #     if form.is_valid():
+    #         payment.user = payment.user
+    #         payment.is_paid = form.cleaned_data.get('is_paid')
+    #         payment.payment_date = form.cleaned_data.get('payment_date')
+    #         payment.expiry_date = next_month()
+    #         payment.save()
+    #         if user.is_active == False:
+    #             user.is_active = True
+    #             user.save()
             
-            return HttpResponse(
-                status=204,
-                headers={
-                    'HX-Trigger' : json.dumps({
-                        "bookingListChanged" : None,
-                        "showMessage" : f"Zaktualizowano status płatności"
-                    }),
-                    'HX-Refresh':"true",
-                }
-            )
-        else:
-            return render(request, 'profiles/payments_form.html', {
-                'form' : form,
-                'payment' : payment,
-            })
+    #         return HttpResponse(
+    #             status=204,
+    #             headers={
+    #                 'HX-Trigger' : json.dumps({
+    #                     "bookingListChanged" : None,
+    #                     "showMessage" : f"Zaktualizowano status płatności"
+    #                 }),
+    #                 'HX-Refresh':"true",
+    #             }
+    #         )
+    #     else:
+    #         return render(request, 'profiles/payments_form.html', {
+    #             'form' : form,
+    #             'payment' : payment,
+    #         })
         
         
-    else:
-        form = PaymentForm(request.POST, initial={
-            'is_paid' : payment.is_paid,
-            'payment_date' : payment.payment_date,
-        })
+    # else:
+    #     form = PaymentForm(request.POST, initial={
+    #         'is_paid' : payment.is_paid,
+    #         'payment_date' : payment.payment_date,
+    #     })
     
-        return render(request, 'profiles/payments_form.html', {
-                'form' : form,
-                'payment' : payment,
-            })
-        
+    #     return render(request, 'profiles/payments_form.html', {
+    #             'form' : form,
+    #             'payment' : payment,
+    #         })
+    return render(request, 'profiles/payments_form.html')
         

@@ -10,8 +10,10 @@ class ProfileAdmin(admin.ModelAdmin):
 
 # payments list shown in admin
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ["user","is_paid","payment_date","expiry_date"]
-    field = ["user","is_paid","payment_date","expiry_date"]
+    list_display=["user"]
+    field = ["user"]
+    # list_display = ["user","is_paid","payment_date","expiry_date"]
+    # field = ["user","is_paid","payment_date","expiry_date"]
 
 # register profiles if they don't exist already in the admin profiles list
 if Profile not in admin_site._registry:

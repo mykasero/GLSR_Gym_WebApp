@@ -186,8 +186,8 @@
                     <div style="text-shadow: 5px 5px 10px #03A9F4; padding-top:10px; padding-bottom:30px;">
                         <b>Informacje</b>
                     </div>
-                    <!-- Payment information -->
-                    <div style="margin-bottom: 20px;">
+                    <!-- Payment information (OBSOLETE) -->
+                    {% comment %} <div style="margin-bottom: 20px;">
                         {% if context.payment_info.is_paid == True %}
                             <div class="alert alert-success">
                                 Składka opłacona, data wygaśnięcia - {{ context.payment_info.expiry_date|date:"d.m.Y" }}
@@ -198,7 +198,7 @@
                                 <br> Data wygaśnięcia - {{ context.payment_info.expiry_date|date:"d.m.Y" }}
                             </div>
                         {% endif %}
-                    </div>
+                    </div> {% endcomment %}
                     <!-- Profile Picture Section -->
                     <div style="margin-bottom: 20px;">
                         <div><b>Zdjęcie Profilowe:</b></div>
