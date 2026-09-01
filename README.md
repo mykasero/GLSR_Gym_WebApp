@@ -5,7 +5,7 @@
 <p>Due to the fairly small size of the gym this allows the users to attend the gym in a time frame when the place is not packed with people,
 which helps to reduce the time spent on waiting for the equipment to be available.</p>
 <p>This project started as a simple booking webapp, but with my and the gym manager ideas for additional functionalities, it grew to a slightly larger venture.<p>
-<p><b><u>Webapp online period early 2025 - 01.09.2026</u></b></p>
+<p><b><u>Webapp online period early 2025 - 01.09.2026 (shutdown)</u></b></p>
 <p>Below can be found details on the functionalities of the project, tools used and a link to an image host with some screenshots of the live site:</p>
 
 <p><h2>Functionalities:</h2>
